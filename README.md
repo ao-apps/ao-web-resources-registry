@@ -1,7 +1,7 @@
 # [<img src="ao-logo.png" alt="AO Logo" width="35" height="40">](https://github.com/aoindustries) [AO Web Resources](https://github.com/aoindustries/ao-web-resources) / [Registry](https://github.com/aoindustries/ao-web-resources-registry)
 <p>
-	<a href="https://aoindustries.com/life-cycle#project-current-alpha">
-		<img src="https://aoindustries.com/ao-badges/project-current-alpha.svg" alt="project: current alpha" />
+	<a href="https://aoindustries.com/life-cycle#project-alpha">
+		<img src="https://aoindustries.com/ao-badges/project-alpha.svg" alt="project: alpha" />
 	</a>
 	<a href="https://aoindustries.com/life-cycle#management-preview">
 		<img src="https://aoindustries.com/ao-badges/management-preview.svg" alt="management: preview" />
