@@ -39,7 +39,7 @@ final public class Styles extends Resources<Style> {
 	 * @see  #add(com.aoindustries.web.resources.registry.Resource) 
 	 */
 	public boolean add(String href) {
-		return add(new Style(href, null, false));
+		return add(new Style(href));
 	}
 
 	/**
@@ -48,7 +48,7 @@ final public class Styles extends Resources<Style> {
 	 * @see  #remove(com.aoindustries.web.resources.registry.Resource)
 	 */
 	public boolean remove(String href) {
-		return remove(new Style(href, null, false));
+		return remove(new Style(href));
 	}
 
 	/**
@@ -58,8 +58,8 @@ final public class Styles extends Resources<Style> {
 	 */
 	public boolean addOrdering(String beforeHref, String afterHref, boolean required) {
 		return addOrdering(
-			new Style(beforeHref, null, false),
-			new Style(afterHref, null, false),
+			new Style(beforeHref),
+			new Style(afterHref),
 			required
 		);
 	}
@@ -80,8 +80,8 @@ final public class Styles extends Resources<Style> {
 	 */
 	public boolean removeOrdering(String beforeHref, String afterHref, boolean required) {
 		return removeOrdering(
-			new Style(beforeHref, null, false),
-			new Style(afterHref, null, false),
+			new Style(beforeHref),
+			new Style(afterHref),
 			required
 		);
 	}

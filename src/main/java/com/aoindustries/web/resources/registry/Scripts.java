@@ -39,7 +39,7 @@ final public class Scripts extends Resources<Script> {
 	 * @see  #add(com.aoindustries.web.resources.registry.Resource)
 	 */
 	public boolean add(String src) {
-		return add(new Script(src, false, false, null));
+		return add(new Script(src));
 	}
 
 	/**
@@ -48,7 +48,7 @@ final public class Scripts extends Resources<Script> {
 	 * @see  #remove(com.aoindustries.web.resources.registry.Resource)
 	 */
 	public boolean remove(String src) {
-		return remove(new Script(src, false, false, null));
+		return remove(new Script(src));
 	}
 
 	/**
@@ -58,8 +58,8 @@ final public class Scripts extends Resources<Script> {
 	 */
 	public boolean addOrdering(String beforeSrc, String afterSrc, boolean required) {
 		return addOrdering(
-			new Script(beforeSrc, false, false, null),
-			new Script(afterSrc, false, false, null),
+			new Script(beforeSrc),
+			new Script(afterSrc),
 			required
 		);
 	}
@@ -80,8 +80,8 @@ final public class Scripts extends Resources<Script> {
 	 */
 	public boolean removeOrdering(String beforeSrc, String afterSrc, boolean required) {
 		return removeOrdering(
-			new Script(beforeSrc, false, false, null),
-			new Script(afterSrc, false, false, null),
+			new Script(beforeSrc),
+			new Script(afterSrc),
 			required
 		);
 	}

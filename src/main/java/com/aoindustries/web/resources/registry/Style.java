@@ -24,7 +24,9 @@ package com.aoindustries.web.resources.registry;
 
 import com.aoindustries.text.SmartComparator;
 import com.aoindustries.util.StringUtility;
+import com.aoindustries.util.i18n.Locales;
 import java.util.Comparator;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -37,9 +39,6 @@ import java.util.Objects;
  * <p>
  * Optimizers should be careful to only group styles that have equivalent
  * constraints.
- * </p>
- * <p>
- * TODO: Support isRtl() for right-to-left languages, automatically selected by response locale.
  * </p>
  * <p>
  * TODO: Support a "group" (or "position" / "category"?): prelude, main, and coda.
@@ -58,11 +57,50 @@ import java.util.Objects;
 public class Style extends Resource<Style> implements Comparable<Style> {
 
 	/**
+	 * The direction of a {@link Style}.
+	 *
+	 * @author  AO Industries, Inc.
+	 */
+	public enum Direction {
+
+		/**
+		 * Left-to-right.
+		 */
+		LTR,
+
+		/**
+		 * Right-to-left.
+		 */
+		RTL;
+
+		/**
+		 * Gets the expected direction for the given locale.
+		 *
+		 * @see  Locales#isRightToLeft(java.util.Locale)
+		 */
+		public static Direction getDirection(Locale locale) {
+			return Locales.isRightToLeft(locale) ? RTL : LTR;
+		}
+
+		/**
+		 * Gets the expected direction for the given language.
+		 *
+		 * @see  Locales#parseLocale(java.lang.String)
+		 * @see  #getDirection(java.util.Locale)
+		 */
+		public static Direction getDirection(String language) {
+			return getDirection(Locales.parseLocale(language));
+		}
+	}
+
+	/**
 	 * Styles start with a default ordering that should minimize the number
 	 * of explicit ordering declarations:
+	 * TODO: Review that this is the best default ordering.
 	 * <ol>
 	 * <li>Order by {@linkplain #getIe() IE conditional comment}, nulls first</li>
 	 * <li>Order by {@linkplain #getMedia() media condition}, nulls first</li>
+	 * <li>Order by {@linkplain #getDirection() direction}, nulls first</li>
 	 * <li>Order by {@linkplain #getUri() URI}</li>
 	 * </ol>
 	 * <p>
@@ -104,6 +142,15 @@ public class Style extends Resource<Style> implements Comparable<Style> {
 			if(diff != 0) return diff;
 		}
 
+		// Direction, nulls first
+		if(ss1.direction == null) {
+			return (ss2.direction != null) ? -1 : 0;
+		} else {
+			if(ss2.direction == null) return 1;
+			diff = ss1.direction.compareTo(ss2.direction);
+			if(diff != 0) return diff;
+		}
+
 		// URI
 		return SmartComparator.ROOT.compare(ss1.getUri(), ss2.getUri());
 	};
@@ -112,15 +159,21 @@ public class Style extends Resource<Style> implements Comparable<Style> {
 
 		protected Builder() {}
 
+		@Override
+		public Builder uri(String href) {
+			super.uri(href);
+			return this;
+		}
+
 		private String media;
 		public Builder media(String media) {
 			this.media = media;
 			return this;
 		}
 
-		@Override
-		public Builder uri(String href) {
-			super.uri(href);
+		private Direction direction;
+		public Builder direction(Direction direction) {
+			this.direction = direction;
 			return this;
 		}
 
@@ -149,6 +202,7 @@ public class Style extends Resource<Style> implements Comparable<Style> {
 			return new Style(
 				uri,
 				media,
+				direction,
 				ie,
 				disabled
 			);
@@ -163,6 +217,8 @@ public class Style extends Resource<Style> implements Comparable<Style> {
 
 	private final String media;
 
+	private final Direction direction;
+
 	/**
 	 * @deprecated  Conditional comments were for IE 5-9, which are all end-of-life.
 	 */
@@ -172,33 +228,55 @@ public class Style extends Resource<Style> implements Comparable<Style> {
 	private final boolean disabled;
 
 	/**
-	 * @param href      See {@link #getUri()}
-	 * @param media     See {@link #getMedia()}
-	 * @param ie        See {@link #getIe()}
-	 * @param disabled  See {@link #isDisabled()}
+	 * @param href       See {@link #getUri()}
+	 * @param media      See {@link #getMedia()}
+	 * @param direction  See {@link #getDirection()}
+	 * @param ie         See {@link #getIe()}
+	 * @param disabled   See {@link #isDisabled()}
 	 *
 	 * @deprecated  Conditional comments were for IE 5-9, which are all end-of-life.
 	 */
 	@Deprecated
-	public Style(String href, String media, String ie, boolean disabled) {
+	public Style(
+		String href,
+		String media,
+		Direction direction,
+		String ie,
+		boolean disabled
+	) {
 		super(href);
 		this.media = StringUtility.trimNullIfEmpty(media);
+		this.direction = direction;
 		this.ie = StringUtility.trimNullIfEmpty(ie);
 		this.disabled = disabled;
 	}
 
 	/**
-	 * @param href      See {@link #getUri()}
-	 * @param media     See {@link #getMedia()}
-	 * @param disabled  See {@link #isDisabled()}
+	 * @param href       See {@link #getUri()}
+	 * @param media      See {@link #getMedia()}
+	 * @param direction  See {@link #getDirection()}
+	 * @param disabled   See {@link #isDisabled()}
 	 */
-	public Style(String href, String media, boolean disabled) {
-		this(href, media, null, disabled);
+	public Style(
+		String href,
+		String media,
+		Direction direction,
+		boolean disabled
+	) {
+		this(href, media, direction, null, disabled);
+	}
+
+	/**
+	 * @param href  See {@link #getUri()}
+	 */
+	public Style(String href) {
+		this(href, null, null, false);
 	}
 
 	/**
 	 * @see  Resource#toString()
 	 * @see  #getMedia()
+	 * @see  #getDirection()
 	 * @see  #getIe()
 	 * @see  #isDisabled()
 	 */
@@ -212,6 +290,11 @@ public class Style extends Resource<Style> implements Comparable<Style> {
 			boolean needComma = false;
 			if(media != null) {
 				sb.append("media=\"").append(media).append('"');
+				needComma = true;
+			}
+			if(direction != null) {
+				if(needComma) sb.append(", ");
+				sb.append("direction=").append(direction);
 				needComma = true;
 			}
 			if(ie != null) {
@@ -234,6 +317,7 @@ public class Style extends Resource<Style> implements Comparable<Style> {
 		Style other = (Style)obj;
 		return
 			disabled == other.disabled
+			&& direction == other.direction
 			&& Objects.equals(getUri(), other.getUri())
 			&& Objects.equals(media, other.media)
 			&& Objects.equals(ie, other.ie);
@@ -243,6 +327,7 @@ public class Style extends Resource<Style> implements Comparable<Style> {
 	public int hashCode() {
 		int hash = Objects.hashCode(getUri());
 		hash = hash * 31 + Objects.hashCode(media);
+		hash = hash * 31 + Objects.hashCode(direction);
 		hash = hash * 31 + Objects.hashCode(ie);
 		if(disabled) hash += 1;
 		return hash;
@@ -261,6 +346,15 @@ public class Style extends Resource<Style> implements Comparable<Style> {
 	 */
 	final public String getMedia() {
 		return media;
+	}
+
+	/**
+	 * Gets the direction for the style.
+	 * This is matched against the current response language/locale, when know,
+	 * to selectively include the style.
+	 */
+	final public Direction getDirection() {
+		return direction;
 	}
 
 	/**

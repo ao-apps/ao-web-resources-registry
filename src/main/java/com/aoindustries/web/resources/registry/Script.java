@@ -142,6 +142,13 @@ public class Script extends Resource<Script> implements Comparable<Script> {
 	}
 
 	/**
+	 * @param src  See {@link #getUri()}
+	 */
+	public Script(String src) {
+		this(src, false, false, null);
+	}
+
+	/**
 	 * @see  Resource#toString()
 	 * @see  #isAsync()
 	 * @see  #isDefer()
