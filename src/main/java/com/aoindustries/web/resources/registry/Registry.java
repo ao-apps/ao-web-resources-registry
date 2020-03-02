@@ -26,6 +26,7 @@ import com.aoindustries.util.AoCollections;
 import com.aoindustries.util.graph.Edge;
 import com.aoindustries.util.graph.SymmetricGraph;
 import com.aoindustries.util.graph.TopologicalSorter;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,11 +43,13 @@ import java.util.concurrent.ConcurrentMap;
  *
  * @author  AO Industries, Inc.
  */
-public class Registry {
+public class Registry implements Serializable {
 
-	private static class Entry<R extends Resource<R> & Comparable<? super R>> {
+	private static class Entry<R extends Resource<R> & Comparable<? super R>> implements Serializable {
 
-		private static class Before<R extends Resource<R> & Comparable<? super R>> {
+		private static class Before<R extends Resource<R> & Comparable<? super R>> implements Serializable {
+
+			private static final long serialVersionUID = 1L;
 
 			private final R before;
 			private final boolean required;
@@ -79,6 +82,8 @@ public class Registry {
 				return hash;
 			}
 		}
+
+		private static final long serialVersionUID = 1L;
 
 		private final Set<R> resources = new HashSet<>();
 
@@ -200,6 +205,8 @@ public class Registry {
 			return s;
 		}
 	}
+
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * All concrete implementations of Resource must be comparable to themselves,

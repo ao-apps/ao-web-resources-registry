@@ -24,6 +24,7 @@ package com.aoindustries.web.resources.registry;
 
 import com.aoindustries.text.SmartComparator;
 import com.aoindustries.util.StringUtility;
+import java.io.Serializable;
 
 /**
  * A resource given its full URL or application context-relative path.
@@ -37,7 +38,7 @@ import com.aoindustries.util.StringUtility;
 abstract public class Resource<
 	// All concrete implementations of Resource must be comparable to themselves
 	R extends Resource<R> & Comparable<? super R>
-> {
+> implements Serializable {
 
 	abstract public static class Builder<R extends Resource<R> & Comparable<? super R>> {
 
@@ -51,6 +52,8 @@ abstract public class Resource<
 
 		abstract public R build();
 	}
+
+	private static final long serialVersionUID = 1L;
 
 	private final String uri;
 

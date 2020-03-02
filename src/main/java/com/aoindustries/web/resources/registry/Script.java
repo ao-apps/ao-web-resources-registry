@@ -122,6 +122,8 @@ public class Script extends Resource<Script> implements Comparable<Script> {
 		return new Builder();
 	}
 
+	private static final long serialVersionUID = 1L;
+
 	private final boolean async;
 	private final boolean defer;
 	private final String crossorigin;

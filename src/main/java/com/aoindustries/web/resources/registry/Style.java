@@ -144,6 +144,8 @@ public class Style extends Resource<Style> implements Comparable<Style> {
 		}
 	}
 
+	private static final long serialVersionUID = 1L;
+
 	private final String media;
 
 	/**
