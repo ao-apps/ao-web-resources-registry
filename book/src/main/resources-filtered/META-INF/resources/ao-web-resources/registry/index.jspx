@@ -35,6 +35,7 @@ along with ao-web-resources-registry.  If not, see <http://www.gnu.org/licenses 
 		shortTitle="@{documented.shortTitle}"
 		description="@{documented.description}"
 		datePublished="2020-03-01T00:33:22-0600"
+		dateModified="2020-03-02T02:22:16-0600"
 	>
 		<core:child page="changelog.jspx" />
 		<core:child page="apidocs/index.jspx" />
@@ -61,5 +62,22 @@ along with ao-web-resources-registry.  If not, see <http://www.gnu.org/licenses 
 				<li><ao:a href="@{documented.scm.url}">GitHub</ao:a></li>
 			</ul>
 		</section:nav>
+		<section:section label="TODO">
+			<ul>
+				<li>Support inlining (putting directly into the page like some landing pages do already)
+<pre>Style says inline: never, "auto/any/?", always.
+When style is "auto/any/?", defer to "Page/Request":
+
+"Page/Request" says inline: never, "auto/any/?", always.
+When page/request is "auto/any/?", defer to "Global/Theme/Application":
+
+"Global/Theme/Application" says inline: never, "auto/any/?", always.
+"auto" means to inline on new session? (requires sessions enabled)
+	This would mean first page is automatically fewer round trips, wherever they land.
+
+What to do if things conflict?  What is precedence?</pre>
+				</li>
+			</ul>
+		</section:section>
 	</core:page>
 </jsp:root>
