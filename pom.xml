@@ -66,7 +66,8 @@ along with ao-web-resources-registry.  If not, see <http://www.gnu.org/licenses 
 							<links>
 								<link>${javac.link.javaApi}</link>
 								<!-- Direct -->
-								<!-- TODO -->
+								<link>https://aoindustries.com/ao-lang/apidocs/</link>
+								<link>https://aoindustries.com/aocode-public/apidocs/</link>
 							</links>
 						</configuration>
 					</plugin>
@@ -78,14 +79,26 @@ along with ao-web-resources-registry.  If not, see <http://www.gnu.org/licenses 
 	<dependencyManagement>
 		<dependencies>
 			<!-- Direct -->
-			<!-- TODO -->
+			<dependency>
+				<groupId>com.aoindustries</groupId><artifactId>ao-lang</artifactId><version>3.4.0-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
+			</dependency>
+			<dependency>
+				<groupId>com.aoindustries</groupId><artifactId>aocode-public</artifactId><version>4.0.0-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
+			</dependency>
 			<!-- Transitive -->
-			<!-- TODO -->
+			<dependency>
+				<groupId>com.aoindustries</groupId><artifactId>ao-tempfiles</artifactId><version>1.0.1${POST-SNAPSHOT}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
 	<dependencies>
 		<!-- Direct -->
-		<!-- TODO -->
+		<dependency>
+			<groupId>com.aoindustries</groupId><artifactId>ao-lang</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.aoindustries</groupId><artifactId>aocode-public</artifactId>
+		</dependency>
 	</dependencies>
 </project>
