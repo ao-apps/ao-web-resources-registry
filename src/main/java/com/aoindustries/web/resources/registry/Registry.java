@@ -253,12 +253,30 @@ public class Registry implements Serializable {
 	}
 
 	/**
+	 * Adds a new style, if not already present.
+	 *
+	 * @see  #add(com.aoindustries.web.resources.registry.Style)
+	 */
+	public boolean addStyle(String uri) {
+		return add(new Style(uri, null, false));
+	}
+
+	/**
 	 * Adds a new script, if not already present.
 	 *
 	 * @see  #add(java.lang.Class, com.aoindustries.web.resources.registry.Resource)
 	 */
 	public boolean add(Script script) {
 		return add(Script.class, script);
+	}
+
+	/**
+	 * Adds a new script, if not already present.
+	 *
+	 * @see  #add(com.aoindustries.web.resources.registry.Script)
+	 */
+	public boolean addScript(String uri) {
+		return add(new Script(uri, false, false, null));
 	}
 
 	/**
@@ -280,12 +298,30 @@ public class Registry implements Serializable {
 	}
 
 	/**
+	 * Removes a style.
+	 *
+	 * @see  #remove(com.aoindustries.web.resources.registry.Style)
+	 */
+	public boolean removeStyle(String uri) {
+		return remove(new Style(uri, null, false));
+	}
+
+	/**
 	 * Removes a script.
 	 *
 	 * @see  #remove(java.lang.Class, com.aoindustries.web.resources.registry.Resource)
 	 */
 	public boolean remove(Script script) {
 		return add(Script.class, script);
+	}
+
+	/**
+	 * Removes a script.
+	 *
+	 * @see  #remove(com.aoindustries.web.resources.registry.Script)
+	 */
+	public boolean removeScript(String uri) {
+		return remove(new Script(uri, false, false, null));
 	}
 
 	/**
@@ -324,6 +360,30 @@ public class Registry implements Serializable {
 		return addOrdering(before, after, true);
 	}
 
+	// TODO: Move style and script specific methods to an inner class?  registry.style.addOrdering(...)
+
+	/**
+	 * Adds an ordering constraint between two styles.
+	 *
+	 * @see  #addOrdering(com.aoindustries.web.resources.registry.Style, com.aoindustries.web.resources.registry.Style, boolean)
+	 */
+	public boolean addStyleOrdering(String beforeUri, String afterUri, boolean required) {
+		return addOrdering(
+			new Style(beforeUri, null, false),
+			new Style(afterUri, null, false),
+			required
+		);
+	}
+
+	/**
+	 * Adds a required ordering constraint between two styles.
+	 *
+	 * @see  #addStyleOrdering(java.lang.String, java.lang.String, boolean)
+	 */
+	public boolean addStyleOrdering(String beforeUri, String afterUri) {
+		return addStyleOrdering(beforeUri, afterUri, true);
+	}
+
 	/**
 	 * Adds an ordering constraint between two scripts.
 	 *
@@ -340,6 +400,28 @@ public class Registry implements Serializable {
 	 */
 	public boolean addOrdering(Script before, Script after) {
 		return addOrdering(before, after, true);
+	}
+
+	/**
+	 * Adds an ordering constraint between two scripts.
+	 *
+	 * @see  #addOrdering(com.aoindustries.web.resources.registry.Script, com.aoindustries.web.resources.registry.Script, boolean)
+	 */
+	public boolean addScriptOrdering(String beforeUri, String afterUri, boolean required) {
+		return addOrdering(
+			new Script(beforeUri, false, false, null),
+			new Script(afterUri, false, false, null),
+			required
+		);
+	}
+
+	/**
+	 * Adds a required ordering constraint between two scripts.
+	 *
+	 * @see  #addScriptOrdering(java.lang.String, java.lang.String, boolean)
+	 */
+	public boolean addScriptOrdering(String beforeUri, String afterUri) {
+		return addScriptOrdering(beforeUri, afterUri, true);
 	}
 
 	/**
@@ -379,6 +461,28 @@ public class Registry implements Serializable {
 	}
 
 	/**
+	 * Removes an ordering constraint between two styles.
+	 *
+	 * @see  #removeOrdering(com.aoindustries.web.resources.registry.Style, com.aoindustries.web.resources.registry.Style, boolean)
+	 */
+	public boolean removeStyleOrdering(String beforeUri, String afterUri, boolean required) {
+		return removeOrdering(
+			new Style(beforeUri, null, false),
+			new Style(afterUri, null, false),
+			required
+		);
+	}
+
+	/**
+	 * Removes a required ordering constraint between two styles.
+	 *
+	 * @see  #removeStyleOrdering(java.lang.String, java.lang.String, boolean)
+	 */
+	public boolean removeStyleOrdering(String beforeUri, String afterUri) {
+		return removeStyleOrdering(beforeUri, afterUri, true);
+	}
+
+	/**
 	 * Removes an ordering constraint between two scripts.
 	 *
 	 * @see  #removeOrdering(java.lang.Class, com.aoindustries.web.resources.registry.Resource, com.aoindustries.web.resources.registry.Resource, boolean)
@@ -394,6 +498,28 @@ public class Registry implements Serializable {
 	 */
 	public boolean removeOrdering(Script before, Script after) {
 		return removeOrdering(before, after, true);
+	}
+
+	/**
+	 * Removes an ordering constraint between two scripts.
+	 *
+	 * @see  #removeOrdering(com.aoindustries.web.resources.registry.Script, com.aoindustries.web.resources.registry.Script, boolean)
+	 */
+	public boolean removeScriptOrdering(String beforeUri, String afterUri, boolean required) {
+		return removeOrdering(
+			new Script(beforeUri, false, false, null),
+			new Script(afterUri, false, false, null),
+			required
+		);
+	}
+
+	/**
+	 * Removes a required ordering constraint between two scripts.
+	 *
+	 * @see  #removeScriptOrdering(java.lang.String, java.lang.String, boolean)
+	 */
+	public boolean removeScriptOrdering(String beforeUri, String afterUri) {
+		return removeScriptOrdering(beforeUri, afterUri, true);
 	}
 
 	/**
