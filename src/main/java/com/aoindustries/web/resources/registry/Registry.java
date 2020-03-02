@@ -22,19 +22,7 @@
  */
 package com.aoindustries.web.resources.registry;
 
-import com.aoindustries.util.AoCollections;
-import com.aoindustries.util.graph.Edge;
-import com.aoindustries.util.graph.SymmetricGraph;
-import com.aoindustries.util.graph.TopologicalSorter;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -45,167 +33,6 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class Registry implements Serializable {
 
-	private static class Entry<R extends Resource<R> & Comparable<? super R>> implements Serializable {
-
-		private static class Before<R extends Resource<R> & Comparable<? super R>> implements Serializable {
-
-			private static final long serialVersionUID = 1L;
-
-			private final R before;
-			private final boolean required;
-
-			private Before(R before, boolean required) {
-				this.before = before;
-				this.required = required;
-			}
-
-			@Override
-			public String toString() {
-				return
-					before.toString()
-					+ (required ? " (required)" : " (optional)");
-			}
-
-			@Override
-			public boolean equals(Object obj) {
-				if(!(obj instanceof Before)) return false;
-				Before<?> other = (Before)obj;
-				return
-					required == other.required
-					&& before.equals(other.before);
-			}
-
-			@Override
-			public int hashCode() {
-				int hash = before.hashCode();
-				if(required) hash++;
-				return hash;
-			}
-		}
-
-		private static final long serialVersionUID = 1L;
-
-		private final Set<R> resources = new HashSet<>();
-
-		/**
-		 * Ordering map: <code>after -&gt; Set&lt;Before&gt;</code>.
-		 */
-		private final Map<R,Set<Before<R>>> ordering = new HashMap<>();
-
-		private Set<R> sorted;
-
-		private Entry() {
-		}
-
-		/**
-		 * @see Registry#add(java.lang.Class, com.aoindustries.web.resources.registry.Resource)
-		 */
-		synchronized private boolean add(R resource) {
-			boolean added = resources.add(resource);
-			if(added) sorted = null;
-			return added;
-		}
-
-		/**
-		 * @see Registry#remove(java.lang.Class, com.aoindustries.web.resources.registry.Resource)
-		 */
-		synchronized private boolean remove(R resource) {
-			boolean removed = resources.remove(resource);
-			if(removed) sorted = null;
-			return removed;
-		}
-
-		/**
-		 * @see Registry#addOrdering(java.lang.Class, com.aoindustries.web.resources.registry.Resource, com.aoindustries.web.resources.registry.Resource, boolean)
-		 */
-		synchronized private boolean addOrdering(R before, R after, boolean required) {
-			Set<Before<R>> set = ordering.get(after);
-			if(set == null) {
-				set = new HashSet<>();
-				ordering.put(after, set);
-			}
-			boolean added = set.add(new Before<>(before, required));
-			if(added) sorted = null;
-			return added;
-		}
-
-		/**
-		 * @see Registry#removeOrdering(java.lang.Class, com.aoindustries.web.resources.registry.Resource, com.aoindustries.web.resources.registry.Resource, boolean)
-		 */
-		synchronized private boolean removeOrdering(R before, R after, boolean required) {
-			Set<Before<R>> set = ordering.get(after);
-			if(set != null) {
-				boolean removed = set.remove(new Before<>(before, required));
-				if(removed) sorted = null;
-				return removed;
-			} else {
-				return false;
-			}
-		}
-
-		/**
-		 * Performs the topological sort.
-		 *
-		 * @return  An unmodifiable set, in the sorted order.
-		 */
-		private Set<R> topologicalSort(List<R> list) {
-			assert Thread.holdsLock(this);
-			// Build a SymmetricGraph, while making sure all required are found
-			Set<Edge<R>> edgesTo = new LinkedHashSet<>();
-			Set<Edge<R>> edgesFrom = new LinkedHashSet<>();
-			Set<R> vertices = new LinkedHashSet<>(list);
-			for(Map.Entry<R,Set<Before<R>>> entry : ordering.entrySet()) {
-				R afterResource = entry.getKey();
-				for(Before<R> before : entry.getValue()) {
-					R beforeResource = before.before;
-					if(vertices.contains(beforeResource)) {
-						edgesTo.add(new Edge<>(beforeResource, afterResource));
-						edgesFrom.add(new Edge<>(afterResource, beforeResource));
-					} else if(before.required) {
-						throw new IllegalStateException(
-							"Required resource not found:\n"
-							+ "    before = " + beforeResource + "\n"
-							+ "    after  = " + afterResource
-						);
-					}
-				}
-			}
-			SymmetricGraph<R,Edge<R>,RuntimeException> graph = new SymmetricGraph<R,Edge<R>,RuntimeException>() {
-				@Override
-				public Set<Edge<R>> getEdgesTo(R to) {
-					return edgesTo;
-				}
-				@Override
-				public Set<Edge<R>> getEdgesFrom(R from) {
-					return edgesFrom;
-				}
-				@Override
-				public Set<R> getVertices() {
-					return vertices;
-				}
-			};
-			// Perform the sort
-			return AoCollections.optimalUnmodifiableSet(new TopologicalSorter<>(graph, true).sortGraph());
-		}
-
-		/**
-		 * @see Registry#getSorted(java.lang.Class)
-		 */
-		synchronized private Set<R> getSorted() {
-			Set<R> s = sorted;
-			if(s == null) {
-				// Natural sort
-				List<R> list = new ArrayList<>(resources);
-				Collections.sort(list);
-				// Topological sort
-				s = topologicalSort(list);
-				// Cache the value, unmodifiable
-				sorted = s;
-			}
-			return s;
-		}
-	}
-
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -214,334 +41,42 @@ public class Registry implements Serializable {
 	 */
 	private final ConcurrentMap<
 		Class<? extends Resource<?>>,
-		Entry<? extends Resource<?>>
-	> resourceMaps = new ConcurrentHashMap<>();
+		Resources<? extends Resource<?>>
+	> resourcesByClass = new ConcurrentHashMap<>();
+
+	/**
+	 * The partition for CSS styles.
+	 *
+	 * @see  #getResources(java.lang.Class)
+	 */
+	public final Styles styles;
+
+	/**
+	 * The partition for scripts.
+	 *
+	 * @see  #getResources(java.lang.Class)
+	 */
+	public final Scripts scripts;
+
+	public Registry() {
+		styles = new Styles();
+		if(resourcesByClass.put(Style.class, styles) != null) throw new IllegalStateException();
+		scripts = new Scripts();
+		if(resourcesByClass.put(Script.class, scripts) != null) throw new IllegalStateException();
+	}
 
 	/**
 	 * Gets the resources for a given type.
 	 */
-	private <R extends Resource<R> & Comparable<? super R>> Entry<R> getEntry(Class<R> clazz) {
+	public <R extends Resource<R> & Comparable<? super R>> Resources<R> getResources(Class<R> clazz) {
 		@SuppressWarnings("unchecked")
-		Entry<R> entry = (Entry)resourceMaps.get(clazz);
+		Resources<R> entry = (Resources)resourcesByClass.get(clazz);
 		if(entry == null) {
-			entry = new Entry<>();
+			entry = new Resources<>();
 			@SuppressWarnings("unchecked")
-			Entry<R> existing = resourceMaps.putIfAbsent(clazz, (Entry)entry);
+			Resources<R> existing = resourcesByClass.putIfAbsent(clazz, (Resources)entry);
 			if(existing != null) entry = existing;
 		}
 		return entry;
-	}
-
-	public Registry() {}
-
-	/**
-	 * Adds a new resource, if not already present.
-	 *
-	 * @return  {@code true} if the resource was added, or {@code false} if already exists and was not added
-	 */
-	public <R extends Resource<R> & Comparable<? super R>> boolean add(Class<R> clazz, R resource) {
-		return getEntry(clazz).add(resource);
-	}
-
-	/**
-	 * Adds a new style, if not already present.
-	 *
-	 * @see  #add(java.lang.Class, com.aoindustries.web.resources.registry.Resource)
-	 */
-	public boolean add(Style style) {
-		return add(Style.class, style);
-	}
-
-	/**
-	 * Adds a new style, if not already present.
-	 *
-	 * @see  #add(com.aoindustries.web.resources.registry.Style)
-	 */
-	public boolean addStyle(String uri) {
-		return add(new Style(uri, null, false));
-	}
-
-	/**
-	 * Adds a new script, if not already present.
-	 *
-	 * @see  #add(java.lang.Class, com.aoindustries.web.resources.registry.Resource)
-	 */
-	public boolean add(Script script) {
-		return add(Script.class, script);
-	}
-
-	/**
-	 * Adds a new script, if not already present.
-	 *
-	 * @see  #add(com.aoindustries.web.resources.registry.Script)
-	 */
-	public boolean addScript(String uri) {
-		return add(new Script(uri, false, false, null));
-	}
-
-	/**
-	 * Removes a resource.
-	 *
-	 * @return  {@code true} if the resource was removed, or {@code false} if the resource was not found
-	 */
-	public <R extends Resource<R> & Comparable<? super R>> boolean remove(Class<R> clazz, R resource) {
-		return getEntry(clazz).remove(resource);
-	}
-
-	/**
-	 * Removes a style.
-	 *
-	 * @see  #remove(java.lang.Class, com.aoindustries.web.resources.registry.Resource)
-	 */
-	public boolean remove(Style style) {
-		return add(Style.class, style);
-	}
-
-	/**
-	 * Removes a style.
-	 *
-	 * @see  #remove(com.aoindustries.web.resources.registry.Style)
-	 */
-	public boolean removeStyle(String uri) {
-		return remove(new Style(uri, null, false));
-	}
-
-	/**
-	 * Removes a script.
-	 *
-	 * @see  #remove(java.lang.Class, com.aoindustries.web.resources.registry.Resource)
-	 */
-	public boolean remove(Script script) {
-		return add(Script.class, script);
-	}
-
-	/**
-	 * Removes a script.
-	 *
-	 * @see  #remove(com.aoindustries.web.resources.registry.Script)
-	 */
-	public boolean removeScript(String uri) {
-		return remove(new Script(uri, false, false, null));
-	}
-
-	/**
-	 * Adds an ordering constraint between two resources.
-	 *
-	 * @return  {@code true} if the ordering was added, or {@code false} if already exists and was not added
-	 */
-	public <R extends Resource<R> & Comparable<? super R>> boolean addOrdering(Class<R> clazz, R before, R after, boolean required) {
-		return getEntry(clazz).addOrdering(before, after, required);
-	}
-
-	/**
-	 * Adds a required ordering constraint between two resources.
-	 *
-	 * @see  #addOrdering(java.lang.Class, com.aoindustries.web.resources.registry.Resource, com.aoindustries.web.resources.registry.Resource, boolean)
-	 */
-	public <R extends Resource<R> & Comparable<? super R>> boolean addOrdering(Class<R> clazz, R before, R after) {
-		return addOrdering(clazz, before, after, true);
-	}
-
-	/**
-	 * Adds an ordering constraint between two styles.
-	 *
-	 * @see  #addOrdering(java.lang.Class, com.aoindustries.web.resources.registry.Resource, com.aoindustries.web.resources.registry.Resource, boolean)
-	 */
-	public boolean addOrdering(Style before, Style after, boolean required) {
-		return addOrdering(Style.class, before, after, required);
-	}
-
-	/**
-	 * Adds a required ordering constraint between two styles.
-	 *
-	 * @see  #addOrdering(com.aoindustries.web.resources.registry.Style, com.aoindustries.web.resources.registry.Style, boolean)
-	 */
-	public boolean addOrdering(Style before, Style after) {
-		return addOrdering(before, after, true);
-	}
-
-	// TODO: Move style and script specific methods to an inner class?  registry.style.addOrdering(...)
-
-	/**
-	 * Adds an ordering constraint between two styles.
-	 *
-	 * @see  #addOrdering(com.aoindustries.web.resources.registry.Style, com.aoindustries.web.resources.registry.Style, boolean)
-	 */
-	public boolean addStyleOrdering(String beforeUri, String afterUri, boolean required) {
-		return addOrdering(
-			new Style(beforeUri, null, false),
-			new Style(afterUri, null, false),
-			required
-		);
-	}
-
-	/**
-	 * Adds a required ordering constraint between two styles.
-	 *
-	 * @see  #addStyleOrdering(java.lang.String, java.lang.String, boolean)
-	 */
-	public boolean addStyleOrdering(String beforeUri, String afterUri) {
-		return addStyleOrdering(beforeUri, afterUri, true);
-	}
-
-	/**
-	 * Adds an ordering constraint between two scripts.
-	 *
-	 * @see  #addOrdering(java.lang.Class, com.aoindustries.web.resources.registry.Resource, com.aoindustries.web.resources.registry.Resource, boolean)
-	 */
-	public boolean addOrdering(Script before, Script after, boolean required) {
-		return addOrdering(Script.class, before, after, required);
-	}
-
-	/**
-	 * Adds a required ordering constraint between two scripts.
-	 *
-	 * @see  #addOrdering(com.aoindustries.web.resources.registry.Style, com.aoindustries.web.resources.registry.Style, boolean)
-	 */
-	public boolean addOrdering(Script before, Script after) {
-		return addOrdering(before, after, true);
-	}
-
-	/**
-	 * Adds an ordering constraint between two scripts.
-	 *
-	 * @see  #addOrdering(com.aoindustries.web.resources.registry.Script, com.aoindustries.web.resources.registry.Script, boolean)
-	 */
-	public boolean addScriptOrdering(String beforeUri, String afterUri, boolean required) {
-		return addOrdering(
-			new Script(beforeUri, false, false, null),
-			new Script(afterUri, false, false, null),
-			required
-		);
-	}
-
-	/**
-	 * Adds a required ordering constraint between two scripts.
-	 *
-	 * @see  #addScriptOrdering(java.lang.String, java.lang.String, boolean)
-	 */
-	public boolean addScriptOrdering(String beforeUri, String afterUri) {
-		return addScriptOrdering(beforeUri, afterUri, true);
-	}
-
-	/**
-	 * Removes an ordering constraint between two resources.
-	 *
-	 * @return  {@code true} if the ordering was removed, or {@code false} if the ordering was not found
-	 */
-	public <R extends Resource<R> & Comparable<? super R>> boolean removeOrdering(Class<R> clazz, R before, R after, boolean required) {
-		return getEntry(clazz).removeOrdering(before, after, required);
-	}
-
-	/**
-	 * Removes a required ordering constraint between two resources.
-	 *
-	 * @see  #removeOrdering(java.lang.Class, com.aoindustries.web.resources.registry.Resource, com.aoindustries.web.resources.registry.Resource, boolean)
-	 */
-	public <R extends Resource<R> & Comparable<? super R>> boolean removeOrdering(Class<R> clazz, R before, R after) {
-		return removeOrdering(clazz, before, after, true);
-	}
-
-	/**
-	 * Removes an ordering constraint between two styles.
-	 *
-	 * @see  #removeOrdering(java.lang.Class, com.aoindustries.web.resources.registry.Resource, com.aoindustries.web.resources.registry.Resource, boolean)
-	 */
-	public boolean removeOrdering(Style before, Style after, boolean required) {
-		return removeOrdering(Style.class, before, after, required);
-	}
-
-	/**
-	 * Removes a required ordering constraint between two styles.
-	 *
-	 * @see  #removeOrdering(com.aoindustries.web.resources.registry.Style, com.aoindustries.web.resources.registry.Style, boolean)
-	 */
-	public boolean removeOrdering(Style before, Style after) {
-		return removeOrdering(before, after, true);
-	}
-
-	/**
-	 * Removes an ordering constraint between two styles.
-	 *
-	 * @see  #removeOrdering(com.aoindustries.web.resources.registry.Style, com.aoindustries.web.resources.registry.Style, boolean)
-	 */
-	public boolean removeStyleOrdering(String beforeUri, String afterUri, boolean required) {
-		return removeOrdering(
-			new Style(beforeUri, null, false),
-			new Style(afterUri, null, false),
-			required
-		);
-	}
-
-	/**
-	 * Removes a required ordering constraint between two styles.
-	 *
-	 * @see  #removeStyleOrdering(java.lang.String, java.lang.String, boolean)
-	 */
-	public boolean removeStyleOrdering(String beforeUri, String afterUri) {
-		return removeStyleOrdering(beforeUri, afterUri, true);
-	}
-
-	/**
-	 * Removes an ordering constraint between two scripts.
-	 *
-	 * @see  #removeOrdering(java.lang.Class, com.aoindustries.web.resources.registry.Resource, com.aoindustries.web.resources.registry.Resource, boolean)
-	 */
-	public boolean removeOrdering(Script before, Script after, boolean required) {
-		return removeOrdering(Script.class, before, after, required);
-	}
-
-	/**
-	 * Removes a required ordering constraint between two scripts.
-	 *
-	 * @see  #removeOrdering(com.aoindustries.web.resources.registry.Style, com.aoindustries.web.resources.registry.Style, boolean)
-	 */
-	public boolean removeOrdering(Script before, Script after) {
-		return removeOrdering(before, after, true);
-	}
-
-	/**
-	 * Removes an ordering constraint between two scripts.
-	 *
-	 * @see  #removeOrdering(com.aoindustries.web.resources.registry.Script, com.aoindustries.web.resources.registry.Script, boolean)
-	 */
-	public boolean removeScriptOrdering(String beforeUri, String afterUri, boolean required) {
-		return removeOrdering(
-			new Script(beforeUri, false, false, null),
-			new Script(afterUri, false, false, null),
-			required
-		);
-	}
-
-	/**
-	 * Removes a required ordering constraint between two scripts.
-	 *
-	 * @see  #removeScriptOrdering(java.lang.String, java.lang.String, boolean)
-	 */
-	public boolean removeScriptOrdering(String beforeUri, String afterUri) {
-		return removeScriptOrdering(beforeUri, afterUri, true);
-	}
-
-	/**
-	 * Gets the set of all resources of the given class, first with their
-	 * {@linkplain Resource#compareTo(com.aoindustries.web.resources.registry.Resource) natural ordering},
-	 * then with a topological sort to manage ordering constraints;
-	 */
-	public <R extends Resource<R> & Comparable<? super R>> Set<R> getSorted(Class<R> clazz) {
-		return getEntry(clazz).getSorted();
-	}
-
-	/**
-	 * @see  #getSorted(java.lang.Class)
-	 */
-	public Set<Style> getSortedStyles() {
-		return getSorted(Style.class);
-	}
-
-	/**
-	 * @see  #getSorted(java.lang.Class)
-	 */
-	public Set<Script> getSortedScripts() {
-		return getSorted(Script.class);
 	}
 }

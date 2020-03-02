@@ -84,8 +84,8 @@ public class Script extends Resource<Script> implements Comparable<Script> {
 		protected Builder() {}
 
 		@Override
-		public Builder uri(String uri) {
-			super.uri(uri);
+		public Builder uri(String src) {
+			super.uri(src);
 			return this;
 		}
 
@@ -129,13 +129,13 @@ public class Script extends Resource<Script> implements Comparable<Script> {
 	private final String crossorigin;
 
 	/**
-	 * @param uri          See {@link #getUri()}
+	 * @param src          See {@link #getUri()}
 	 * @param async        See {@link #isAsync()}
 	 * @param defer        See {@link #isDefer()}
 	 * @param crossorigin  See {@link #getCrossorigin()}
 	 */
-	public Script(String uri, boolean async, boolean defer, String crossorigin) {
-		super(uri);
+	public Script(String src, boolean async, boolean defer, String crossorigin) {
+		super(src);
 		this.async = async;
 		this.defer = defer;
 		this.crossorigin = StringUtility.trimNullIfEmpty(crossorigin);

@@ -39,6 +39,17 @@ import java.util.Objects;
  * constraints.
  * </p>
  * <p>
+ * TODO: Support isRtl() for right-to-left languages, automatically selected by response locale.
+ * </p>
+ * <p>
+ * TODO: Support a "group" (or "position" / "category"?): prelude, main, and coda.
+ * "prelude" is before all others (except possibly other prelude).
+ * "main" (the default) is the middle.
+ * "coda" is after all others (except possibly other coda).
+ * It would be an error if the topological sort results in prelude that is not
+ * first or coda that is not last.  Use "prelude" for "html5.css".
+ * </p>
+ * <p>
  * TODO: Support inline styles without URI.
  * </p>
  *
@@ -108,8 +119,8 @@ public class Style extends Resource<Style> implements Comparable<Style> {
 		}
 
 		@Override
-		public Builder uri(String uri) {
-			super.uri(uri);
+		public Builder uri(String href) {
+			super.uri(href);
 			return this;
 		}
 
@@ -161,7 +172,7 @@ public class Style extends Resource<Style> implements Comparable<Style> {
 	private final boolean disabled;
 
 	/**
-	 * @param uri       See {@link #getUri()}
+	 * @param href      See {@link #getUri()}
 	 * @param media     See {@link #getMedia()}
 	 * @param ie        See {@link #getIe()}
 	 * @param disabled  See {@link #isDisabled()}
@@ -169,20 +180,20 @@ public class Style extends Resource<Style> implements Comparable<Style> {
 	 * @deprecated  Conditional comments were for IE 5-9, which are all end-of-life.
 	 */
 	@Deprecated
-	public Style(String uri, String media, String ie, boolean disabled) {
-		super(uri);
+	public Style(String href, String media, String ie, boolean disabled) {
+		super(href);
 		this.media = StringUtility.trimNullIfEmpty(media);
 		this.ie = StringUtility.trimNullIfEmpty(ie);
 		this.disabled = disabled;
 	}
 
 	/**
-	 * @param uri       See {@link #getUri()}
+	 * @param href      See {@link #getUri()}
 	 * @param media     See {@link #getMedia()}
 	 * @param disabled  See {@link #isDisabled()}
 	 */
-	public Style(String uri, String media, boolean disabled) {
-		this(uri, media, null, disabled);
+	public Style(String href, String media, boolean disabled) {
+		this(href, media, null, disabled);
 	}
 
 	/**

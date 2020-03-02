@@ -31,6 +31,9 @@ import java.io.Serializable;
  * <p>
  * TODO: Support inline resources without URI.
  * </p>
+ * <p>
+ * TODO: Support comments, which would not be displayed in production mode.
+ * </p>
  *
  * @author  AO Industries, Inc.
  */
