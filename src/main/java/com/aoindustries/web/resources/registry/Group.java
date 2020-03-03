@@ -141,7 +141,7 @@ public class Group implements Serializable {
 			resourcesByClass.put(
 				Style.class,
 				new ResourcesEntry<Style,Styles>(
-					Styles::union,
+					(Function<Collection<? extends Styles>,Styles> & Serializable)Styles::union,
 					styles
 				)
 			) != null
@@ -151,7 +151,7 @@ public class Group implements Serializable {
 			resourcesByClass.put(
 				Script.class,
 				new ResourcesEntry<Script,Scripts>(
-					Scripts::union,
+					(Function<Collection<? extends Scripts>,Scripts> & Serializable)Scripts::union,
 					scripts
 				)
 			) != null
