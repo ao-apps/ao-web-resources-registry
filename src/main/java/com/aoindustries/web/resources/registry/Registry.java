@@ -50,9 +50,14 @@ public class Registry implements Serializable {
 	}
 
 	/**
-	 * Gets the group for a given name.
+	 * Gets the group for a given name, creating it if not already present.
+	 *
+	 * @throws  IllegalArgumentException when {@linkplain Group#checkName(java.lang.String) group name is invalid}.
+	 *
+	 * @see  Group#checkName(java.lang.String)
 	 */
-	public Group getGroup(String name) {
+	public Group getGroup(String name) throws IllegalArgumentException {
+		Group.checkName(name);
 		Group group = groups.get(name);
 		if(group == null) {
 			group = new Group();

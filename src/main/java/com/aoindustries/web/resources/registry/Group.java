@@ -38,6 +38,27 @@ public class Group implements Serializable {
 	 */
 	public static final String GLOBAL = "global";
 
+	/**
+	 * Gets the group for a given name.
+	 *
+	 * @param  Group names may not contain commas or spaces
+	 */
+	public static boolean isValidName(String name) {
+		return name.indexOf(' ') == -1 && name.indexOf(',') == -1;
+	}
+
+	/**
+	 * Checks a group name.
+	 *
+	 * @return  the group name when valid
+	 *
+	 * @throws  IllegalArgumentException when the group name is invalid
+	 */
+	public static String checkName(String name) throws IllegalArgumentException {
+		if(!isValidName(name)) throw new IllegalArgumentException("Group names may not contain spaces or commas: " + name);
+		return name;
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	/**
