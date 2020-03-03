@@ -35,48 +35,30 @@ public class Registry implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * All concrete implementations of Resource must be comparable to themselves,
-	 * so we maintain one sorted set per type.
-	 */
-	private final ConcurrentMap<
-		Class<? extends Resource<?>>,
-		Resources<? extends Resource<?>>
-	> resourcesByClass = new ConcurrentHashMap<>();
+	private final ConcurrentMap<String,Group> groups = new ConcurrentHashMap<>();
 
 	/**
-	 * The partition for CSS styles.
+	 * The global group.
 	 *
-	 * @see  #getResources(java.lang.Class)
+	 * @see  #getGroup(java.lang.String)
 	 */
-	public final Styles styles;
-
-	/**
-	 * The partition for scripts.
-	 *
-	 * @see  #getResources(java.lang.Class)
-	 */
-	public final Scripts scripts;
+	public final Group global;
 
 	public Registry() {
-		styles = new Styles();
-		if(resourcesByClass.put(Style.class, styles) != null) throw new IllegalStateException();
-		scripts = new Scripts();
-		if(resourcesByClass.put(Script.class, scripts) != null) throw new IllegalStateException();
+		global = new Group();
+		if(groups.put(Group.GLOBAL, global) != null) throw new IllegalStateException();
 	}
 
 	/**
-	 * Gets the resources for a given type.
+	 * Gets the group for a given name.
 	 */
-	public <R extends Resource<R> & Comparable<? super R>> Resources<R> getResources(Class<R> clazz) {
-		@SuppressWarnings("unchecked")
-		Resources<R> entry = (Resources)resourcesByClass.get(clazz);
-		if(entry == null) {
-			entry = new Resources<>();
-			@SuppressWarnings("unchecked")
-			Resources<R> existing = resourcesByClass.putIfAbsent(clazz, (Resources)entry);
-			if(existing != null) entry = existing;
+	public Group getGroup(String name) {
+		Group group = groups.get(name);
+		if(group == null) {
+			group = new Group();
+			Group existing = groups.putIfAbsent(name, group);
+			if(existing != null) group = existing;
 		}
-		return entry;
+		return group;
 	}
 }
