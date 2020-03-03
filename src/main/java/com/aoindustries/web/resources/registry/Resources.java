@@ -45,6 +45,8 @@ import java.util.Set;
 // TODO: When resources becomes empty, remove from Group (except Styles and Scripts)
 public class Resources<R extends Resource<R> & Comparable<? super R>> implements Serializable {
 
+	private static final boolean DEBUG = false; // Must be false on release
+
 	private static class Before<R extends Resource<R> & Comparable<? super R>> implements Serializable {
 
 		private static final long serialVersionUID = 1L;
@@ -114,7 +116,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 	 * Gets a deep copy of these resources.
 	 */
 	protected Resources<R> copy() {
-		return new Resources<R>(this);
+		return new Resources<>(this);
 	}
 
 	/**
@@ -266,8 +268,20 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 			// Natural sort
 			List<R> list = new ArrayList<>(resources);
 			Collections.sort(list);
+			if(DEBUG) {
+				System.err.println("Resources: list sorted:");
+				for(R resource : list) {
+					System.err.println("    " + resource);
+				}
+			}
 			// Topological sort
 			s = topologicalSort(list);
+			if(DEBUG) {
+				System.err.println("Resources: topological sorted:");
+				for(R resource : s) {
+					System.err.println("    " + resource);
+				}
+			}
 			// Cache the value, unmodifiable
 			sorted = s;
 		}

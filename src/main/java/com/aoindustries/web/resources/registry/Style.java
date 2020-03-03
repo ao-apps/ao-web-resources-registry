@@ -126,7 +126,7 @@ final public class Style extends Resource<Style> implements Comparable<Style> {
 		int diff;
 		// IE condition, nulls first
 		if(ss1.ie == null) {
-			return (ss2.ie != null) ? -1 : 0;
+			if(ss2.ie != null) return -1;
 		} else {
 			if(ss2.ie == null) return 1;
 			diff = SmartComparator.ROOT.compare(ss1.ie, ss2.ie);
@@ -135,7 +135,7 @@ final public class Style extends Resource<Style> implements Comparable<Style> {
 
 		// Media condition, nulls first
 		if(ss1.media == null) {
-			return (ss2.media != null) ? -1 : 0;
+			if(ss2.media != null) return -1;
 		} else {
 			if(ss2.media == null) return 1;
 			diff = SmartComparator.ROOT.compare(ss1.media, ss2.media);
@@ -144,14 +144,14 @@ final public class Style extends Resource<Style> implements Comparable<Style> {
 
 		// Direction, nulls first
 		if(ss1.direction == null) {
-			return (ss2.direction != null) ? -1 : 0;
+			if(ss2.direction != null) return -1;
 		} else {
 			if(ss2.direction == null) return 1;
 			diff = ss1.direction.compareTo(ss2.direction);
 			if(diff != 0) return diff;
 		}
 
-		// URI
+		// URI (TODO: non-nulls first for inline)
 		return SmartComparator.ROOT.compare(ss1.getUri(), ss2.getUri());
 	};
 

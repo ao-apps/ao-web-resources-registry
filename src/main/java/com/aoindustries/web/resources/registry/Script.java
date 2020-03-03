@@ -75,7 +75,7 @@ final public class Script extends Resource<Script> implements Comparable<Script>
 		diff = -Boolean.compare(ss1.defer, ss2.defer);
 		if(diff != 0) return diff;
 
-		// URI
+		// URI (TODO: non-nulls first for inline)
 		return SmartComparator.ROOT.compare(ss1.getUri(), ss2.getUri());
 	};
 
