@@ -54,7 +54,7 @@ import java.util.Objects;
  *
  * @author  AO Industries, Inc.
  */
-public class Style extends Resource<Style> implements Comparable<Style> {
+final public class Style extends Resource<Style> implements Comparable<Style> {
 
 	/**
 	 * The direction of a {@link Style}.
@@ -337,14 +337,14 @@ public class Style extends Resource<Style> implements Comparable<Style> {
 	 * @see  #COMPARATOR
 	 */
 	@Override
-	final public int compareTo(Style o) {
+	public int compareTo(Style o) {
 		return COMPARATOR.compare(this, o);
 	}
 
 	/**
 	 * Gets the optional media condition.
 	 */
-	final public String getMedia() {
+	public String getMedia() {
 		return media;
 	}
 
@@ -353,7 +353,7 @@ public class Style extends Resource<Style> implements Comparable<Style> {
 	 * This is matched against the current response language/locale, when know,
 	 * to selectively include the style.
 	 */
-	final public Direction getDirection() {
+	public Direction getDirection() {
 		return direction;
 	}
 
@@ -361,14 +361,14 @@ public class Style extends Resource<Style> implements Comparable<Style> {
 	 * @deprecated  Conditional comments were for IE 5-9, which are all end-of-life.
 	 */
 	@Deprecated
-	final public String getIe() {
+	public String getIe() {
 		return ie;
 	}
 
 	/**
 	 * Style may be disabled by default, then enabled via JavaScript.
 	 */
-	final public boolean isDisabled() {
+	public boolean isDisabled() {
 		return disabled;
 	}
 }

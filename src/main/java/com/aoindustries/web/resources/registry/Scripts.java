@@ -22,8 +22,6 @@
  */
 package com.aoindustries.web.resources.registry;
 
-import java.util.Map;
-
 /**
  * A partition with some extra convenience overloads for {@link Script}.
  *
@@ -48,6 +46,13 @@ final public class Scripts extends Resources<Script> {
 	@Override
 	protected Scripts copy() {
 		return new Scripts(this);
+	}
+
+	/**
+	 * Union constructor.
+	 */
+	Scripts(Scripts ... others) {
+		super(others);
 	}
 
 	/**

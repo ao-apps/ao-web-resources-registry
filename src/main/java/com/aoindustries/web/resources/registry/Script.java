@@ -48,7 +48,7 @@ import java.util.Objects;
  *
  * @author  AO Industries, Inc.
  */
-public class Script extends Resource<Script> implements Comparable<Script> {
+final public class Script extends Resource<Script> implements Comparable<Script> {
 
 	/**
 	 * Scripts start with a default ordering that should minimize the number
@@ -204,28 +204,28 @@ public class Script extends Resource<Script> implements Comparable<Script> {
 	 * @see  #COMPARATOR
 	 */
 	@Override
-	final public int compareTo(Script o) {
+	public int compareTo(Script o) {
 		return COMPARATOR.compare(this, o);
 	}
 
 	/**
 	 * Is this script asynchronous?
 	 */
-	final public boolean isAsync() {
+	public boolean isAsync() {
 		return async;
 	}
 
 	/**
 	 * Is this script deferred?
 	 */
-	final public boolean isDefer() {
+	public boolean isDefer() {
 		return defer;
 	}
 
 	/**
 	 * Gets the optional crossorigin policy.
 	 */
-	final public String getCrossorigin() {
+	public String getCrossorigin() {
 		return crossorigin;
 	}
 }

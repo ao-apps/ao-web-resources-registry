@@ -49,6 +49,13 @@ final public class Styles extends Resources<Style> {
 	}
 
 	/**
+	 * Union constructor.
+	 */
+	Styles(Styles ... others) {
+		super(others);
+	}
+
+	/**
 	 * Adds a new style, if not already present.
 	 *
 	 * @see  #add(com.aoindustries.web.resources.registry.Resource) 

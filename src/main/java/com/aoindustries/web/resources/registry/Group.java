@@ -23,6 +23,9 @@
 package com.aoindustries.web.resources.registry;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -120,6 +123,70 @@ public class Group implements Serializable {
 	 */
 	protected Group copy() {
 		return new Group(this);
+	}
+
+	/**
+	 * Union constructor.
+	 */
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	protected Group(Group ... others) {
+		// Find all resources
+		Map<
+			Class<? extends Resource<?>>,
+			List<Resources<? extends Resource<?>>>
+		> allResources = new HashMap<>();
+		for(Group other : others) {
+			for(
+				Map.Entry<
+					Class<? extends Resource<?>>,
+					Resources<? extends Resource<?>>
+				> entry : other.resourcesByClass.entrySet()
+			) {
+				Class<? extends Resource<?>> clazz = entry.getKey();
+				Resources<? extends Resource<?>> resources = entry.getValue();
+				List<Resources<? extends Resource<?>>> resourcesForClass = allResources.get(clazz);
+				if(resourcesForClass == null) {
+					resourcesForClass = new ArrayList<>();
+					allResources.put(clazz, resourcesForClass);
+				}
+				resourcesForClass.add(resources);
+			}
+		}
+		// Union all resources
+		for(
+			Map.Entry<
+				Class<? extends Resource<?>>,
+				List<Resources<? extends Resource<?>>>
+			> entry : allResources.entrySet()
+		) {
+			Class<? extends Resource<?>> clazz = entry.getKey();
+			List<Resources<? extends Resource<?>>> resourcesForClass = entry.getValue();
+			resourcesByClass.put(
+				clazz,
+				Resources.union(
+					(Class)clazz,
+					resourcesForClass.toArray(new Resources[resourcesForClass.size()])
+				)
+			);
+		}
+		// Set styles
+		styles = (Styles)resourcesByClass.get(Style.class);
+		if(styles == null) throw new IllegalStateException();
+		// Set scripts
+		scripts = (Scripts)resourcesByClass.get(Scripts.class);
+		if(scripts == null) throw new IllegalStateException();
+	}
+
+	/**
+	 * Gets a the union of multiple groups.
+	 */
+	static Group union(Group ... others) {
+		// Empty group when null or empty
+		if(others == null || others.length == 0) throw new IllegalArgumentException();
+		// Perform a copy when a single group
+		if(others.length == 1) return others[0].copy();
+		// Use union constructor
+		return new Group(others);
 	}
 
 	/**

@@ -117,6 +117,46 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 	}
 
 	/**
+	 * Union constructor.
+	 */
+	@SafeVarargs
+	protected Resources(Resources<R> ... others) {
+		for(Resources<R> other : others) {
+			synchronized(other) {
+				resources.addAll(other.resources);
+				for(Map.Entry<R,Set<Before<R>>> entry : other.ordering.entrySet()) {
+					R after = entry.getKey();
+					Set<Before<R>> befores = ordering.get(after);
+					if(befores == null) {
+						befores = new HashSet<>();
+						ordering.put(after, befores);
+					}
+					befores.addAll(entry.getValue());
+				}
+			}
+		}
+		sorted = null;
+	}
+
+	/**
+	 * Gets a the union of multiple groups.
+	 */
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	static Resources<?> union(Class<? extends Resource<?>> clazz, Resources<?> ... others) {
+		// Empty resources when null or empty
+		if(others == null || others.length == 0) throw new IllegalArgumentException();
+		// Perform a copy when a single resources
+		if(others.length == 1) return others[0].copy();
+		// Use union constructor
+		if(clazz == Style.class) return new Styles((Styles[])others);
+		if(clazz == Script.class) return new Scripts((Scripts[])others);
+		// TODO: All "others" must be the same class
+		// TODO: Use reflection to call a union constructor on this class
+		// TODO: This will support other types of resources beyond style/script
+		return new Resources(others);
+	}
+
+	/**
 	 * Adds a new resource, if not already present.
 	 *
 	 * @return  {@code true} if the resource was added, or {@code false} if already exists and was not added

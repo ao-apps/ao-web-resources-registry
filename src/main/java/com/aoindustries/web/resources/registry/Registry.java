@@ -23,6 +23,9 @@
 package com.aoindustries.web.resources.registry;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -64,12 +67,58 @@ public class Registry implements Serializable {
 		if(global == null) throw new IllegalStateException();
 	}
 
-
 	/**
 	 * Gets a deep copy of this registry.
 	 */
 	public Registry copy() {
 		return new Registry(this);
+	}
+
+	/**
+	 * Union constructor.
+	 */
+	protected Registry(Registry ... others) {
+		// Find all groups
+		Map<String,List<Group>> allGroups = new HashMap<>();
+		for(Registry other : others) {
+			for(Map.Entry<String,Group> entry : other.groups.entrySet()) {
+				String name = entry.getKey();
+				Group group = entry.getValue();
+				List<Group> groupsForName = allGroups.get(name);
+				if(groupsForName == null) {
+					groupsForName = new ArrayList<>();
+					allGroups.put(name, groupsForName);
+				}
+				groupsForName.add(group);
+			}
+		}
+		// Union all groups
+		for(Map.Entry<String,List<Group>> entry : allGroups.entrySet()) {
+			String name = entry.getKey();
+			List<Group> groupsForName = entry.getValue();
+			groups.put(
+				name,
+				Group.union(
+					groupsForName.toArray(new Group[groupsForName.size()])
+				)
+			);
+		}
+		// Set global
+		global = groups.get(Group.GLOBAL);
+		if(global == null) throw new IllegalStateException();
+	}
+
+	/**
+	 * Gets a the union of multiple registries.
+	 * This is a deep copy and may be manipulated without altering the source registries.
+	 */
+	public static Registry union(Registry ... others) {
+		// Empty registry when null or empty
+		if(others == null || others.length == 0) return new Registry();
+		// Perform a copy when a single registry
+		if(others.length == 1) return others[0].copy();
+		// Use union constructor
+		return new Registry(others);
 	}
 
 	/**
