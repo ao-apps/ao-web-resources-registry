@@ -31,6 +31,7 @@ import java.util.concurrent.ConcurrentMap;
  *
  * @author  AO Industries, Inc.
  */
+// TODO: When group becomes empty, remove from Registry (except Global)
 public class Group implements Serializable {
 
 	/**

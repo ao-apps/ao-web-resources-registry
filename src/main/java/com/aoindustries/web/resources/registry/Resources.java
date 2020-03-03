@@ -41,6 +41,7 @@ import java.util.Set;
  *
  * @author  AO Industries, Inc.
  */
+// TODO: When resources becomes empty, remove from Group (except Styles and Scripts)
 public class Resources<R extends Resource<R> & Comparable<? super R>> implements Serializable {
 
 	private static class Before<R extends Resource<R> & Comparable<? super R>> implements Serializable {
