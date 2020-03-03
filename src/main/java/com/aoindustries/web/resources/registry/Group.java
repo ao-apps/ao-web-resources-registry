@@ -84,21 +84,31 @@ public class Group implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	// TODO: Why is "RS" required?
-	private static class ResourcesEntry<R extends Resource<R> & Comparable<? super R>,RS extends Resources<R>> {
+	private static class ResourcesEntry<
+		R extends Resource<R> & Comparable<? super R>,
+		RS extends Resources<R>
+	> implements Serializable {
+
+		private static final long serialVersionUID = 1L;
 
 		private final Function<? super Collection<? extends RS>,RS> unionizer;
 		private final Resources<R> resources;
 
-		private ResourcesEntry(
-			Function<? super Collection<? extends RS>,RS> unionizer,
+		private <F extends Function<? super Collection<? extends RS>,RS> & Serializable> ResourcesEntry(
+			F unionizer,
 			Resources<R> resources
 		) {
+			// Don't rely on generics only, enforce here
+			if(!(unionizer instanceof Serializable)) {
+				throw new IllegalArgumentException("unionizer is not Serializable");
+			} 
 			this.unionizer = unionizer;
 			this.resources = resources;
 		}
 
+		@SuppressWarnings({"unchecked", "rawtypes"})
 		private ResourcesEntry<R,RS> copy() {
-			return new ResourcesEntry<>(unionizer, resources.copy());
+			return new ResourcesEntry((Function)unionizer, resources.copy());
 		}
 	}
 
@@ -251,7 +261,11 @@ public class Group implements Serializable {
 	/**
 	 * Gets the resources for a given type.
 	 */
-	public <R extends Resource<R> & Comparable<? super R>,RS extends Resources<R>> Resources<R> getResources(Class<R> clazz, Function<? super Collection<? extends RS>,RS> unionizer) {
+	public <
+		R extends Resource<R> & Comparable<? super R>,
+		RS extends Resources<R>,
+		F extends Function<? super Collection<? extends RS>,RS> & Serializable
+	> Resources<R> getResources(Class<R> clazz, F unionizer) {
 		@SuppressWarnings("unchecked")
 		ResourcesEntry<R,RS> entry = (ResourcesEntry)resourcesByClass.get(clazz);
 		if(entry == null) {
