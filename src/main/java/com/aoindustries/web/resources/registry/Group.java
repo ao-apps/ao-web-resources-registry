@@ -23,6 +23,7 @@
 package com.aoindustries.web.resources.registry;
 
 import com.aoindustries.util.StringUtility;
+import com.aoindustries.util.function.SerializableFunction;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.function.Function;
 
 /**
  * Groups are named sets of resources.
@@ -91,24 +91,19 @@ public class Group implements Serializable {
 
 		private static final long serialVersionUID = 1L;
 
-		private final Function<? super Collection<? extends RS>,RS> unionizer;
+		private final SerializableFunction<? super Collection<? extends RS>,RS> unionizer;
 		private final Resources<R> resources;
 
-		private <F extends Function<? super Collection<? extends RS>,RS> & Serializable> ResourcesEntry(
-			F unionizer,
+		private ResourcesEntry(
+			SerializableFunction<? super Collection<? extends RS>,RS> unionizer,
 			Resources<R> resources
 		) {
-			// Don't rely on generics only, enforce here
-			if(!(unionizer instanceof Serializable)) {
-				throw new IllegalArgumentException("unionizer is not Serializable");
-			} 
 			this.unionizer = unionizer;
 			this.resources = resources;
 		}
 
-		@SuppressWarnings({"unchecked", "rawtypes"})
 		private ResourcesEntry<R,RS> copy() {
-			return new ResourcesEntry((Function)unionizer, resources.copy());
+			return new ResourcesEntry<>(unionizer, resources.copy());
 		}
 	}
 
@@ -124,14 +119,14 @@ public class Group implements Serializable {
 	/**
 	 * The partition for CSS styles.
 	 *
-	 * @see  #getResources(java.lang.Class, java.util.function.Function)
+	 * @see  #getResources(java.lang.Class, com.aoindustries.util.function.SerializableFunction)
 	 */
 	public final Styles styles;
 
 	/**
 	 * The partition for scripts.
 	 *
-	 * @see  #getResources(java.lang.Class, java.util.function.Function)
+	 * @see  #getResources(java.lang.Class, com.aoindustries.util.function.SerializableFunction)
 	 */
 	public final Scripts scripts;
 
@@ -141,7 +136,7 @@ public class Group implements Serializable {
 			resourcesByClass.put(
 				Style.class,
 				new ResourcesEntry<Style,Styles>(
-					(Function<Collection<? extends Styles>,Styles> & Serializable)Styles::union,
+					Styles::union,
 					styles
 				)
 			) != null
@@ -151,7 +146,7 @@ public class Group implements Serializable {
 			resourcesByClass.put(
 				Script.class,
 				new ResourcesEntry<Script,Scripts>(
-					(Function<Collection<? extends Scripts>,Scripts> & Serializable)Scripts::union,
+					Scripts::union,
 					scripts
 				)
 			) != null
@@ -223,7 +218,7 @@ public class Group implements Serializable {
 			Class<? extends Resource<?>> clazz = entry.getKey();
 			List<ResourcesEntry<?,?>> resourcesEntries = entry.getValue();
 			List<Resources<?>> resourcesList = new ArrayList<>();
-			Function unionizer = null;
+			SerializableFunction unionizer = null;
 			for(ResourcesEntry<?,?> resourcesEntry : resourcesEntries) {
 				if(unionizer == null) unionizer = resourcesEntry.unionizer;
 				resourcesList.add(resourcesEntry.resources);
@@ -263,9 +258,8 @@ public class Group implements Serializable {
 	 */
 	public <
 		R extends Resource<R> & Comparable<? super R>,
-		RS extends Resources<R>,
-		F extends Function<? super Collection<? extends RS>,RS> & Serializable
-	> Resources<R> getResources(Class<R> clazz, F unionizer) {
+		RS extends Resources<R>
+	> Resources<R> getResources(Class<R> clazz, SerializableFunction<? super Collection<? extends RS>,RS> unionizer) {
 		@SuppressWarnings("unchecked")
 		ResourcesEntry<R,RS> entry = (ResourcesEntry)resourcesByClass.get(clazz);
 		if(entry == null) {
