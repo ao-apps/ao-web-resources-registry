@@ -51,7 +51,7 @@ public class Group implements Serializable {
 	 *
 	 * @param  name  Group names may not contain commas or spaces
 	 *
-	 * @see  StringUtility#isWhitespace(int)
+	 * @see  StringUtility#splitStringCommaSpace(java.lang.String)
 	 */
 	public static boolean isValidName(String name) {
 		int len = name.length();
@@ -98,7 +98,7 @@ public class Group implements Serializable {
 		}
 
 		private ResourcesEntry<R,RS> copy() {
-			return new ResourcesEntry<R,RS>(unionizer, resources.copy());
+			return new ResourcesEntry<>(unionizer, resources.copy());
 		}
 	}
 
@@ -166,7 +166,7 @@ public class Group implements Serializable {
 		styles = (Styles)resourcesByClass.get(Style.class).resources;
 		if(styles == null) throw new IllegalStateException();
 		// Set scripts
-		scripts = (Scripts)resourcesByClass.get(Scripts.class).resources;
+		scripts = (Scripts)resourcesByClass.get(Script.class).resources;
 		if(scripts == null) throw new IllegalStateException();
 	}
 
@@ -232,7 +232,7 @@ public class Group implements Serializable {
 		styles = (Styles)resourcesByClass.get(Style.class).resources;
 		if(styles == null) throw new IllegalStateException();
 		// Set scripts
-		scripts = (Scripts)resourcesByClass.get(Scripts.class).resources;
+		scripts = (Scripts)resourcesByClass.get(Script.class).resources;
 		if(scripts == null) throw new IllegalStateException();
 	}
 
@@ -255,10 +255,7 @@ public class Group implements Serializable {
 		@SuppressWarnings("unchecked")
 		ResourcesEntry<R,RS> entry = (ResourcesEntry)resourcesByClass.get(clazz);
 		if(entry == null) {
-			entry = new ResourcesEntry<>(
-				unionizer,
-				new Resources<R>()
-			);
+			entry = new ResourcesEntry<>(unionizer, new Resources<>());
 			@SuppressWarnings("unchecked")
 			ResourcesEntry<R,RS> existing = (ResourcesEntry)resourcesByClass.putIfAbsent(clazz, (ResourcesEntry)entry);
 			if(existing != null) entry = existing;
