@@ -23,6 +23,7 @@
 package com.aoindustries.web.resources.registry;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -47,6 +48,28 @@ public class Registry implements Serializable {
 	public Registry() {
 		global = new Group();
 		if(groups.put(Group.GLOBAL, global) != null) throw new IllegalStateException();
+	}
+
+	/**
+	 * Copy constructor.
+	 */
+	protected Registry(Registry other) {
+		groups.putAll(other.groups);
+		// Copy each
+		for(Map.Entry<String,Group> entry : groups.entrySet()) {
+			entry.setValue(entry.getValue().copy());
+		}
+		// Set global
+		global = groups.get(Group.GLOBAL);
+		if(global == null) throw new IllegalStateException();
+	}
+
+
+	/**
+	 * Gets a deep copy of this registry.
+	 */
+	public Registry copy() {
+		return new Registry(this);
 	}
 
 	/**

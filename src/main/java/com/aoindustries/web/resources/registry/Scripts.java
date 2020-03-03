@@ -22,6 +22,8 @@
  */
 package com.aoindustries.web.resources.registry;
 
+import java.util.Map;
+
 /**
  * A partition with some extra convenience overloads for {@link Script}.
  *
@@ -32,6 +34,21 @@ final public class Scripts extends Resources<Script> {
 	private static final long serialVersionUID = 1L;
 
 	Scripts() {}
+
+	/**
+	 * Copy constructor.
+	 */
+	Scripts(Scripts other) {
+		super(other);
+	}
+
+	/**
+	 * Gets a deep copy of these resources.
+	 */
+	@Override
+	protected Scripts copy() {
+		return new Scripts(this);
+	}
 
 	/**
 	 * Adds a new script, if not already present.

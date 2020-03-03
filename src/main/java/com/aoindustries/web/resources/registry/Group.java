@@ -23,6 +23,7 @@
 package com.aoindustries.web.resources.registry;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -42,7 +43,7 @@ public class Group implements Serializable {
 	/**
 	 * Gets the group for a given name.
 	 *
-	 * @param  Group names may not contain commas or spaces
+	 * @param  name  Group names may not contain commas or spaces
 	 */
 	public static boolean isValidName(String name) {
 		return name.indexOf(' ') == -1 && name.indexOf(',') == -1;
@@ -90,6 +91,35 @@ public class Group implements Serializable {
 		if(resourcesByClass.put(Style.class, styles) != null) throw new IllegalStateException();
 		scripts = new Scripts();
 		if(resourcesByClass.put(Script.class, scripts) != null) throw new IllegalStateException();
+	}
+
+	/**
+	 * Copy constructor.
+	 */
+	protected Group(Group other) {
+		resourcesByClass.putAll(other.resourcesByClass);
+		// Copy each
+		for(
+			Map.Entry<
+				Class<? extends Resource<?>>,
+				Resources<? extends Resource<?>>
+			> entry : resourcesByClass.entrySet()
+		) {
+			entry.setValue(entry.getValue().copy());
+		}
+		// Set styles
+		styles = (Styles)resourcesByClass.get(Style.class);
+		if(styles == null) throw new IllegalStateException();
+		// Set scripts
+		scripts = (Scripts)resourcesByClass.get(Scripts.class);
+		if(scripts == null) throw new IllegalStateException();
+	}
+
+	/**
+	 * Gets a deep copy of this group.
+	 */
+	protected Group copy() {
+		return new Group(this);
 	}
 
 	/**

@@ -34,6 +34,21 @@ final public class Styles extends Resources<Style> {
 	Styles() {}
 
 	/**
+	 * Copy constructor.
+	 */
+	Styles(Styles other) {
+		super(other);
+	}
+
+	/**
+	 * Gets a deep copy of these resources.
+	 */
+	@Override
+	protected Styles copy() {
+		return new Styles(this);
+	}
+
+	/**
 	 * Adds a new style, if not already present.
 	 *
 	 * @see  #add(com.aoindustries.web.resources.registry.Resource) 

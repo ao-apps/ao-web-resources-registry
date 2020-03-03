@@ -95,6 +95,28 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 	}
 
 	/**
+	 * Copy constructor.
+	 */
+	protected Resources(Resources<R> other) {
+		synchronized(other) {
+			resources.addAll(other.resources);
+			ordering.putAll(other.ordering);
+			// Copy each
+			for(Map.Entry<R,Set<Before<R>>> entry : ordering.entrySet()) {
+				entry.setValue(new HashSet<>(entry.getValue()));
+			}
+			sorted = other.sorted;
+		}
+	}
+
+	/**
+	 * Gets a deep copy of these resources.
+	 */
+	protected Resources<R> copy() {
+		return new Resources<R>(this);
+	}
+
+	/**
 	 * Adds a new resource, if not already present.
 	 *
 	 * @return  {@code true} if the resource was added, or {@code false} if already exists and was not added
