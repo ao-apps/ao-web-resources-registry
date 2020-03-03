@@ -22,6 +22,7 @@
  */
 package com.aoindustries.web.resources.registry;
 
+import com.aoindustries.util.StringUtility;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,9 +50,23 @@ public class Group implements Serializable {
 	 * Gets the group for a given name.
 	 *
 	 * @param  name  Group names may not contain commas or spaces
+	 *
+	 * @see  StringUtility#isWhitespace(int)
 	 */
 	public static boolean isValidName(String name) {
-		return name.indexOf(' ') == -1 && name.indexOf(',') == -1;
+		int len = name.length();
+		if(len == 0) {
+			return false;
+		}
+		int pos = 0;
+		while(pos < len) {
+			int cp = name.codePointAt(pos);
+			if(cp == ',' || StringUtility.isWhitespace(cp)) {
+				return false;
+			}
+			pos += Character.charCount(cp);
+		}
+		return true;
 	}
 
 	/**
@@ -62,7 +77,7 @@ public class Group implements Serializable {
 	 * @throws  IllegalArgumentException when the group name is invalid
 	 */
 	public static String checkName(String name) throws IllegalArgumentException {
-		if(!isValidName(name)) throw new IllegalArgumentException("Group names may not contain spaces or commas: " + name);
+		if(!isValidName(name)) throw new IllegalArgumentException("Group names may not be empty or contain whitespaces or commas: " + name);
 		return name;
 	}
 
