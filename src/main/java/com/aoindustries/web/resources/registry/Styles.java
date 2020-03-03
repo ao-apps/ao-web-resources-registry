@@ -22,6 +22,8 @@
  */
 package com.aoindustries.web.resources.registry;
 
+import java.util.Collection;
+
 /**
  * A partition with some extra convenience overloads for {@link Style}.
  *
@@ -36,7 +38,7 @@ final public class Styles extends Resources<Style> {
 	/**
 	 * Copy constructor.
 	 */
-	Styles(Styles other) {
+	private Styles(Styles other) {
 		super(other);
 	}
 
@@ -51,8 +53,20 @@ final public class Styles extends Resources<Style> {
 	/**
 	 * Union constructor.
 	 */
-	Styles(Styles ... others) {
+	private Styles(Collection<? extends Styles> others) {
 		super(others);
+	}
+
+	/**
+	 * Gets a the union of multiple groups.
+	 */
+	public static Styles union(Collection<? extends Styles> others) {
+		// Empty resources when null or empty
+		if(others == null || others.isEmpty()) return new Styles();
+		// Perform a copy when a single resources
+		if(others.size() == 1) return others.iterator().next().copy();
+		// Use union constructor
+		return new Styles(others);
 	}
 
 	/**

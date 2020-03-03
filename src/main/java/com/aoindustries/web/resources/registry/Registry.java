@@ -24,6 +24,7 @@ package com.aoindustries.web.resources.registry;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,7 +78,7 @@ public class Registry implements Serializable {
 	/**
 	 * Union constructor.
 	 */
-	protected Registry(Registry ... others) {
+	protected Registry(Collection<? extends Registry> others) {
 		// Find all groups
 		Map<String,List<Group>> allGroups = new HashMap<>();
 		for(Registry other : others) {
@@ -94,13 +95,9 @@ public class Registry implements Serializable {
 		}
 		// Union all groups
 		for(Map.Entry<String,List<Group>> entry : allGroups.entrySet()) {
-			String name = entry.getKey();
-			List<Group> groupsForName = entry.getValue();
 			groups.put(
-				name,
-				Group.union(
-					groupsForName.toArray(new Group[groupsForName.size()])
-				)
+				entry.getKey(),
+				Group.union(entry.getValue())
 			);
 		}
 		// Set global
@@ -112,13 +109,38 @@ public class Registry implements Serializable {
 	 * Gets a the union of multiple registries.
 	 * This is a deep copy and may be manipulated without altering the source registries.
 	 */
-	public static Registry union(Registry ... others) {
+	// TODO: Is full registry union still used?  Or is it just group unions?
+	/*
+	public static Registry union(Collection<? extends Registry> others) {
 		// Empty registry when null or empty
-		if(others == null || others.length == 0) return new Registry();
+		if(others == null || others.isEmpty()) return new Registry();
 		// Perform a copy when a single registry
-		if(others.length == 1) return others[0].copy();
+		if(others.size() == 1) return others.iterator().next().copy();
 		// Use union constructor
 		return new Registry(others);
+	}
+	 */
+
+	/**
+	 * Gets the group for a given name, optionally creating it if not already present.
+	 *
+	 * @param  createIfMissing  When {@code true}, will create the group if missing
+	 *
+	 * @return  The group or {@code null} when the group does not exist and {@code createIfMissing} is {@code false}.
+	 *
+	 * @throws  IllegalArgumentException when {@linkplain Group#checkName(java.lang.String) group name is invalid}.
+	 *
+	 * @see  Group#checkName(java.lang.String)
+	 */
+	public Group getGroup(String name, boolean createIfMissing) throws IllegalArgumentException {
+		Group.checkName(name);
+		Group group = groups.get(name);
+		if(group == null && createIfMissing) {
+			group = new Group();
+			Group existing = groups.putIfAbsent(name, group);
+			if(existing != null) group = existing;
+		}
+		return group;
 	}
 
 	/**
@@ -129,13 +151,18 @@ public class Registry implements Serializable {
 	 * @see  Group#checkName(java.lang.String)
 	 */
 	public Group getGroup(String name) throws IllegalArgumentException {
-		Group.checkName(name);
-		Group group = groups.get(name);
-		if(group == null) {
-			group = new Group();
-			Group existing = groups.putIfAbsent(name, group);
-			if(existing != null) group = existing;
+		return getGroup(name, true);
+	}
+
+	/**
+	 * Are all groups empty?
+	 *
+	 * @see  Group#isEmpty()
+	 */
+	public boolean isEmpty() {
+		for(Group group : groups.values()) {
+			if(!group.isEmpty()) return false;
 		}
-		return group;
+		return true;
 	}
 }

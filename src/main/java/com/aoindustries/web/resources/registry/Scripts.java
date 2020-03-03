@@ -22,6 +22,8 @@
  */
 package com.aoindustries.web.resources.registry;
 
+import java.util.Collection;
+
 /**
  * A partition with some extra convenience overloads for {@link Script}.
  *
@@ -36,7 +38,7 @@ final public class Scripts extends Resources<Script> {
 	/**
 	 * Copy constructor.
 	 */
-	Scripts(Scripts other) {
+	private Scripts(Scripts other) {
 		super(other);
 	}
 
@@ -51,8 +53,20 @@ final public class Scripts extends Resources<Script> {
 	/**
 	 * Union constructor.
 	 */
-	Scripts(Scripts ... others) {
+	private Scripts(Collection<? extends Scripts> others) {
 		super(others);
+	}
+
+	/**
+	 * Gets a the union of multiple groups.
+	 */
+	public static Scripts union(Collection<? extends Scripts> others) {
+		// Empty resources when null or empty
+		if(others == null || others.isEmpty()) return new Scripts();
+		// Perform a copy when a single resources
+		if(others.size() == 1) return others.iterator().next().copy();
+		// Use union constructor
+		return new Scripts(others);
 	}
 
 	/**

@@ -28,6 +28,7 @@ import com.aoindustries.util.graph.SymmetricGraph;
 import com.aoindustries.util.graph.TopologicalSorter;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -119,8 +120,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 	/**
 	 * Union constructor.
 	 */
-	@SafeVarargs
-	protected Resources(Resources<R> ... others) {
+	protected Resources(Collection<? extends Resources<R>> others) {
 		for(Resources<R> other : others) {
 			synchronized(other) {
 				resources.addAll(other.resources);
@@ -136,24 +136,6 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 			}
 		}
 		sorted = null;
-	}
-
-	/**
-	 * Gets a the union of multiple groups.
-	 */
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	static Resources<?> union(Class<? extends Resource<?>> clazz, Resources<?> ... others) {
-		// Empty resources when null or empty
-		if(others == null || others.length == 0) throw new IllegalArgumentException();
-		// Perform a copy when a single resources
-		if(others.length == 1) return others[0].copy();
-		// Use union constructor
-		if(clazz == Style.class) return new Styles((Styles[])others);
-		if(clazz == Script.class) return new Scripts((Scripts[])others);
-		// TODO: All "others" must be the same class
-		// TODO: Use reflection to call a union constructor on this class
-		// TODO: This will support other types of resources beyond style/script
-		return new Resources(others);
 	}
 
 	/**
@@ -290,5 +272,14 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 			sorted = s;
 		}
 		return s;
+	}
+
+	/**
+	 * Is this resources empty?
+	 */
+	synchronized public boolean isEmpty() {
+		return
+			resources.isEmpty()
+			&& ordering.isEmpty();
 	}
 }
