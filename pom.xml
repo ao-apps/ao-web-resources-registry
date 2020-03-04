@@ -85,10 +85,6 @@ along with ao-web-resources-registry.  If not, see <http://www.gnu.org/licenses 
 			<dependency>
 				<groupId>com.aoindustries</groupId><artifactId>aocode-public</artifactId><version>4.0.0-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
 			</dependency>
-			<!-- Transitive -->
-			<dependency>
-				<groupId>com.aoindustries</groupId><artifactId>ao-tempfiles</artifactId><version>1.0.1${POST-SNAPSHOT}</version>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
