@@ -36,6 +36,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A set of resources for a single class.
@@ -45,7 +47,9 @@ import java.util.Set;
 // TODO: When resources becomes empty, remove from Group (except Styles and Scripts)
 public class Resources<R extends Resource<R> & Comparable<? super R>> implements Serializable {
 
-	private static final boolean DEBUG = false; // Must be false on release
+	private static final Logger logger = Logger.getLogger(Resources.class.getName());
+
+	private static final String EOL = System.getProperty("line.separator");
 
 	private static class Before<R extends Resource<R> & Comparable<? super R>> implements Serializable {
 
@@ -123,8 +127,10 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 	 * Union constructor.
 	 */
 	protected Resources(Collection<? extends Resources<R>> others) {
+		if(logger.isLoggable(Level.FINE)) logger.fine("others: " + others);
 		for(Resources<R> other : others) {
 			synchronized(other) {
+				if(logger.isLoggable(Level.FINE)) logger.fine("addAll: " + other.resources);
 				resources.addAll(other.resources);
 				for(Map.Entry<R,Set<Before<R>>> entry : other.ordering.entrySet()) {
 					R after = entry.getKey();
@@ -220,21 +226,33 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 	private Set<R> topologicalSort(List<R> list) {
 		assert Thread.holdsLock(this);
 		// Build a SymmetricGraph, while making sure all required are found
-		Set<Edge<R>> edgesTo = new LinkedHashSet<>();
-		Set<Edge<R>> edgesFrom = new LinkedHashSet<>();
+		Map<R,Set<Edge<R>>> edgesTo = new HashMap<>();
+		Map<R,Set<Edge<R>>> edgesFrom = new HashMap<>();
 		Set<R> vertices = new LinkedHashSet<>(list);
 		for(Map.Entry<R,Set<Before<R>>> entry : ordering.entrySet()) {
-			R afterResource = entry.getKey();
+			R from = entry.getKey();
 			for(Before<R> before : entry.getValue()) {
-				R beforeResource = before.before;
-				if(vertices.contains(beforeResource)) {
-					edgesTo.add(new Edge<>(beforeResource, afterResource));
-					edgesFrom.add(new Edge<>(afterResource, beforeResource));
+				R to = before.before;
+				if(vertices.contains(to)) {
+					Edge<R> edge = new Edge<>(from, to);
+					Set<Edge<R>> toSet = edgesTo.get(to);
+					if(toSet == null) {
+						toSet = new LinkedHashSet<>();
+						edgesTo.put(to, toSet);
+					}
+					toSet.add(edge);
+
+					Set<Edge<R>> fromSet = edgesFrom.get(from);
+					if(fromSet == null) {
+						fromSet = new LinkedHashSet<>();
+						edgesFrom.put(from, fromSet);
+					}
+					fromSet.add(edge);
 				} else if(before.required) {
 					throw new IllegalStateException(
 						"Required resource not found:\n"
-						+ "    before = " + beforeResource + "\n"
-						+ "    after  = " + afterResource
+						+ "    before = " + to + "\n"
+						+ "    after  = " + from
 					);
 				}
 			}
@@ -242,11 +260,13 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 		SymmetricGraph<R,Edge<R>,RuntimeException> graph = new SymmetricGraph<R,Edge<R>,RuntimeException>() {
 			@Override
 			public Set<Edge<R>> getEdgesTo(R to) {
-				return edgesTo;
+				Set<Edge<R>> set = edgesTo.get(to);
+				return (set == null) ? Collections.emptySet() : set;
 			}
 			@Override
 			public Set<Edge<R>> getEdgesFrom(R from) {
-				return edgesFrom;
+				Set<Edge<R>> set = edgesFrom.get(from);
+				return (set == null) ? Collections.emptySet() : set;
 			}
 			@Override
 			public Set<R> getVertices() {
@@ -268,19 +288,21 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 			// Natural sort
 			List<R> list = new ArrayList<>(resources);
 			Collections.sort(list);
-			if(DEBUG) {
-				System.err.println("Resources: list sorted:");
+			if(logger.isLoggable(Level.FINE)) {
+				StringBuilder message = new StringBuilder("list sorted:");
 				for(R resource : list) {
-					System.err.println("    " + resource);
+					message.append(EOL).append("    ").append(resource);
 				}
+				logger.fine(message.toString());
 			}
 			// Topological sort
 			s = topologicalSort(list);
-			if(DEBUG) {
-				System.err.println("Resources: topological sorted:");
+			if(logger.isLoggable(Level.FINE)) {
+				StringBuilder message = new StringBuilder("topological sorted:");
 				for(R resource : s) {
-					System.err.println("    " + resource);
+					message.append(EOL).append("    ").append(resource);
 				}
+				logger.fine(message.toString());
 			}
 			// Cache the value, unmodifiable
 			sorted = s;

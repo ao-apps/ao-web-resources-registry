@@ -23,10 +23,6 @@
 package com.aoindustries.web.resources.registry;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -78,6 +74,7 @@ public class Registry implements Serializable {
 	/**
 	 * Union constructor.
 	 */
+	/* TODO: Is full registry union still used?  Or is it just group unions?
 	protected Registry(Collection<? extends Registry> others) {
 		// Find all groups
 		Map<String,List<Group>> allGroups = new HashMap<>();
@@ -104,13 +101,13 @@ public class Registry implements Serializable {
 		global = groups.get(Group.GLOBAL);
 		if(global == null) throw new IllegalStateException();
 	}
+	 */
 
 	/**
 	 * Gets a the union of multiple registries.
 	 * This is a deep copy and may be manipulated without altering the source registries.
 	 */
-	// TODO: Is full registry union still used?  Or is it just group unions?
-	/*
+	/* TODO: Is full registry union still used?  Or is it just group unions?
 	public static Registry union(Collection<? extends Registry> others) {
 		// Empty registry when null or empty
 		if(others == null || others.isEmpty()) return new Registry();
@@ -133,12 +130,15 @@ public class Registry implements Serializable {
 	 * @see  Group#checkName(java.lang.String)
 	 */
 	public Group getGroup(String name, boolean createIfMissing) throws IllegalArgumentException {
-		Group.checkName(name);
 		Group group = groups.get(name);
-		if(group == null && createIfMissing) {
-			group = new Group();
-			Group existing = groups.putIfAbsent(name, group);
-			if(existing != null) group = existing;
+		if(group == null) {
+			// When group found, its name must have been valid
+			Group.checkName(name);
+			if(createIfMissing) {
+				group = new Group();
+				Group existing = groups.putIfAbsent(name, group);
+				if(existing != null) group = existing;
+			}
 		}
 		return group;
 	}
