@@ -278,6 +278,13 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 	}
 
 	/**
+	 * Gets a snapshot copy of the current set of resources, in no particular order.
+	 */
+	synchronized public Set<R> getSnapshot() {
+		return AoCollections.unmodifiableCopySet(resources);
+	}
+
+	/**
 	 * Gets the set of all resources of the given class, first with their
 	 * {@linkplain Resource#compareTo(com.aoindustries.web.resources.registry.Resource) natural ordering},
 	 * then with a topological sort to manage ordering constraints;
