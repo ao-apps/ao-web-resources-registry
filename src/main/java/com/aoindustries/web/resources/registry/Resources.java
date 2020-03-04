@@ -127,10 +127,10 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 	 * Union constructor.
 	 */
 	protected Resources(Collection<? extends Resources<R>> others) {
-		if(logger.isLoggable(Level.FINE)) logger.fine("others: " + others);
+		if(logger.isLoggable(Level.FINER)) logger.finer("others: " + others);
 		for(Resources<R> other : others) {
 			synchronized(other) {
-				if(logger.isLoggable(Level.FINE)) logger.fine("addAll: " + other.resources);
+				if(logger.isLoggable(Level.FINER)) logger.finer("addAll: " + other.resources);
 				resources.addAll(other.resources);
 				for(Map.Entry<R,Set<Before<R>>> entry : other.ordering.entrySet()) {
 					R after = entry.getKey();
@@ -288,21 +288,21 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 			// Natural sort
 			List<R> list = new ArrayList<>(resources);
 			Collections.sort(list);
-			if(logger.isLoggable(Level.FINE)) {
+			if(logger.isLoggable(Level.FINER)) {
 				StringBuilder message = new StringBuilder("list sorted:");
 				for(R resource : list) {
 					message.append(EOL).append("    ").append(resource);
 				}
-				logger.fine(message.toString());
+				logger.finer(message.toString());
 			}
 			// Topological sort
 			s = topologicalSort(list);
-			if(logger.isLoggable(Level.FINE)) {
+			if(logger.isLoggable(Level.FINER)) {
 				StringBuilder message = new StringBuilder("topological sorted:");
 				for(R resource : s) {
 					message.append(EOL).append("    ").append(resource);
 				}
-				logger.fine(message.toString());
+				logger.finer(message.toString());
 			}
 			// Cache the value, unmodifiable
 			sorted = s;
