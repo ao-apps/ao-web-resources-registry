@@ -24,6 +24,9 @@ package com.aoindustries.web.resources.registry;
 
 import com.aoindustries.util.StringUtility;
 import com.aoindustries.util.function.SerializableFunction;
+import java.io.IOException;
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,51 +37,96 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * Groups are named sets of resources.
+ * Groups are named sets of resources, along with ordering requirements.
  *
  * @author  AO Industries, Inc.
  */
-// TODO: When group becomes empty, remove from Registry (except Global)
+// TODO: When group becomes empty, remove from Registry
 public class Group implements Serializable {
 
-	/**
-	 * The name of the global group.
-	 */
-	public static final String GLOBAL = "global";
+	final public static class Name implements Comparable<Name>, Serializable {
 
-	/**
-	 * Gets the group for a given name.
-	 *
-	 * @param  name  Group names may not contain commas or spaces
-	 *
-	 * @see  StringUtility#splitStringCommaSpace(java.lang.String)
-	 */
-	public static boolean isValidName(String name) {
-		int len = name.length();
-		if(len == 0) {
-			return false;
-		}
-		int pos = 0;
-		while(pos < len) {
-			int cp = name.codePointAt(pos);
-			if(cp == ',' || StringUtility.isWhitespace(cp)) {
-				return false;
+		/**
+		 * Validates a {@link Group} name.
+		 *
+		 * @param  name  Group names may not be empty and may not contain commas
+		 *               or spaces.
+		 *
+		 * @return  A message of why invalid or {@code null} when valid.
+		 *
+		 * @see  StringUtility#splitStringCommaSpace(java.lang.String)
+		 */
+		// TODO: ValidationResult? (Requires use of ApplicationResources)
+		public static String validate(String name) {
+			if(name == null) {
+				return "Group names may not be null";
 			}
-			pos += Character.charCount(cp);
+			int len = name.length();
+			if(len == 0) {
+				return "Group names may not be empty";
+			}
+			int pos = 0;
+			while(pos < len) {
+				int cp = name.codePointAt(pos);
+				if(cp == ',') {
+					return "Group names may not contain commas (\",\" position " + (pos + 1) + ")";
+				}
+				if(StringUtility.isWhitespace(cp)) {
+					return "Group names may not contain whitespaces (position " + (pos + 1) + ")";
+				}
+				pos += Character.charCount(cp);
+			}
+			return null;
 		}
-		return true;
-	}
 
-	/**
-	 * Checks a group name.
-	 *
-	 * @return  the group name when valid
-	 *
-	 * @throws  IllegalArgumentException when the group name is invalid
-	 */
-	public static String checkName(String name) throws IllegalArgumentException {
-		if(!isValidName(name)) throw new IllegalArgumentException("Group names may not be empty or contain whitespaces or commas: " + name);
-		return name;
+		/**
+		 * Checks a group name.
+		 *
+		 * @return  the group name when valid
+		 *
+		 * @throws  IllegalArgumentException when the group name is invalid
+		 */
+		public static String checkName(String name) throws IllegalArgumentException {
+			String reason = validate(name);
+			if(reason != null) throw new IllegalArgumentException(reason);
+			return name;
+		}
+
+		private static final long serialVersionUID = 1L;
+
+		private final String name;
+
+		public Name(String name) throws IllegalArgumentException {
+			this.name = checkName(name);
+		}
+
+		private void readObject(ObjectInputStream inputStream) throws ClassNotFoundException, IOException {
+			inputStream.defaultReadObject();
+			String reason = validate(name);
+			if(reason != null) throw new InvalidObjectException(reason);
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if(!(obj instanceof Name)) return false;
+			Name other = (Name)obj;
+			return name.equals(other.name);
+		}
+
+		@Override
+		public int hashCode() {
+			return name.hashCode();
+		}
+		
+		@Override
+		public int compareTo(Name other) {
+			return this==other ? 0 : name.compareTo(other.name);
+		}
+
+		@Override
+		public String toString() {
+			return name;
+		}
 	}
 
 	private static final long serialVersionUID = 1L;
