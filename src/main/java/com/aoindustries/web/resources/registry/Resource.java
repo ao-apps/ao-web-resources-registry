@@ -58,6 +58,8 @@ abstract public class Resource<
 
 	private static final long serialVersionUID = 1L;
 
+	// TODO: No longer assume uri is part of all resource, might be done as part of inline support.
+	// TODO: Resource become interface at the same time?  Or just Object (no Resource interface itself?)
 	private final String uri;
 
 	/**
