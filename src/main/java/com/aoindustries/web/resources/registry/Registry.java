@@ -23,12 +23,13 @@
 package com.aoindustries.web.resources.registry;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * A registry contains a set of resources, along with ordering requirements.
+ * A registry contains a set of groups, along with activations.
  *
  * @author  AO Industries, Inc.
  */
@@ -36,18 +37,11 @@ public class Registry implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private final ConcurrentMap<String,Group> groups = new ConcurrentHashMap<>();
+	private final ConcurrentMap<Group.Name,Group> groups = new ConcurrentHashMap<>();
 
-	/**
-	 * The global group.
-	 *
-	 * @see  #getGroup(java.lang.String)
-	 */
-	public final Group global;
+	private final Map<Group.Name,Boolean> activations = new ConcurrentHashMap<>();
 
 	public Registry() {
-		global = new Group();
-		if(groups.put(Group.GLOBAL, global) != null) throw new IllegalStateException();
 	}
 
 	/**
@@ -56,12 +50,10 @@ public class Registry implements Serializable {
 	protected Registry(Registry other) {
 		groups.putAll(other.groups);
 		// Copy each
-		for(Map.Entry<String,Group> entry : groups.entrySet()) {
+		for(Map.Entry<Group.Name,Group> entry : groups.entrySet()) {
 			entry.setValue(entry.getValue().copy());
 		}
-		// Set global
-		global = groups.get(Group.GLOBAL);
-		if(global == null) throw new IllegalStateException();
+		activations.putAll(other.activations);
 	}
 
 	/**
@@ -77,10 +69,10 @@ public class Registry implements Serializable {
 	/* TODO: Is full registry union still used?  Or is it just group unions?
 	protected Registry(Collection<? extends Registry> others) {
 		// Find all groups
-		Map<String,List<Group>> allGroups = new HashMap<>();
+		Map<Group.Name,List<Group>> allGroups = new HashMap<>();
 		for(Registry other : others) {
-			for(Map.Entry<String,Group> entry : other.groups.entrySet()) {
-				String name = entry.getKey();
+			for(Map.Entry<Group.Name,Group> entry : other.groups.entrySet()) {
+				Group.Name name = entry.getKey();
 				Group group = entry.getValue();
 				List<Group> groupsForName = allGroups.get(name);
 				if(groupsForName == null) {
@@ -97,9 +89,8 @@ public class Registry implements Serializable {
 				Group.union(entry.getValue())
 			);
 		}
-		// Set global
-		global = groups.get(Group.GLOBAL);
-		if(global == null) throw new IllegalStateException();
+		// Union all activations
+		TODO
 	}
 	 */
 
@@ -124,16 +115,10 @@ public class Registry implements Serializable {
 	 * @param  createIfMissing  When {@code true}, will create the group if missing
 	 *
 	 * @return  The group or {@code null} when the group does not exist and {@code createIfMissing} is {@code false}.
-	 *
-	 * @throws  IllegalArgumentException when {@linkplain Group#checkName(java.lang.String) group name is invalid}.
-	 *
-	 * @see  Group#checkName(java.lang.String)
 	 */
-	public Group getGroup(String name, boolean createIfMissing) throws IllegalArgumentException {
+	public Group getGroup(Group.Name name, boolean createIfMissing) {
 		Group group = groups.get(name);
 		if(group == null) {
-			// When group found, its name must have been valid
-			Group.checkName(name);
 			if(createIfMissing) {
 				group = new Group();
 				Group existing = groups.putIfAbsent(name, group);
@@ -144,24 +129,127 @@ public class Registry implements Serializable {
 	}
 
 	/**
-	 * Gets the group for a given name, creating it if not already present.
+	 * Gets the group for a given name, optionally creating it if not already present.
 	 *
-	 * @throws  IllegalArgumentException when {@linkplain Group#checkName(java.lang.String) group name is invalid}.
+	 * @param  createIfMissing  When {@code true}, will create the group if missing
 	 *
-	 * @see  Group#checkName(java.lang.String)
+	 * @return  The group or {@code null} when the group does not exist and {@code createIfMissing} is {@code false}.
+	 *
+	 * @throws  IllegalArgumentException  See {@link Group.Name#checkName(java.lang.String)}.
 	 */
-	public Group getGroup(String name) throws IllegalArgumentException {
+	public Group getGroup(String name, boolean createIfMissing) throws IllegalArgumentException {
+		return getGroup(new Group.Name(name), createIfMissing);
+	}
+
+	/**
+	 * Gets the group for a given name, creating it if not already present.
+	 */
+	public Group getGroup(Group.Name name) {
 		return getGroup(name, true);
 	}
 
 	/**
-	 * Are all groups empty?
+	 * Gets the group for a given name, creating it if not already present.
+	 *
+	 * @throws  IllegalArgumentException  See {@link Group.Name#checkName(java.lang.String)}.
+	 */
+	public Group getGroup(String name) throws IllegalArgumentException {
+		return getGroup(new Group.Name(name), true);
+	}
+
+	/**
+	 * Gets an unmodifiable view of the current activations.
+	 * <ul>
+	 * <li>{@link Boolean#TRUE} indicates the group is activated by this registry.</li>
+	 * <li>{@link Boolean#FALSE} indicates the group is deactivated by this registry.</li>
+	 * <li>{@code null} indicates the activation is unchanged.</li>
+	 * </ul>
+	 * <p>
+	 * Groups are inactive by default, when not activated in any of the applied registries.
+	 * </p>
+	 * <p>
+	 * This mapping is not a snapshot and may reflect concurrent changes to the registry
+	 * (see {@link ConcurrentHashMap}).
+	 * </p>
+	 */
+	public Map<Group.Name,Boolean> getActivations() {
+		return Collections.unmodifiableMap(activations);
+	}
+
+	/**
+	 * Sets the activation for the given group.
+	 * <ul>
+	 * <li>{@link Boolean#TRUE} indicates the group is activated by this registry.</li>
+	 * <li>{@link Boolean#FALSE} indicates the group is deactivated by this registry.</li>
+	 * <li>{@code null} indicates the activation is unchanged.</li>
+	 * </ul>
+	 * <p>
+	 * The group does not need to be part of this registry.  In fact, it will
+	 * often be the case that the application-scope registry contains the
+	 * resources while request/theme/view/page-scope registries activate them.
+	 * </p>
+	 *
+	 * @param  group  When {@code null}, the activation is removed.
+	 *
+	 * @return  The previous activation value for the group
+	 */
+	public Boolean setActivation(Group.Name group, Boolean activation) {
+		if(activation == null) {
+			return activations.remove(group);
+		} else {
+			return activations.put(group, activation);
+		}
+	}
+
+	/**
+	 * Activates the given group.
+	 */
+	public Registry activate(Group.Name group) {
+		setActivation(group, true);
+		return this;
+	}
+
+	/**
+	 * Activates the given group.
+	 *
+	 * @throws  IllegalArgumentException  See {@link Group.Name#checkName(java.lang.String)}.
+	 */
+	public Registry activate(String group) throws IllegalArgumentException {
+		setActivation(new Group.Name(group), true);
+		return this;
+	}
+
+	/**
+	 * Deactivates the given group.
+	 */
+	public Registry deactivate(Group.Name group) {
+		setActivation(group, false);
+		return this;
+	}
+
+	/**
+	 * Deactivates the given group.
+	 *
+	 * @throws  IllegalArgumentException  See {@link Group.Name#checkName(java.lang.String)}.
+	 */
+	public Registry deactivate(String group) throws IllegalArgumentException {
+		setActivation(new Group.Name(group), false);
+		return this;
+	}
+
+	/**
+	 * Empty when there are no activations and all groups are empty.
 	 *
 	 * @see  Group#isEmpty()
 	 */
 	public boolean isEmpty() {
+		if(!activations.isEmpty()) {
+			return false;
+		}
 		for(Group group : groups.values()) {
-			if(!group.isEmpty()) return false;
+			if(!group.isEmpty()) {
+				return false;
+			}
 		}
 		return true;
 	}
