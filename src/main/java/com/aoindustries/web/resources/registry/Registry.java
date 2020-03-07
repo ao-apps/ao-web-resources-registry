@@ -22,6 +22,8 @@
  */
 package com.aoindustries.web.resources.registry;
 
+import com.aoindustries.lang.Iterables;
+import com.aoindustries.lang.NullArgumentException;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
@@ -117,6 +119,7 @@ public class Registry implements Serializable {
 	 * @return  The group or {@code null} when the group does not exist and {@code createIfMissing} is {@code false}.
 	 */
 	public Group getGroup(Group.Name name, boolean createIfMissing) {
+		if(name == null) throw new NullArgumentException("name");
 		Group group = groups.get(name);
 		if(group == null) {
 			if(createIfMissing) {
@@ -189,11 +192,12 @@ public class Registry implements Serializable {
 	 * resources while request/theme/view/page-scope registries activate them.
 	 * </p>
 	 *
-	 * @param  group  When {@code null}, the activation is removed.
+	 * @param  activation  When {@code null}, the activation is removed.
 	 *
 	 * @return  The previous activation value for the group
 	 */
 	public Boolean setActivation(Group.Name group, Boolean activation) {
+		if(group == null) throw new NullArgumentException("group");
 		if(activation == null) {
 			return activations.remove(group);
 		} else {
@@ -220,6 +224,66 @@ public class Registry implements Serializable {
 	}
 
 	/**
+	 * Activates the given groups.
+	 */
+	public Registry activate(Iterable<Group.Name> groups) {
+		if(groups != null) {
+			for(Group.Name group : groups) {
+				if(group != null) {
+					activate(group);
+				}
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Activates the given groups.
+	 */
+	public Registry activate(Group.Name ... groups) {
+		if(groups != null) {
+			for(Group.Name group : groups) {
+				if(group != null) {
+					activate(group);
+				}
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Activates the given groups.
+	 *
+	 * @throws  IllegalArgumentException  See {@link Group.Name#checkName(java.lang.String)}.
+	 */
+	public Registry activate(Iterables.String<?> groups) throws IllegalArgumentException {
+		if(groups != null) {
+			for(String group : groups) {
+				if(group != null) {
+					activate(group);
+				}
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Activates the given groups.
+	 *
+	 * @throws  IllegalArgumentException  See {@link Group.Name#checkName(java.lang.String)}.
+	 */
+	public Registry activate(String ... groups) throws IllegalArgumentException {
+		if(groups != null) {
+			for(String group : groups) {
+				if(group != null) {
+					activate(group);
+				}
+			}
+		}
+		return this;
+	}
+
+	/**
 	 * Deactivates the given group.
 	 */
 	public Registry deactivate(Group.Name group) {
@@ -234,6 +298,66 @@ public class Registry implements Serializable {
 	 */
 	public Registry deactivate(String group) throws IllegalArgumentException {
 		setActivation(new Group.Name(group), false);
+		return this;
+	}
+
+	/**
+	 * Deactivates the given groups.
+	 */
+	public Registry deactivate(Iterable<Group.Name> groups) {
+		if(groups != null) {
+			for(Group.Name group : groups) {
+				if(group != null) {
+					deactivate(group);
+				}
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Deactivates the given groups.
+	 */
+	public Registry deactivate(Group.Name ... groups) {
+		if(groups != null) {
+			for(Group.Name group : groups) {
+				if(group != null) {
+					deactivate(group);
+				}
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Deactivates the given groups.
+	 *
+	 * @throws  IllegalArgumentException  See {@link Group.Name#checkName(java.lang.String)}.
+	 */
+	public Registry deactivate(Iterables.String<?> groups) throws IllegalArgumentException {
+		if(groups != null) {
+			for(String group : groups) {
+				if(group != null) {
+					deactivate(group);
+				}
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Deactivates the given groups.
+	 *
+	 * @throws  IllegalArgumentException  See {@link Group.Name#checkName(java.lang.String)}.
+	 */
+	public Registry deactivate(String ... groups) throws IllegalArgumentException {
+		if(groups != null) {
+			for(String group : groups) {
+				if(group != null) {
+					deactivate(group);
+				}
+			}
+		}
 		return this;
 	}
 

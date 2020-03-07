@@ -22,6 +22,8 @@
  */
 package com.aoindustries.web.resources.registry;
 
+import com.aoindustries.lang.Iterables;
+import com.aoindustries.lang.NullArgumentException;
 import java.util.Collection;
 
 /**
@@ -69,65 +71,296 @@ final public class Styles extends Resources<Style> {
 		return new Styles(others);
 	}
 
+	@Override
+	public Styles add(Iterable<? extends Style> styles) {
+		super.add(styles);
+		return this;
+	}
+
+	@Override
+	public Styles add(Style ... styles) {
+		super.add(styles);
+		return this;
+	}
+
 	/**
 	 * Adds a new style, if not already present.
-	 *
-	 * @see  #add(com.aoindustries.web.resources.registry.Resource) 
 	 */
 	public boolean add(String href) {
+		if(href == null) throw new NullArgumentException("href");
 		return add(new Style(href));
 	}
 
 	/**
+	 * Adds new styles, if not already present.
+	 */
+	public Styles add(Iterables.String<?> hrefs) {
+		if(hrefs != null) {
+			for(String href : hrefs) {
+				if(href != null) {
+					add(href);
+				}
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Adds new styles, if not already present.
+	 */
+	public Styles add(String ... hrefs) {
+		if(hrefs != null) {
+			for(String href : hrefs) {
+				if(href != null) {
+					add(href);
+				}
+			}
+		}
+		return this;
+	}
+
+	@Override
+	public Styles remove(Iterable<? extends Style> styles) {
+		super.remove(styles);
+		return this;
+	}
+
+	@Override
+	public Styles remove(Style ... styles) {
+		super.remove(styles);
+		return this;
+	}
+
+	/**
 	 * Removes a style.
-	 *
-	 * @see  #remove(com.aoindustries.web.resources.registry.Resource)
 	 */
 	public boolean remove(String href) {
-		return remove(new Style(href));
+		if(href != null) {
+			return remove(new Style(href));
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Removes styles.
+	 */
+	public Styles remove(Iterables.String<?> hrefs) {
+		if(hrefs != null) {
+			for(String href : hrefs) {
+				if(href != null) {
+					remove(href);
+				}
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Removes styles.
+	 */
+	public Styles remove(String ... hrefs) {
+		if(hrefs != null) {
+			for(String href : hrefs) {
+				if(href != null) {
+					remove(href);
+				}
+			}
+		}
+		return this;
+	}
+
+	@Override
+	public Styles addOrdering(boolean required, Iterable<? extends Style> styles) {
+		super.addOrdering(required, styles);
+		return this;
+	}
+
+	@Override
+	public Styles addOrdering(Iterable<? extends Style> styles) {
+		super.addOrdering(styles);
+		return this;
+	}
+
+	@Override
+	public Styles addOrdering(boolean required, Style ... styles) {
+		super.addOrdering(required, styles);
+		return this;
+	}
+
+	@Override
+	public Styles addOrdering(Style ... styles) {
+		super.addOrdering(styles);
+		return this;
 	}
 
 	/**
 	 * Adds an ordering constraint between two styles.
-	 *
-	 * @see  #addOrdering(com.aoindustries.web.resources.registry.Resource, com.aoindustries.web.resources.registry.Resource, boolean)
 	 */
-	public boolean addOrdering(String beforeHref, String afterHref, boolean required) {
+	public boolean addOrdering(boolean required, String beforeHref, String afterHref) {
+		if(beforeHref == null) throw new NullArgumentException("beforeHref");
+		if(afterHref == null) throw new NullArgumentException("afterHref");
 		return addOrdering(
+			required,
 			new Style(beforeHref),
-			new Style(afterHref),
-			required
+			new Style(afterHref)
 		);
 	}
 
 	/**
 	 * Adds a required ordering constraint between two styles.
-	 *
-	 * @see  #addOrdering(java.lang.String, java.lang.String, boolean)
 	 */
 	public boolean addOrdering(String beforeHref, String afterHref) {
-		return addOrdering(beforeHref, afterHref, true);
+		return addOrdering(true, beforeHref, afterHref);
+	}
+
+	/**
+	 * Adds ordering constraints between multiple styles, if not already present.
+	 */
+	public Styles addOrdering(boolean required, Iterables.String<?> hrefs) {
+		if(hrefs != null) {
+			Style lastStyle = null;
+			for(String href : hrefs) {
+				if(href != null) {
+					Style style = new Style(href);
+					if(lastStyle != null) {
+						addOrdering(required, lastStyle, style);
+					}
+					lastStyle = style;
+				}
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Adds required ordering constraints between multiple styles, if not already present.
+	 */
+	public Styles addOrdering(Iterables.String<?> hrefs) {
+		return addOrdering(true, hrefs);
+	}
+
+	/**
+	 * Adds ordering constraints between multiple styles, if not already present.
+	 */
+	public Styles addOrdering(boolean required, String ... hrefs) {
+		if(hrefs != null) {
+			Style lastStyle = null;
+			for(String href : hrefs) {
+				if(href != null) {
+					Style style = new Style(href);
+					if(lastStyle != null) {
+						addOrdering(required, lastStyle, style);
+					}
+					lastStyle = style;
+				}
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Adds required ordering constraints between multiple styles, if not already present.
+	 */
+	public Styles addOrdering(String ... hrefs) {
+		return addOrdering(true, hrefs);
+	}
+
+	@Override
+	public Styles removeOrdering(boolean required, Iterable<? extends Style> styles) {
+		super.removeOrdering(required, styles);
+		return this;
+	}
+
+	@Override
+	public Styles removeOrdering(Iterable<? extends Style> styles) {
+		super.removeOrdering(styles);
+		return this;
+	}
+
+	@Override
+	public Styles removeOrdering(boolean required, Style ... styles) {
+		super.removeOrdering(required, styles);
+		return this;
+	}
+
+	@Override
+	public Styles removeOrdering(Style ... styles) {
+		super.removeOrdering(styles);
+		return this;
 	}
 
 	/**
 	 * Removes an ordering constraint between two styles.
-	 *
-	 * @see  #removeOrdering(com.aoindustries.web.resources.registry.Resource, com.aoindustries.web.resources.registry.Resource, boolean)
 	 */
-	public boolean removeOrdering(String beforeHref, String afterHref, boolean required) {
-		return removeOrdering(
-			new Style(beforeHref),
-			new Style(afterHref),
-			required
-		);
+	public boolean removeOrdering(boolean required, String beforeHref, String afterHref) {
+		if(beforeHref != null && afterHref != null) {
+			return removeOrdering(
+				required,
+				new Style(beforeHref),
+				new Style(afterHref)
+			);
+		} else {
+			return false;
+		}
 	}
 
 	/**
 	 * Removes a required ordering constraint between two styles.
-	 *
-	 * @see  #removeOrdering(java.lang.String, java.lang.String, boolean)
 	 */
 	public boolean removeOrdering(String beforeHref, String afterHref) {
-		return removeOrdering(beforeHref, afterHref, true);
+		return removeOrdering(true, beforeHref, afterHref);
+	}
+
+	/**
+	 * Removes ordering constraints between multiple styles.
+	 */
+	public Styles removeOrdering(boolean required, Iterables.String<?> hrefs) {
+		if(hrefs != null) {
+			Style lastStyle = null;
+			for(String href : hrefs) {
+				if(href != null) {
+					Style style = new Style(href);
+					if(lastStyle != null) {
+						removeOrdering(required, lastStyle, style);
+					}
+					lastStyle = style;
+				}
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Removes required ordering constraints between multiple styles.
+	 */
+	public Styles removeOrdering(Iterables.String<?> hrefs) {
+		return removeOrdering(true, hrefs);
+	}
+
+	/**
+	 * Removes ordering constraints between multiple styles.
+	 */
+	public Styles removeOrdering(boolean required, String ... hrefs) {
+		if(hrefs != null) {
+			Style lastStyle = null;
+			for(String href : hrefs) {
+				if(href != null) {
+					Style style = new Style(href);
+					if(lastStyle != null) {
+						removeOrdering(required, lastStyle, style);
+					}
+					lastStyle = style;
+				}
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Removes required ordering constraints between multiple styles.
+	 */
+	public Styles removeOrdering(String ... hrefs) {
+		return removeOrdering(true, hrefs);
 	}
 }

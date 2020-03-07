@@ -22,6 +22,7 @@
  */
 package com.aoindustries.web.resources.registry;
 
+import com.aoindustries.lang.NullArgumentException;
 import com.aoindustries.util.AoCollections;
 import com.aoindustries.util.graph.Edge;
 import com.aoindustries.util.graph.SymmetricGraph;
@@ -59,6 +60,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 		private final boolean required;
 
 		private Before(R before, boolean required) {
+			if(before == null) throw new NullArgumentException("before");
 			this.before = before;
 			this.required = required;
 		}
@@ -152,9 +154,39 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 	 * @return  {@code true} if the resource was added, or {@code false} if already exists and was not added
 	 */
 	synchronized public boolean add(R resource) {
+		if(resource == null) throw new NullArgumentException("resource");
 		boolean added = resources.add(resource);
 		if(added) sorted = null;
 		return added;
+	}
+
+	/**
+	 * Adds new resources, if not already present.
+	 */
+	public Resources<R> add(Iterable<? extends R> resources) {
+		if(resources != null) {
+			for(R resource : resources) {
+				if(resource != null) {
+					add(resource);
+				}
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Adds new resources, if not already present.
+	 */
+	@SuppressWarnings({"unchecked", "varargs"})
+	public Resources<R> add(R ... resources) {
+		if(resources != null) {
+			for(R resource : resources) {
+				if(resource != null) {
+					add(resource);
+				}
+			}
+		}
+		return this;
 	}
 
 	/**
@@ -169,11 +201,42 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 	}
 
 	/**
+	 * Removes resources.
+	 */
+	public Resources<R> remove(Iterable<? extends R> resources) {
+		if(resources != null) {
+			for(R resource : resources) {
+				if(resource != null) {
+					remove(resource);
+				}
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Removes resources.
+	 */
+	@SuppressWarnings({"unchecked", "varargs"})
+	public Resources<R> remove(R ... resources) {
+		if(resources != null) {
+			for(R resource : resources) {
+				if(resource != null) {
+					remove(resource);
+				}
+			}
+		}
+		return this;
+	}
+
+	/**
 	 * Adds an ordering constraint between two resources.
 	 *
 	 * @return  {@code true} if the ordering was added, or {@code false} if already exists and was not added
 	 */
-	synchronized public boolean addOrdering(R before, R after, boolean required) {
+	synchronized public boolean addOrdering(boolean required, R before, R after) {
+		if(before == null) throw new NullArgumentException("before");
+		if(after == null) throw new NullArgumentException("after");
 		Set<Before<R>> set = ordering.get(after);
 		if(set == null) {
 			set = new HashSet<>();
@@ -186,11 +249,61 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 
 	/**
 	 * Adds a required ordering constraint between two resources.
-	 *
-	 * @see  #addOrdering(com.aoindustries.web.resources.registry.Resource, com.aoindustries.web.resources.registry.Resource, boolean)
 	 */
 	public boolean addOrdering(R before, R after) {
-		return addOrdering(before, after, true);
+		return addOrdering(true, before, after);
+	}
+
+	/**
+	 * Adds ordering constraints between multiple resources, if not already present.
+	 */
+	public Resources<R> addOrdering(boolean required, Iterable<? extends R> resources) {
+		if(resources != null) {
+			R lastResource = null;
+			for(R resource : resources) {
+				if(resource != null) {
+					if(lastResource != null) {
+						addOrdering(required, lastResource, resource);
+					}
+					lastResource = resource;
+				}
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Adds required ordering constraints between multiple resources, if not already present.
+	 */
+	public Resources<R> addOrdering(Iterable<? extends R> resources) {
+		return addOrdering(true, resources);
+	}
+
+	/**
+	 * Adds ordering constraints between multiple resources, if not already present.
+	 */
+	@SuppressWarnings({"unchecked", "varargs"})
+	public Resources<R> addOrdering(boolean required, R ... resources) {
+		if(resources != null) {
+			R lastResource = null;
+			for(R resource : resources) {
+				if(resource != null) {
+					if(lastResource != null) {
+						addOrdering(required, lastResource, resource);
+					}
+					lastResource = resource;
+				}
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Adds required ordering constraints between multiple resources, if not already present.
+	 */
+	@SuppressWarnings({"unchecked", "varargs"})
+	public Resources<R> addOrdering(R ... resources) {
+		return addOrdering(true, resources);
 	}
 
 	/**
@@ -198,7 +311,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 	 *
 	 * @return  {@code true} if the ordering was removed, or {@code false} if the ordering was not found
 	 */
-	synchronized public boolean removeOrdering(R before, R after, boolean required) {
+	synchronized public boolean removeOrdering(boolean required, R before, R after) {
 		Set<Before<R>> set = ordering.get(after);
 		if(set != null) {
 			boolean removed = set.remove(new Before<>(before, required));
@@ -211,11 +324,61 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 
 	/**
 	 * Removes a required ordering constraint between two resources.
-	 *
-	 * @see  #removeOrdering(com.aoindustries.web.resources.registry.Resource, com.aoindustries.web.resources.registry.Resource, boolean)
 	 */
 	public boolean removeOrdering(R before, R after) {
-		return removeOrdering(before, after, true);
+		return removeOrdering(true, before, after);
+	}
+
+	/**
+	 * Removes ordering constraints between multiple resources.
+	 */
+	public Resources<R> removeOrdering(boolean required, Iterable<? extends R> resources) {
+		if(resources != null) {
+			R lastResource = null;
+			for(R resource : resources) {
+				if(resource != null) {
+					if(lastResource != null) {
+						removeOrdering(required, lastResource, resource);
+					}
+					lastResource = resource;
+				}
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Removes required ordering constraints between multiple resources.
+	 */
+	public Resources<R> removeOrdering(Iterable<? extends R> resources) {
+		return removeOrdering(true, resources);
+	}
+
+	/**
+	 * Removes ordering constraints between multiple resources.
+	 */
+	@SuppressWarnings({"unchecked", "varargs"})
+	public Resources<R> removeOrdering(boolean required, R ... resources) {
+		if(resources != null) {
+			R lastResource = null;
+			for(R resource : resources) {
+				if(resource != null) {
+					if(lastResource != null) {
+						removeOrdering(required, lastResource, resource);
+					}
+					lastResource = resource;
+				}
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Removes required ordering constraints between multiple resources.
+	 */
+	@SuppressWarnings({"unchecked", "varargs"})
+	public Resources<R> removeOrdering(R ... resources) {
+		return removeOrdering(true, resources);
 	}
 
 	/**
