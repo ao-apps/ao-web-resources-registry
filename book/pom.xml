@@ -35,8 +35,6 @@ along with ao-web-resources-registry.  If not, see <http://www.gnu.org/licenses 
 	<properties>
 		<!-- These values are copied from the project being documented -->
 		<documented.artifactId>ao-web-resources-registry</documented.artifactId>
-		<documented.javaVersion>1.8</documented.javaVersion>
-		<documented.javac.link.javaApi>${javac.link.javaApi.jdk8}</documented.javac.link.javaApi>
 		<documented.name>AO Web Resources Registry</documented.name>
 		<documented.shortTitle>Registry</documented.shortTitle>
 		<documented.description>Central registry for web resource management.</documented.description>
