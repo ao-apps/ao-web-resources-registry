@@ -23,7 +23,7 @@
 package com.aoindustries.web.resources.registry;
 
 import com.aoindustries.text.SmartComparator;
-import com.aoindustries.util.StringUtility;
+import com.aoindustries.lang.Strings;
 import java.util.Comparator;
 import java.util.Objects;
 
@@ -138,7 +138,7 @@ final public class Script extends Resource<Script> implements Comparable<Script>
 		super(src);
 		this.async = async;
 		this.defer = defer;
-		this.crossorigin = StringUtility.trimNullIfEmpty(crossorigin);
+		this.crossorigin = Strings.trimNullIfEmpty(crossorigin);
 	}
 
 	/**

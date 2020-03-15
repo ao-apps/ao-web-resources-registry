@@ -23,7 +23,7 @@
 package com.aoindustries.web.resources.registry;
 
 import com.aoindustries.text.SmartComparator;
-import com.aoindustries.util.StringUtility;
+import com.aoindustries.lang.Strings;
 import java.io.Serializable;
 
 /**
@@ -66,7 +66,7 @@ abstract public class Resource<
 	 * @param uri  See {@link #getUri()}
 	 */
 	public Resource(String uri) {
-		this.uri = StringUtility.nullIfEmpty(uri);
+		this.uri = Strings.nullIfEmpty(uri);
 	}
 
 	/**

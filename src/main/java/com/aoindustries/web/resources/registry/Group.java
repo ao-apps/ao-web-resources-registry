@@ -22,7 +22,7 @@
  */
 package com.aoindustries.web.resources.registry;
 
-import com.aoindustries.util.StringUtility;
+import com.aoindustries.lang.Strings;
 import com.aoindustries.util.function.SerializableFunction;
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -54,7 +54,7 @@ public class Group implements Serializable {
 		 *
 		 * @return  A message of why invalid or {@code null} when valid.
 		 *
-		 * @see  StringUtility#splitStringCommaSpace(java.lang.String)
+		 * @see  Strings#splitStringCommaSpace(java.lang.String)
 		 */
 		// TODO: ValidationResult? (Requires use of ApplicationResources)
 		public static String validate(String name) {
@@ -71,7 +71,7 @@ public class Group implements Serializable {
 				if(cp == ',') {
 					return "Group names may not contain commas (\",\" position " + (pos + 1) + ")";
 				}
-				if(StringUtility.isWhitespace(cp)) {
+				if(Strings.isWhitespace(cp)) {
 					return "Group names may not contain whitespaces (position " + (pos + 1) + ")";
 				}
 				pos += Character.charCount(cp);

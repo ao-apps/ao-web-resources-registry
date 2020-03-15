@@ -23,7 +23,7 @@
 package com.aoindustries.web.resources.registry;
 
 import com.aoindustries.text.SmartComparator;
-import com.aoindustries.util.StringUtility;
+import com.aoindustries.lang.Strings;
 import com.aoindustries.util.i18n.Locales;
 import java.util.Comparator;
 import java.util.Locale;
@@ -245,9 +245,9 @@ final public class Style extends Resource<Style> implements Comparable<Style> {
 		boolean disabled
 	) {
 		super(href);
-		this.media = StringUtility.trimNullIfEmpty(media);
+		this.media = Strings.trimNullIfEmpty(media);
 		this.direction = direction;
-		this.ie = StringUtility.trimNullIfEmpty(ie);
+		this.ie = Strings.trimNullIfEmpty(ie);
 		this.disabled = disabled;
 	}
 
