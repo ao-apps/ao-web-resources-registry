@@ -27,7 +27,7 @@ Central registry for web resource management.
 * [Project Home](https://aoindustries.com/ao-web-resources/registry/)
 * [Changelog](https://aoindustries.com/ao-web-resources/registry/changelog)
 * [API Docs](https://aoindustries.com/ao-web-resources/registry/apidocs/)
-* [Maven Central Repository](https://search.maven.org/#search%7Cgav%7C1%7Cg:%22com.aoindustries%22%20AND%20a:%22ao-web-resources-registry%22)
+* [Maven Central Repository](https://search.maven.org/artifact/com.aoindustries/ao-web-resources-registry)
 * [GitHub](https://github.com/aoindustries/ao-web-resources-registry)
 
 ## Contact Us
