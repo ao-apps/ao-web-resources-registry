@@ -22,8 +22,8 @@
  */
 package com.aoindustries.web.resources.registry;
 
+import com.aoindustries.collections.AoCollections;
 import com.aoindustries.lang.NullArgumentException;
-import com.aoindustries.util.AoCollections;
 import com.aoindustries.util.graph.Edge;
 import com.aoindustries.util.graph.SymmetricGraph;
 import com.aoindustries.util.graph.TopologicalSorter;
