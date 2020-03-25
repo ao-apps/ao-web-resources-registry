@@ -54,7 +54,7 @@ public class Group implements Serializable {
 		 *
 		 * @return  A message of why invalid or {@code null} when valid.
 		 *
-		 * @see  Strings#splitStringCommaSpace(java.lang.String)
+		 * @see  Strings#splitCommaSpace(java.lang.String)
 		 */
 		// TODO: ValidationResult? (Requires use of ApplicationResources)
 		public static String validate(String name) {
