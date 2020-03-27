@@ -22,8 +22,8 @@
  */
 package com.aoindustries.web.resources.registry;
 
-import com.aoindustries.text.SmartComparator;
 import com.aoindustries.lang.Strings;
+import com.aoindustries.text.SmartComparator;
 import java.util.Comparator;
 import java.util.Objects;
 
