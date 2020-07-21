@@ -98,7 +98,6 @@ final public class Style extends Resource<Style> implements Comparable<Style> {
 	 * of explicit ordering declarations:
 	 * TODO: Review that this is the best default ordering.
 	 * <ol>
-	 * <li>Order by {@linkplain #getIe() IE conditional comment}, nulls first</li>
 	 * <li>Order by {@linkplain #getMedia() media condition}, nulls first</li>
 	 * <li>Order by {@linkplain #getDirection() direction}, nulls first</li>
 	 * <li>Order by {@linkplain #getUri() URI}</li>
@@ -115,24 +114,13 @@ final public class Style extends Resource<Style> implements Comparable<Style> {
 	 * base definitions:
 	 * </p>
 	 * <ol>
-	 * <li><code>global.css</code> (no ie, no media)</li>
-	 * <li><code>global-print.css</code> (no ie, media="print")</li>
-	 * <li><code>global-ie.css</code> (ie="IE", no media)</li>
-	 * <li><code>global-ie-print.css</code> (ie="IE", media="print")</li>
+	 * <li><code>global.css</code> (no media)</li>
+	 * <li><code>global-print.css</code> (media="print")</li>
 	 * </ol>
 	 */
 	// TODO: This static COMPARATOR pattern for all classes that implement compareTo?
 	public static final Comparator<Style> COMPARATOR = (ss1, ss2) -> {
 		int diff;
-		// IE condition, nulls first
-		if(ss1.ie == null) {
-			if(ss2.ie != null) return -1;
-		} else {
-			if(ss2.ie == null) return 1;
-			diff = SmartComparator.ROOT.compare(ss1.ie, ss2.ie);
-			if(diff != 0) return diff;
-		}
-
 		// Media condition, nulls first
 		if(ss1.media == null) {
 			if(ss2.media != null) return -1;
@@ -177,20 +165,6 @@ final public class Style extends Resource<Style> implements Comparable<Style> {
 			return this;
 		}
 
-		/**
-		 * @deprecated  Conditional comments were for IE 5-9, which are all end-of-life.
-		 */
-		@Deprecated
-		private String ie;
-		/**
-		 * @deprecated  Conditional comments were for IE 5-9, which are all end-of-life.
-		 */
-		@Deprecated
-		public Builder ie(String ie) {
-			this.ie = ie;
-			return this;
-		}
-
 		private boolean disabled;
 		public Builder disabled(boolean disabled) {
 			this.disabled = disabled;
@@ -203,7 +177,6 @@ final public class Style extends Resource<Style> implements Comparable<Style> {
 				uri,
 				media,
 				direction,
-				ie,
 				disabled
 			);
 		}
@@ -219,51 +192,24 @@ final public class Style extends Resource<Style> implements Comparable<Style> {
 
 	private final Direction direction;
 
-	/**
-	 * @deprecated  Conditional comments were for IE 5-9, which are all end-of-life.
-	 */
-	@Deprecated
-	private final String ie;
-
 	private final boolean disabled;
 
 	/**
 	 * @param href       See {@link #getUri()}
 	 * @param media      See {@link #getMedia()}
 	 * @param direction  See {@link #getDirection()}
-	 * @param ie         See {@link #getIe()}
 	 * @param disabled   See {@link #isDisabled()}
-	 *
-	 * @deprecated  Conditional comments were for IE 5-9, which are all end-of-life.
 	 */
-	@Deprecated
 	public Style(
 		String href,
 		String media,
 		Direction direction,
-		String ie,
 		boolean disabled
 	) {
 		super(href);
 		this.media = Strings.trimNullIfEmpty(media);
 		this.direction = direction;
-		this.ie = Strings.trimNullIfEmpty(ie);
 		this.disabled = disabled;
-	}
-
-	/**
-	 * @param href       See {@link #getUri()}
-	 * @param media      See {@link #getMedia()}
-	 * @param direction  See {@link #getDirection()}
-	 * @param disabled   See {@link #isDisabled()}
-	 */
-	public Style(
-		String href,
-		String media,
-		Direction direction,
-		boolean disabled
-	) {
-		this(href, media, direction, null, disabled);
 	}
 
 	/**
@@ -277,12 +223,11 @@ final public class Style extends Resource<Style> implements Comparable<Style> {
 	 * @see  Resource#toString()
 	 * @see  #getMedia()
 	 * @see  #getDirection()
-	 * @see  #getIe()
 	 * @see  #isDisabled()
 	 */
 	@Override
 	public String toString() {
-		if(media == null && ie == null && !disabled) {
+		if(media == null && !disabled) {
 			return super.toString();
 		} else {
 			StringBuilder sb = new StringBuilder(super.toString());
@@ -295,11 +240,6 @@ final public class Style extends Resource<Style> implements Comparable<Style> {
 			if(direction != null) {
 				if(needComma) sb.append(", ");
 				sb.append("direction=").append(direction);
-				needComma = true;
-			}
-			if(ie != null) {
-				if(needComma) sb.append(", ");
-				sb.append("ie=\"").append(ie).append('"');
 				needComma = true;
 			}
 			if(disabled) {
@@ -319,8 +259,7 @@ final public class Style extends Resource<Style> implements Comparable<Style> {
 			disabled == other.disabled
 			&& direction == other.direction
 			&& Objects.equals(getUri(), other.getUri())
-			&& Objects.equals(media, other.media)
-			&& Objects.equals(ie, other.ie);
+			&& Objects.equals(media, other.media);
 	}
 
 	@Override
@@ -328,7 +267,6 @@ final public class Style extends Resource<Style> implements Comparable<Style> {
 		int hash = Objects.hashCode(getUri());
 		hash = hash * 31 + Objects.hashCode(media);
 		hash = hash * 31 + Objects.hashCode(direction);
-		hash = hash * 31 + Objects.hashCode(ie);
 		if(disabled) hash += 1;
 		return hash;
 	}
@@ -355,14 +293,6 @@ final public class Style extends Resource<Style> implements Comparable<Style> {
 	 */
 	public Direction getDirection() {
 		return direction;
-	}
-
-	/**
-	 * @deprecated  Conditional comments were for IE 5-9, which are all end-of-life.
-	 */
-	@Deprecated
-	public String getIe() {
-		return ie;
 	}
 
 	/**

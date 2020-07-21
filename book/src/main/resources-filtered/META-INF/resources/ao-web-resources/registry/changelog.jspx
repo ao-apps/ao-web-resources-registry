@@ -37,7 +37,7 @@ along with ao-web-resources-registry.  If not, see <http://www.gnu.org/licenses 
 		shortTitle="Changelog"
 		tocLevels="1"
 		datePublished="2020-03-01T00:33:22-0600"
-		dateModified="2020-03-26T20:12:02-05:00"
+		dateModified="2020-07-20T20:58:54-05:00"
 	>
 		<!-- The current snapshot, unreleased version -->
 		<c:set var="version" value="@{com.aoindustries:ao-web-resources-registry:pom.version}" />
@@ -52,7 +52,11 @@ along with ao-web-resources-registry.  If not, see <http://www.gnu.org/licenses 
 				groupId="@{project.groupId}"
 				artifactId="@{documented.artifactId}"
 				scmUrl="@{project.scm.url}"
-			/>
+			>
+				<ul>
+					<li>Removed support or IE 6, 7, 8, and 9 since all are end-of-life.</li>
+				</ul>
+			</changelog:release>
 		</c:if>
 
 		<changelog:release
