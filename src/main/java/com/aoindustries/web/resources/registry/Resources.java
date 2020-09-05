@@ -50,7 +50,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 
 	private static final Logger logger = Logger.getLogger(Resources.class.getName());
 
-	private static final String EOL = System.getProperty("line.separator");
+	private static final String EOL = System.lineSeparator();
 
 	private static class Before<R extends Resource<R> & Comparable<? super R>> implements Serializable {
 
