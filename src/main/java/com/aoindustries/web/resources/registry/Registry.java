@@ -1,6 +1,6 @@
 /*
  * ao-web-resources-registry - Central registry for web resource management.
- * Copyright (C) 2020  AO Industries, Inc.
+ * Copyright (C) 2020, 2021  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -39,9 +39,9 @@ public class Registry implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private final ConcurrentMap<Group.Name,Group> groups = new ConcurrentHashMap<>();
+	private final ConcurrentMap<Group.Name, Group> groups = new ConcurrentHashMap<>();
 
-	private final Map<Group.Name,Boolean> activations = new ConcurrentHashMap<>();
+	private final Map<Group.Name, Boolean> activations = new ConcurrentHashMap<>();
 
 	public Registry() {
 	}
@@ -52,7 +52,7 @@ public class Registry implements Serializable {
 	protected Registry(Registry other) {
 		groups.putAll(other.groups);
 		// Copy each
-		for(Map.Entry<Group.Name,Group> entry : groups.entrySet()) {
+		for(Map.Entry<Group.Name, Group> entry : groups.entrySet()) {
 			entry.setValue(entry.getValue().copy());
 		}
 		activations.putAll(other.activations);
@@ -71,9 +71,9 @@ public class Registry implements Serializable {
 	/* TODO: Is full registry union still used?  Or is it just group unions?
 	protected Registry(Collection<? extends Registry> others) {
 		// Find all groups
-		Map<Group.Name,List<Group>> allGroups = new HashMap<>();
+		Map<Group.Name, List<Group>> allGroups = new HashMap<>();
 		for(Registry other : others) {
-			for(Map.Entry<Group.Name,Group> entry : other.groups.entrySet()) {
+			for(Map.Entry<Group.Name, Group> entry : other.groups.entrySet()) {
 				Group.Name name = entry.getKey();
 				Group group = entry.getValue();
 				List<Group> groupsForName = allGroups.get(name);
@@ -85,7 +85,7 @@ public class Registry implements Serializable {
 			}
 		}
 		// Union all groups
-		for(Map.Entry<String,List<Group>> entry : allGroups.entrySet()) {
+		for(Map.Entry<String, List<Group>> entry : allGroups.entrySet()) {
 			groups.put(
 				entry.getKey(),
 				Group.union(entry.getValue())
@@ -175,7 +175,7 @@ public class Registry implements Serializable {
 	 * (see {@link ConcurrentHashMap}).
 	 * </p>
 	 */
-	public Map<Group.Name,Boolean> getActivations() {
+	public Map<Group.Name, Boolean> getActivations() {
 		return Collections.unmodifiableMap(activations);
 	}
 

@@ -1,6 +1,6 @@
 /*
  * ao-web-resources-registry - Central registry for web resource management.
- * Copyright (C) 2020  AO Industries, Inc.
+ * Copyright (C) 2020, 2021  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -139,18 +139,18 @@ public class Group implements Serializable {
 
 		private static final long serialVersionUID = 1L;
 
-		private final SerializableFunction<? super Collection<? extends RS>,RS> unionizer;
+		private final SerializableFunction<? super Collection<? extends RS>, RS> unionizer;
 		private final Resources<R> resources;
 
 		private ResourcesEntry(
-			SerializableFunction<? super Collection<? extends RS>,RS> unionizer,
+			SerializableFunction<? super Collection<? extends RS>, RS> unionizer,
 			Resources<R> resources
 		) {
 			this.unionizer = unionizer;
 			this.resources = resources;
 		}
 
-		private ResourcesEntry<R,RS> copy() {
+		private ResourcesEntry<R, RS> copy() {
 			return new ResourcesEntry<>(unionizer, resources.copy());
 		}
 	}
@@ -161,7 +161,7 @@ public class Group implements Serializable {
 	 */
 	private final ConcurrentMap<
 		Class<? extends Resource<?>>,
-		ResourcesEntry<?,?>
+		ResourcesEntry<?, ?>
 	> resourcesByClass = new ConcurrentHashMap<>();
 
 	/**
@@ -183,7 +183,7 @@ public class Group implements Serializable {
 		if(
 			resourcesByClass.put(
 				Style.class,
-				new ResourcesEntry<Style,Styles>(
+				new ResourcesEntry<Style, Styles>(
 					Styles::union,
 					styles
 				)
@@ -193,7 +193,7 @@ public class Group implements Serializable {
 		if(
 			resourcesByClass.put(
 				Script.class,
-				new ResourcesEntry<Script,Scripts>(
+				new ResourcesEntry<Script, Scripts>(
 					Scripts::union,
 					scripts
 				)
@@ -210,7 +210,7 @@ public class Group implements Serializable {
 		for(
 			Map.Entry<
 				Class<? extends Resource<?>>,
-				ResourcesEntry<?,?>
+				ResourcesEntry<?, ?>
 			> entry : resourcesByClass.entrySet()
 		) {
 			entry.setValue(entry.getValue().copy());
@@ -238,17 +238,17 @@ public class Group implements Serializable {
 		// Find all resources
 		Map<
 			Class<? extends Resource<?>>,
-			List<ResourcesEntry<?,?>>
+			List<ResourcesEntry<?, ?>>
 		> allResources = new HashMap<>();
 		for(Group other : others) {
 			for(
 				Map.Entry<
 					Class<? extends Resource<?>>,
-					ResourcesEntry<?,?>
+					ResourcesEntry<?, ?>
 				> entry : other.resourcesByClass.entrySet()
 			) {
 				Class<? extends Resource<?>> clazz = entry.getKey();
-				List<ResourcesEntry<?,?>> resourcesForClass = allResources.get(clazz);
+				List<ResourcesEntry<?, ?>> resourcesForClass = allResources.get(clazz);
 				if(resourcesForClass == null) {
 					resourcesForClass = new ArrayList<>();
 					allResources.put(clazz, resourcesForClass);
@@ -260,14 +260,14 @@ public class Group implements Serializable {
 		for(
 			Map.Entry<
 				Class<? extends Resource<?>>,
-				List<ResourcesEntry<?,?>>
+				List<ResourcesEntry<?, ?>>
 			> entry : allResources.entrySet()
 		) {
 			Class<? extends Resource<?>> clazz = entry.getKey();
-			List<ResourcesEntry<?,?>> resourcesEntries = entry.getValue();
+			List<ResourcesEntry<?, ?>> resourcesEntries = entry.getValue();
 			List<Resources<?>> resourcesList = new ArrayList<>();
 			SerializableFunction unionizer = null;
-			for(ResourcesEntry<?,?> resourcesEntry : resourcesEntries) {
+			for(ResourcesEntry<?, ?> resourcesEntry : resourcesEntries) {
 				if(unionizer == null) unionizer = resourcesEntry.unionizer;
 				resourcesList.add(resourcesEntry.resources);
 			}
@@ -307,13 +307,13 @@ public class Group implements Serializable {
 	public <
 		R extends Resource<R> & Comparable<? super R>,
 		RS extends Resources<R>
-	> Resources<R> getResources(Class<R> clazz, SerializableFunction<? super Collection<? extends RS>,RS> unionizer) {
+	> Resources<R> getResources(Class<R> clazz, SerializableFunction<? super Collection<? extends RS>, RS> unionizer) {
 		@SuppressWarnings("unchecked")
-		ResourcesEntry<R,RS> entry = (ResourcesEntry)resourcesByClass.get(clazz);
+		ResourcesEntry<R, RS> entry = (ResourcesEntry)resourcesByClass.get(clazz);
 		if(entry == null) {
 			entry = new ResourcesEntry<>(unionizer, new Resources<>());
 			@SuppressWarnings("unchecked")
-			ResourcesEntry<R,RS> existing = (ResourcesEntry)resourcesByClass.putIfAbsent(clazz, (ResourcesEntry)entry);
+			ResourcesEntry<R, RS> existing = (ResourcesEntry)resourcesByClass.putIfAbsent(clazz, (ResourcesEntry)entry);
 			if(existing != null) entry = existing;
 		}
 		return entry.resources;
@@ -325,7 +325,7 @@ public class Group implements Serializable {
 	 * @see  Resources#isEmpty()
 	 */
 	public boolean isEmpty() {
-		for(ResourcesEntry<?,?> entry : resourcesByClass.values()) {
+		for(ResourcesEntry<?, ?> entry : resourcesByClass.values()) {
 			if(!entry.resources.isEmpty()) return false;
 		}
 		return true;

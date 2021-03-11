@@ -1,6 +1,6 @@
 /*
  * ao-web-resources-registry - Central registry for web resource management.
- * Copyright (C) 2020  AO Industries, Inc.
+ * Copyright (C) 2020, 2021  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -96,7 +96,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 	/**
 	 * Ordering map: <code>after -&gt; Set&lt;Before&gt;</code>.
 	 */
-	private final Map<R,Set<Before<R>>> ordering = new HashMap<>();
+	private final Map<R, Set<Before<R>>> ordering = new HashMap<>();
 
 	private Set<R> sorted;
 
@@ -111,7 +111,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 			resources.addAll(other.resources);
 			ordering.putAll(other.ordering);
 			// Copy each
-			for(Map.Entry<R,Set<Before<R>>> entry : ordering.entrySet()) {
+			for(Map.Entry<R, Set<Before<R>>> entry : ordering.entrySet()) {
 				entry.setValue(new HashSet<>(entry.getValue()));
 			}
 			sorted = other.sorted;
@@ -134,7 +134,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 			synchronized(other) {
 				if(logger.isLoggable(Level.FINER)) logger.finer("addAll: " + other.resources);
 				resources.addAll(other.resources);
-				for(Map.Entry<R,Set<Before<R>>> entry : other.ordering.entrySet()) {
+				for(Map.Entry<R, Set<Before<R>>> entry : other.ordering.entrySet()) {
 					R after = entry.getKey();
 					Set<Before<R>> befores = ordering.get(after);
 					if(befores == null) {
@@ -389,10 +389,10 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 	private Set<R> topologicalSort(List<R> list) {
 		assert Thread.holdsLock(this);
 		// Build a SymmetricGraph, while making sure all required are found
-		Map<R,Set<Edge<R>>> edgesTo = new HashMap<>();
-		Map<R,Set<Edge<R>>> edgesFrom = new HashMap<>();
+		Map<R, Set<Edge<R>>> edgesTo = new HashMap<>();
+		Map<R, Set<Edge<R>>> edgesFrom = new HashMap<>();
 		Set<R> vertices = new LinkedHashSet<>(list);
-		for(Map.Entry<R,Set<Before<R>>> entry : ordering.entrySet()) {
+		for(Map.Entry<R, Set<Before<R>>> entry : ordering.entrySet()) {
 			R from = entry.getKey();
 			for(Before<R> before : entry.getValue()) {
 				R to = before.before;
@@ -420,7 +420,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 				}
 			}
 		}
-		SymmetricGraph<R,Edge<R>,RuntimeException> graph = new SymmetricGraph<R,Edge<R>,RuntimeException>() {
+		SymmetricGraph<R, Edge<R>, RuntimeException> graph = new SymmetricGraph<R, Edge<R>, RuntimeException>() {
 			@Override
 			public Set<Edge<R>> getEdgesTo(R to) {
 				Set<Edge<R>> set = edgesTo.get(to);
