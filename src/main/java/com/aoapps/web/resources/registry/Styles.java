@@ -1,6 +1,6 @@
 /*
  * ao-web-resources-registry - Central registry for web resource management.
- * Copyright (C) 2020  AO Industries, Inc.
+ * Copyright (C) 2020, 2021  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -20,10 +20,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with ao-web-resources-registry.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.aoindustries.web.resources.registry;
+package com.aoapps.web.resources.registry;
 
-import com.aoindustries.lang.Iterables;
-import com.aoindustries.lang.NullArgumentException;
+import com.aoapps.lang.Iterables;
+import com.aoapps.lang.NullArgumentException;
 import java.util.Collection;
 
 /**

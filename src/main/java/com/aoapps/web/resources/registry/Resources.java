@@ -20,13 +20,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with ao-web-resources-registry.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.aoindustries.web.resources.registry;
+package com.aoapps.web.resources.registry;
 
-import com.aoindustries.collections.AoCollections;
-import com.aoindustries.lang.NullArgumentException;
-import com.aoindustries.util.graph.Edge;
-import com.aoindustries.util.graph.SymmetricGraph;
-import com.aoindustries.util.graph.TopologicalSorter;
+import com.aoapps.collections.AoCollections;
+import com.aoapps.hodgepodge.graph.Edge;
+import com.aoapps.hodgepodge.graph.SymmetricGraph;
+import com.aoapps.hodgepodge.graph.TopologicalSorter;
+import com.aoapps.lang.NullArgumentException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -449,7 +449,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 
 	/**
 	 * Gets the set of all resources of the given class, first with their
-	 * {@linkplain Resource#compareTo(com.aoindustries.web.resources.registry.Resource) natural ordering},
+	 * {@linkplain Resource#compareTo(com.aoapps.web.resources.registry.Resource) natural ordering},
 	 * then with a topological sort to manage ordering constraints;
 	 */
 	synchronized public Set<R> getSorted() {

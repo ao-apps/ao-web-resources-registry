@@ -20,10 +20,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with ao-web-resources-registry.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.aoindustries.web.resources.registry;
+package com.aoapps.web.resources.registry;
 
-import com.aoindustries.lang.Iterables;
-import com.aoindustries.lang.NullArgumentException;
+import com.aoapps.lang.Iterables;
+import com.aoapps.lang.NullArgumentException;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;

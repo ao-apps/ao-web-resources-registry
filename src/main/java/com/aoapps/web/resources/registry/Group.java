@@ -20,10 +20,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with ao-web-resources-registry.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.aoindustries.web.resources.registry;
+package com.aoapps.web.resources.registry;
 
-import com.aoindustries.lang.Strings;
-import com.aoindustries.util.function.SerializableFunction;
+import com.aoapps.lang.Strings;
+import com.aoapps.lang.function.SerializableFunction;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
@@ -167,14 +167,14 @@ public class Group implements Serializable {
 	/**
 	 * The partition for CSS styles.
 	 *
-	 * @see  #getResources(java.lang.Class, com.aoindustries.util.function.SerializableFunction)
+	 * @see  #getResources(java.lang.Class, com.aoapps.lang.function.SerializableFunction)
 	 */
 	public final Styles styles;
 
 	/**
 	 * The partition for scripts.
 	 *
-	 * @see  #getResources(java.lang.Class, com.aoindustries.util.function.SerializableFunction)
+	 * @see  #getResources(java.lang.Class, com.aoapps.lang.function.SerializableFunction)
 	 */
 	public final Scripts scripts;
 
