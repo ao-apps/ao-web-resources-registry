@@ -9,6 +9,12 @@
 
 [![Build](https://github.com/aoindustries/ao-web-resources-registry/workflows/Build/badge.svg?branch=master)](https://github.com/aoindustries/ao-web-resources-registry/actions?query=workflow%3ABuild)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.aoapps/ao-web-resources-registry/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.aoapps/ao-web-resources-registry)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?branch=master&project=com.aoapps%3Aao-web-resources-registry&metric=alert_status)](https://sonarcloud.io/dashboard?branch=master&id=com.aoapps%3Aao-web-resources-registry)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?branch=master&project=com.aoapps%3Aao-web-resources-registry&metric=ncloc)](https://sonarcloud.io/component_measures?branch=master&id=com.aoapps%3Aao-web-resources-registry&metric=ncloc)  
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?branch=master&project=com.aoapps%3Aao-web-resources-registry&metric=reliability_rating)](https://sonarcloud.io/component_measures?branch=master&id=com.aoapps%3Aao-web-resources-registry&metric=Reliability)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?branch=master&project=com.aoapps%3Aao-web-resources-registry&metric=security_rating)](https://sonarcloud.io/component_measures?branch=master&id=com.aoapps%3Aao-web-resources-registry&metric=Security)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?branch=master&project=com.aoapps%3Aao-web-resources-registry&metric=sqale_rating)](https://sonarcloud.io/component_measures?branch=master&id=com.aoapps%3Aao-web-resources-registry&metric=Maintainability)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?branch=master&project=com.aoapps%3Aao-web-resources-registry&metric=coverage)](https://sonarcloud.io/component_measures?branch=master&id=com.aoapps%3Aao-web-resources-registry&metric=Coverage)
 
 Central registry for web resource management.
 
