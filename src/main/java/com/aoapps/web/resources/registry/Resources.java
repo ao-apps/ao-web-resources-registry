@@ -153,7 +153,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 	 *
 	 * @return  {@code true} if the resource was added, or {@code false} if already exists and was not added
 	 */
-	synchronized public boolean add(R resource) {
+	public synchronized boolean add(R resource) {
 		if(resource == null) throw new NullArgumentException("resource");
 		boolean added = resources.add(resource);
 		if(added) sorted = null;
@@ -194,7 +194,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 	 *
 	 * @return  {@code true} if the resource was removed, or {@code false} if the resource was not found
 	 */
-	synchronized public boolean remove(R resource) {
+	public synchronized boolean remove(R resource) {
 		boolean removed = resources.remove(resource);
 		if(removed) sorted = null;
 		return removed;
@@ -234,7 +234,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 	 *
 	 * @return  {@code true} if the ordering was added, or {@code false} if already exists and was not added
 	 */
-	synchronized public boolean addOrdering(boolean required, R before, R after) {
+	public synchronized boolean addOrdering(boolean required, R before, R after) {
 		if(before == null) throw new NullArgumentException("before");
 		if(after == null) throw new NullArgumentException("after");
 		Set<Before<R>> set = ordering.get(after);
@@ -311,7 +311,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 	 *
 	 * @return  {@code true} if the ordering was removed, or {@code false} if the ordering was not found
 	 */
-	synchronized public boolean removeOrdering(boolean required, R before, R after) {
+	public synchronized boolean removeOrdering(boolean required, R before, R after) {
 		Set<Before<R>> set = ordering.get(after);
 		if(set != null) {
 			boolean removed = set.remove(new Before<>(before, required));
@@ -443,7 +443,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 	/**
 	 * Gets a snapshot copy of the current set of resources, in no particular order.
 	 */
-	synchronized public Set<R> getSnapshot() {
+	public synchronized Set<R> getSnapshot() {
 		return AoCollections.unmodifiableCopySet(resources);
 	}
 
@@ -452,7 +452,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 	 * {@linkplain Resource#compareTo(com.aoapps.web.resources.registry.Resource) natural ordering},
 	 * then with a topological sort to manage ordering constraints;
 	 */
-	synchronized public Set<R> getSorted() {
+	public synchronized Set<R> getSorted() {
 		Set<R> s = sorted;
 		if(s == null) {
 			// Natural sort
@@ -483,7 +483,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 	/**
 	 * Is this resources empty?
 	 */
-	synchronized public boolean isEmpty() {
+	public synchronized boolean isEmpty() {
 		return
 			resources.isEmpty()
 			&& ordering.isEmpty();

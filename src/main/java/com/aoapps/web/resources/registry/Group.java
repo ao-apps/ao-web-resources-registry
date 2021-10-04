@@ -44,7 +44,7 @@ import java.util.concurrent.ConcurrentMap;
 // TODO: When group becomes empty, remove from Registry
 public class Group implements Serializable {
 
-	final public static class Name implements Comparable<Name>, Serializable {
+	public static final class Name implements Comparable<Name>, Serializable {
 
 		/**
 		 * Validates a {@link Group} name.

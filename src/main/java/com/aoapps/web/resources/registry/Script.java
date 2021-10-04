@@ -48,7 +48,7 @@ import java.util.Objects;
  *
  * @author  AO Industries, Inc.
  */
-final public class Script extends Resource<Script> implements Comparable<Script> {
+public final class Script extends Resource<Script> implements Comparable<Script> {
 
 	/**
 	 * Scripts start with a default ordering that should minimize the number

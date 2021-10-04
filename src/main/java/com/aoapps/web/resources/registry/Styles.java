@@ -31,7 +31,7 @@ import java.util.Collection;
  *
  * @author  AO Industries, Inc.
  */
-final public class Styles extends Resources<Style> {
+public final class Styles extends Resources<Style> {
 
 	private static final long serialVersionUID = 1L;
 

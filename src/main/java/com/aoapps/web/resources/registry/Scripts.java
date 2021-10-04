@@ -31,7 +31,7 @@ import java.util.Collection;
  *
  * @author  AO Industries, Inc.
  */
-final public class Scripts extends Resources<Script> {
+public final class Scripts extends Resources<Script> {
 
 	private static final long serialVersionUID = 1L;
 

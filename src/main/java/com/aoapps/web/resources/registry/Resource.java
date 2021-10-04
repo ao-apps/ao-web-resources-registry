@@ -38,12 +38,12 @@ import java.io.Serializable;
  * @author  AO Industries, Inc.
  */
 // TODO: optional context relative? (adds request.contextPath when used)
-abstract public class Resource<
+public abstract class Resource<
 	// All concrete implementations of Resource must be comparable to themselves
 	R extends Resource<R> & Comparable<? super R>
 > implements Serializable {
 
-	abstract public static class Builder<R extends Resource<R> & Comparable<? super R>> {
+	public abstract static class Builder<R extends Resource<R> & Comparable<? super R>> {
 
 		protected Builder() {}
 
@@ -53,7 +53,7 @@ abstract public class Resource<
 			return this;
 		}
 
-		abstract public R build();
+		public abstract R build();
 	}
 
 	private static final long serialVersionUID = 1L;
@@ -82,13 +82,13 @@ abstract public class Resource<
 	 * all relevant attributes.
 	 */
 	@Override
-	abstract public boolean equals(Object obj);
+	public abstract boolean equals(Object obj);
 
 	/**
 	 * The hash key must be consistent with {@link #equals(java.lang.Object)}.
 	 */
 	@Override
-	abstract public int hashCode();
+	public abstract int hashCode();
 
 	/**
 	 * All concrete implementations of Resource must be comparable to themselves.
@@ -126,7 +126,7 @@ abstract public class Resource<
 	 * application type.
 	 * </p>
 	 */
-	final public String getUri() {
+	public final String getUri() {
 		return uri;
 	}
 }

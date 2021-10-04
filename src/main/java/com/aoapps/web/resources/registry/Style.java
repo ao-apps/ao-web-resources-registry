@@ -54,7 +54,7 @@ import java.util.Objects;
  *
  * @author  AO Industries, Inc.
  */
-final public class Style extends Resource<Style> implements Comparable<Style> {
+public final class Style extends Resource<Style> implements Comparable<Style> {
 
 	/**
 	 * The direction of a {@link Style}.
