@@ -65,7 +65,7 @@ public abstract class Resource<
 	/**
 	 * @param uri  See {@link #getUri()}
 	 */
-	public Resource(String uri) {
+	protected Resource(String uri) {
 		this.uri = Strings.nullIfEmpty(uri);
 	}
 
