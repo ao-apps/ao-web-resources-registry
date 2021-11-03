@@ -117,7 +117,7 @@ public class Group implements Serializable {
 		public int hashCode() {
 			return name.hashCode();
 		}
-		
+
 		@Override
 		public int compareTo(Name other) {
 			return this==other ? 0 : name.compareTo(other.name);
@@ -183,6 +183,7 @@ public class Group implements Serializable {
 		if(
 			resourcesByClass.put(
 				Style.class,
+				// Java 9: new ResourcesEntry<>
 				new ResourcesEntry<Style, Styles>(
 					Styles::union,
 					styles
@@ -193,6 +194,7 @@ public class Group implements Serializable {
 		if(
 			resourcesByClass.put(
 				Script.class,
+				// Java 9: new ResourcesEntry<>
 				new ResourcesEntry<Script, Scripts>(
 					Scripts::union,
 					scripts

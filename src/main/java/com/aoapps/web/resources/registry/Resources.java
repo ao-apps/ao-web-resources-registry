@@ -420,6 +420,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 				}
 			}
 		}
+		// Java 9: new SymmetricGraph<>
 		SymmetricGraph<R, Edge<R>, RuntimeException> graph = new SymmetricGraph<R, Edge<R>, RuntimeException>() {
 			@Override
 			public Set<Edge<R>> getEdgesTo(R to) {
