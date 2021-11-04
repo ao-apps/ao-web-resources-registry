@@ -315,7 +315,7 @@ public class Group implements Serializable {
 		if(entry == null) {
 			entry = new ResourcesEntry<>(unionizer, new Resources<>());
 			@SuppressWarnings("unchecked")
-			ResourcesEntry<R, RS> existing = (ResourcesEntry)resourcesByClass.putIfAbsent(clazz, (ResourcesEntry)entry);
+			ResourcesEntry<R, RS> existing = (ResourcesEntry)resourcesByClass.putIfAbsent(clazz, entry);
 			if(existing != null) entry = existing;
 		}
 		return entry.resources;
