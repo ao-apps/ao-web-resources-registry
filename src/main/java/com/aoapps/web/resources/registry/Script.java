@@ -81,7 +81,9 @@ public final class Script extends Resource<Script> implements Comparable<Script>
 
 	public static class Builder extends Resource.Builder<Script> {
 
-		protected Builder() {}
+		protected Builder() {
+			// Do nothing
+		}
 
 		@Override
 		public Builder uri(String src) {

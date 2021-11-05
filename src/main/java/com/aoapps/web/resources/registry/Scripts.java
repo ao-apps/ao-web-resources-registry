@@ -35,7 +35,9 @@ public final class Scripts extends Resources<Script> {
 
 	private static final long serialVersionUID = 1L;
 
-	Scripts() {}
+	Scripts() {
+		// Do nothing
+	}
 
 	/**
 	 * Copy constructor.

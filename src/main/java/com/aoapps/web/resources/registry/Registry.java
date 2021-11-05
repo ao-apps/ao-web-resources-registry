@@ -44,6 +44,7 @@ public class Registry implements Serializable {
 	private final Map<Group.Name, Boolean> activations = new ConcurrentHashMap<>();
 
 	public Registry() {
+		// Do nothing
 	}
 
 	/**

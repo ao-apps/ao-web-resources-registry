@@ -145,7 +145,9 @@ public final class Style extends Resource<Style> implements Comparable<Style> {
 
 	public static class Builder extends Resource.Builder<Style> {
 
-		protected Builder() {}
+		protected Builder() {
+			// Do nothing
+		}
 
 		@Override
 		public Builder uri(String href) {

@@ -45,7 +45,9 @@ public abstract class Resource<
 
 	public abstract static class Builder<R extends Resource<R> & Comparable<? super R>> {
 
-		protected Builder() {}
+		protected Builder() {
+			// Do nothing
+		}
 
 		protected String uri;
 		public Builder<R> uri(String uri) {

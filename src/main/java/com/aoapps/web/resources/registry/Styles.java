@@ -35,7 +35,9 @@ public final class Styles extends Resources<Style> {
 
 	private static final long serialVersionUID = 1L;
 
-	Styles() {}
+	Styles() {
+		// Do nothing
+	}
 
 	/**
 	 * Copy constructor.

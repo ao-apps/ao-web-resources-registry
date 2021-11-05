@@ -101,6 +101,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
 	private Set<R> sorted;
 
 	protected Resources() {
+		// Do nothing
 	}
 
 	/**
