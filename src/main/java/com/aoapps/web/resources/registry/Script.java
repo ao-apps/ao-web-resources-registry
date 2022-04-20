@@ -51,184 +51,198 @@ import java.util.Objects;
  */
 public final class Script extends Resource<Script> implements Comparable<Script> {
 
-	/**
-	 * Scripts start with a default ordering that should minimize the number
-	 * of explicit ordering declarations:
-	 * <ol>
-	 * <li>Order by {@linkplain #isAsync() async}, true first</li>
-	 * <li>Order by {@linkplain #isDefer() defer}, true first</li>
-	 * <li>Order by {@linkplain #getUri() URI}</li>
-	 * </ol>
-	 * <p>
-	 * Note: The {@linkplain #getCrossorigin() crossorigin policy} is not used in ordering.
-	 * </p>
-	 * <p>
-	 * All string comparisons are performed via {@link SmartComparator#ROOT}.
-	 * </p>
-	 */
-	public static final Comparator<Script> COMPARATOR = (ss1, ss2) -> {
-		int diff;
-		// async, true first
-		diff = -Boolean.compare(ss1.async, ss2.async);
-		if(diff != 0) return diff;
+  /**
+   * Scripts start with a default ordering that should minimize the number
+   * of explicit ordering declarations:
+   * <ol>
+   * <li>Order by {@linkplain #isAsync() async}, true first</li>
+   * <li>Order by {@linkplain #isDefer() defer}, true first</li>
+   * <li>Order by {@linkplain #getUri() URI}</li>
+   * </ol>
+   * <p>
+   * Note: The {@linkplain #getCrossorigin() crossorigin policy} is not used in ordering.
+   * </p>
+   * <p>
+   * All string comparisons are performed via {@link SmartComparator#ROOT}.
+   * </p>
+   */
+  public static final Comparator<Script> COMPARATOR = (ss1, ss2) -> {
+    int diff;
+    // async, true first
+    diff = -Boolean.compare(ss1.async, ss2.async);
+    if (diff != 0) {
+      return diff;
+    }
 
-		// defer, true first
-		diff = -Boolean.compare(ss1.defer, ss2.defer);
-		if(diff != 0) return diff;
+    // defer, true first
+    diff = -Boolean.compare(ss1.defer, ss2.defer);
+    if (diff != 0) {
+      return diff;
+    }
 
-		// URI (TODO: non-nulls first for inline)
-		return SmartComparator.ROOT.compare(ss1.getUri(), ss2.getUri());
-	};
+    // URI (TODO: non-nulls first for inline)
+    return SmartComparator.ROOT.compare(ss1.getUri(), ss2.getUri());
+  };
 
-	public static class Builder extends Resource.Builder<Script> {
+  public static class Builder extends Resource.Builder<Script> {
 
-		protected Builder() {
-			// Do nothing
-		}
+    protected Builder() {
+      // Do nothing
+    }
 
-		@Override
-		public Builder uri(String src) {
-			super.uri(src);
-			return this;
-		}
+    @Override
+    public Builder uri(String src) {
+      super.uri(src);
+      return this;
+    }
 
-		private boolean async;
-		public Builder async(boolean async) {
-			this.async = async;
-			return this;
-		}
+    private boolean async;
+    public Builder async(boolean async) {
+      this.async = async;
+      return this;
+    }
 
-		private boolean defer;
-		public Builder defer(boolean defer) {
-			this.defer = defer;
-			return this;
-		}
+    private boolean defer;
+    public Builder defer(boolean defer) {
+      this.defer = defer;
+      return this;
+    }
 
-		private String crossorigin;
-		public Builder crossorigin(String crossorigin) {
-			this.crossorigin = crossorigin;
-			return this;
-		}
+    private String crossorigin;
+    public Builder crossorigin(String crossorigin) {
+      this.crossorigin = crossorigin;
+      return this;
+    }
 
-		@Override
-		public Script build() {
-			return new Script(
-				uri,
-				async,
-				defer,
-				crossorigin
-			);
-		}
-	}
+    @Override
+    public Script build() {
+      return new Script(
+        uri,
+        async,
+        defer,
+        crossorigin
+      );
+    }
+  }
 
-	public static Builder builder() {
-		return new Builder();
-	}
+  public static Builder builder() {
+    return new Builder();
+  }
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	private final boolean async;
-	private final boolean defer;
-	private final String crossorigin;
+  private final boolean async;
+  private final boolean defer;
+  private final String crossorigin;
 
-	/**
-	 * @param src          See {@link #getUri()}
-	 * @param async        See {@link #isAsync()}
-	 * @param defer        See {@link #isDefer()}
-	 * @param crossorigin  See {@link #getCrossorigin()}
-	 */
-	public Script(String src, boolean async, boolean defer, String crossorigin) {
-		super(src);
-		this.async = async;
-		this.defer = defer;
-		this.crossorigin = Strings.trimNullIfEmpty(crossorigin);
-	}
+  /**
+   * @param src          See {@link #getUri()}
+   * @param async        See {@link #isAsync()}
+   * @param defer        See {@link #isDefer()}
+   * @param crossorigin  See {@link #getCrossorigin()}
+   */
+  public Script(String src, boolean async, boolean defer, String crossorigin) {
+    super(src);
+    this.async = async;
+    this.defer = defer;
+    this.crossorigin = Strings.trimNullIfEmpty(crossorigin);
+  }
 
-	/**
-	 * @param src  See {@link #getUri()}
-	 */
-	public Script(String src) {
-		this(src, false, false, null);
-	}
+  /**
+   * @param src  See {@link #getUri()}
+   */
+  public Script(String src) {
+    this(src, false, false, null);
+  }
 
-	/**
-	 * @see  Resource#toString()
-	 * @see  #isAsync()
-	 * @see  #isDefer()
-	 * @see  #getCrossorigin()
-	 */
-	@Override
-	public String toString() {
-		if(!async && !defer && crossorigin == null) {
-			return super.toString();
-		} else {
-			StringBuilder sb = new StringBuilder(super.toString());
-			sb.append('[');
-			boolean needComma = false;
-			if(async) {
-				sb.append("async");
-				needComma = true;
-			}
-			if(defer) {
-				if(needComma) sb.append(", ");
-				sb.append("defer");
-				needComma = true;
-			}
-			if(crossorigin != null) {
-				if(needComma) sb.append(", ");
-				sb.append("crossorigin=\"").append(crossorigin).append('"');
-			}
-			sb.append(']');
-			return sb.toString();
-		}
-	}
+  /**
+   * @see  Resource#toString()
+   * @see  #isAsync()
+   * @see  #isDefer()
+   * @see  #getCrossorigin()
+   */
+  @Override
+  public String toString() {
+    if (!async && !defer && crossorigin == null) {
+      return super.toString();
+    } else {
+      StringBuilder sb = new StringBuilder(super.toString());
+      sb.append('[');
+      boolean needComma = false;
+      if (async) {
+        sb.append("async");
+        needComma = true;
+      }
+      if (defer) {
+        if (needComma) {
+          sb.append(", ");
+        }
+        sb.append("defer");
+        needComma = true;
+      }
+      if (crossorigin != null) {
+        if (needComma) {
+          sb.append(", ");
+        }
+        sb.append("crossorigin=\"").append(crossorigin).append('"');
+      }
+      sb.append(']');
+      return sb.toString();
+    }
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if(!(obj instanceof Script)) return false;
-		Script other = (Script)obj;
-		return
-			async == other.async
-			&& defer == other.defer
-			&& Objects.equals(getUri(), other.getUri())
-			&& Objects.equals(crossorigin, other.crossorigin);
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof Script)) {
+      return false;
+    }
+    Script other = (Script)obj;
+    return
+      async == other.async
+      && defer == other.defer
+      && Objects.equals(getUri(), other.getUri())
+      && Objects.equals(crossorigin, other.crossorigin);
+  }
 
-	@Override
-	public int hashCode() {
-		int hash = Objects.hashCode(getUri());
-		hash = hash * 31 + Objects.hashCode(crossorigin);
-		if(async) hash += 1;
-		if(defer) hash += 2;
-		return hash;
-	}
+  @Override
+  public int hashCode() {
+    int hash = Objects.hashCode(getUri());
+    hash = hash * 31 + Objects.hashCode(crossorigin);
+    if (async) {
+      hash += 1;
+    }
+    if (defer) {
+      hash += 2;
+    }
+    return hash;
+  }
 
-	/**
-	 * @see  #COMPARATOR
-	 */
-	@Override
-	public int compareTo(Script o) {
-		return COMPARATOR.compare(this, o);
-	}
+  /**
+   * @see  #COMPARATOR
+   */
+  @Override
+  public int compareTo(Script o) {
+    return COMPARATOR.compare(this, o);
+  }
 
-	/**
-	 * Is this script asynchronous?
-	 */
-	public boolean isAsync() {
-		return async;
-	}
+  /**
+   * Is this script asynchronous?
+   */
+  public boolean isAsync() {
+    return async;
+  }
 
-	/**
-	 * Is this script deferred?
-	 */
-	public boolean isDefer() {
-		return defer;
-	}
+  /**
+   * Is this script deferred?
+   */
+  public boolean isDefer() {
+    return defer;
+  }
 
-	/**
-	 * Gets the optional crossorigin policy.
-	 */
-	public String getCrossorigin() {
-		return crossorigin;
-	}
+  /**
+   * Gets the optional crossorigin policy.
+   */
+  public String getCrossorigin() {
+    return crossorigin;
+  }
 }

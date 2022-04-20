@@ -57,251 +57,271 @@ import java.util.Objects;
  */
 public final class Style extends Resource<Style> implements Comparable<Style> {
 
-	/**
-	 * The direction of a {@link Style}.
-	 *
-	 * @author  AO Industries, Inc.
-	 */
-	public enum Direction {
+  /**
+   * The direction of a {@link Style}.
+   *
+   * @author  AO Industries, Inc.
+   */
+  public enum Direction {
 
-		/**
-		 * Left-to-right.
-		 */
-		LTR,
+    /**
+     * Left-to-right.
+     */
+    LTR,
 
-		/**
-		 * Right-to-left.
-		 */
-		RTL;
+    /**
+     * Right-to-left.
+     */
+    RTL;
 
-		/**
-		 * Gets the expected direction for the given locale.
-		 *
-		 * @see  Locales#isRightToLeft(java.util.Locale)
-		 */
-		public static Direction getDirection(Locale locale) {
-			return Locales.isRightToLeft(locale) ? RTL : LTR;
-		}
+    /**
+     * Gets the expected direction for the given locale.
+     *
+     * @see  Locales#isRightToLeft(java.util.Locale)
+     */
+    public static Direction getDirection(Locale locale) {
+      return Locales.isRightToLeft(locale) ? RTL : LTR;
+    }
 
-		/**
-		 * Gets the expected direction for the given language.
-		 *
-		 * @see  Locales#parseLocale(java.lang.String)
-		 * @see  #getDirection(java.util.Locale)
-		 */
-		public static Direction getDirection(String language) {
-			return getDirection(Locales.parseLocale(language));
-		}
-	}
+    /**
+     * Gets the expected direction for the given language.
+     *
+     * @see  Locales#parseLocale(java.lang.String)
+     * @see  #getDirection(java.util.Locale)
+     */
+    public static Direction getDirection(String language) {
+      return getDirection(Locales.parseLocale(language));
+    }
+  }
 
-	/**
-	 * Styles start with a default ordering that should minimize the number
-	 * of explicit ordering declarations:
-	 * TODO: Review that this is the best default ordering.
-	 * <ol>
-	 * <li>Order by {@linkplain #getMedia() media condition}, nulls first</li>
-	 * <li>Order by {@linkplain #getDirection() direction}, nulls first</li>
-	 * <li>Order by {@linkplain #getUri() URI}</li>
-	 * </ol>
-	 * <p>
-	 * Note: The {@linkplain #isDisabled() disabled flag} is not used in ordering.
-	 * </p>
-	 * <p>
-	 * All string comparisons are performed via {@link SmartComparator#ROOT}.
-	 * </p>
-	 * <p>
-	 * As an example of this ordering, consider the following order would be the
-	 * default, which we expect will often match the way CSS styles override
-	 * base definitions:
-	 * </p>
-	 * <ol>
-	 * <li><code>global.css</code> (no media)</li>
-	 * <li><code>global-print.css</code> (media="print")</li>
-	 * </ol>
-	 */
-	// TODO: This static COMPARATOR pattern for all classes that implement compareTo?
-	public static final Comparator<Style> COMPARATOR = (ss1, ss2) -> {
-		int diff;
-		// Media condition, nulls first
-		if(ss1.media == null) {
-			if(ss2.media != null) return -1;
-		} else {
-			if(ss2.media == null) return 1;
-			diff = SmartComparator.ROOT.compare(ss1.media, ss2.media);
-			if(diff != 0) return diff;
-		}
+  /**
+   * Styles start with a default ordering that should minimize the number
+   * of explicit ordering declarations:
+   * TODO: Review that this is the best default ordering.
+   * <ol>
+   * <li>Order by {@linkplain #getMedia() media condition}, nulls first</li>
+   * <li>Order by {@linkplain #getDirection() direction}, nulls first</li>
+   * <li>Order by {@linkplain #getUri() URI}</li>
+   * </ol>
+   * <p>
+   * Note: The {@linkplain #isDisabled() disabled flag} is not used in ordering.
+   * </p>
+   * <p>
+   * All string comparisons are performed via {@link SmartComparator#ROOT}.
+   * </p>
+   * <p>
+   * As an example of this ordering, consider the following order would be the
+   * default, which we expect will often match the way CSS styles override
+   * base definitions:
+   * </p>
+   * <ol>
+   * <li><code>global.css</code> (no media)</li>
+   * <li><code>global-print.css</code> (media="print")</li>
+   * </ol>
+   */
+  // TODO: This static COMPARATOR pattern for all classes that implement compareTo?
+  public static final Comparator<Style> COMPARATOR = (ss1, ss2) -> {
+    int diff;
+    // Media condition, nulls first
+    if (ss1.media == null) {
+      if (ss2.media != null) {
+        return -1;
+      }
+    } else {
+      if (ss2.media == null) {
+        return 1;
+      }
+      diff = SmartComparator.ROOT.compare(ss1.media, ss2.media);
+      if (diff != 0) {
+        return diff;
+      }
+    }
 
-		// Direction, nulls first
-		if(ss1.direction == null) {
-			if(ss2.direction != null) return -1;
-		} else {
-			if(ss2.direction == null) return 1;
-			diff = ss1.direction.compareTo(ss2.direction);
-			if(diff != 0) return diff;
-		}
+    // Direction, nulls first
+    if (ss1.direction == null) {
+      if (ss2.direction != null) {
+        return -1;
+      }
+    } else {
+      if (ss2.direction == null) {
+        return 1;
+      }
+      diff = ss1.direction.compareTo(ss2.direction);
+      if (diff != 0) {
+        return diff;
+      }
+    }
 
-		// URI (TODO: non-nulls first for inline)
-		return SmartComparator.ROOT.compare(ss1.getUri(), ss2.getUri());
-	};
+    // URI (TODO: non-nulls first for inline)
+    return SmartComparator.ROOT.compare(ss1.getUri(), ss2.getUri());
+  };
 
-	public static class Builder extends Resource.Builder<Style> {
+  public static class Builder extends Resource.Builder<Style> {
 
-		protected Builder() {
-			// Do nothing
-		}
+    protected Builder() {
+      // Do nothing
+    }
 
-		@Override
-		public Builder uri(String href) {
-			super.uri(href);
-			return this;
-		}
+    @Override
+    public Builder uri(String href) {
+      super.uri(href);
+      return this;
+    }
 
-		private String media;
-		public Builder media(String media) {
-			this.media = media;
-			return this;
-		}
+    private String media;
+    public Builder media(String media) {
+      this.media = media;
+      return this;
+    }
 
-		private Direction direction;
-		public Builder direction(Direction direction) {
-			this.direction = direction;
-			return this;
-		}
+    private Direction direction;
+    public Builder direction(Direction direction) {
+      this.direction = direction;
+      return this;
+    }
 
-		private boolean disabled;
-		public Builder disabled(boolean disabled) {
-			this.disabled = disabled;
-			return this;
-		}
+    private boolean disabled;
+    public Builder disabled(boolean disabled) {
+      this.disabled = disabled;
+      return this;
+    }
 
-		@Override
-		public Style build() {
-			return new Style(
-				uri,
-				media,
-				direction,
-				disabled
-			);
-		}
-	}
+    @Override
+    public Style build() {
+      return new Style(
+        uri,
+        media,
+        direction,
+        disabled
+      );
+    }
+  }
 
-	public static Builder builder() {
-		return new Builder();
-	}
+  public static Builder builder() {
+    return new Builder();
+  }
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	private final String media;
+  private final String media;
 
-	private final Direction direction;
+  private final Direction direction;
 
-	private final boolean disabled;
+  private final boolean disabled;
 
-	/**
-	 * @param href       See {@link #getUri()}
-	 * @param media      See {@link #getMedia()}
-	 * @param direction  See {@link #getDirection()}
-	 * @param disabled   See {@link #isDisabled()}
-	 */
-	public Style(
-		String href,
-		String media,
-		Direction direction,
-		boolean disabled
-	) {
-		super(href);
-		this.media = Strings.trimNullIfEmpty(media);
-		this.direction = direction;
-		this.disabled = disabled;
-	}
+  /**
+   * @param href       See {@link #getUri()}
+   * @param media      See {@link #getMedia()}
+   * @param direction  See {@link #getDirection()}
+   * @param disabled   See {@link #isDisabled()}
+   */
+  public Style(
+    String href,
+    String media,
+    Direction direction,
+    boolean disabled
+  ) {
+    super(href);
+    this.media = Strings.trimNullIfEmpty(media);
+    this.direction = direction;
+    this.disabled = disabled;
+  }
 
-	/**
-	 * @param href  See {@link #getUri()}
-	 */
-	public Style(String href) {
-		this(href, null, null, false);
-	}
+  /**
+   * @param href  See {@link #getUri()}
+   */
+  public Style(String href) {
+    this(href, null, null, false);
+  }
 
-	/**
-	 * @see  Resource#toString()
-	 * @see  #getMedia()
-	 * @see  #getDirection()
-	 * @see  #isDisabled()
-	 */
-	@Override
-	public String toString() {
-		if(media == null && !disabled) {
-			return super.toString();
-		} else {
-			StringBuilder sb = new StringBuilder(super.toString());
-			sb.append('[');
-			boolean needComma = false;
-			if(media != null) {
-				sb.append("media=\"").append(media).append('"');
-				needComma = true;
-			}
-			if(direction != null) {
-				if(needComma) sb.append(", ");
-				sb.append("direction=").append(direction);
-				needComma = true;
-			}
-			if(disabled) {
-				if(needComma) sb.append(", ");
-				sb.append("disabled");
-			}
-			sb.append(']');
-			return sb.toString();
-		}
-	}
+  /**
+   * @see  Resource#toString()
+   * @see  #getMedia()
+   * @see  #getDirection()
+   * @see  #isDisabled()
+   */
+  @Override
+  public String toString() {
+    if (media == null && !disabled) {
+      return super.toString();
+    } else {
+      StringBuilder sb = new StringBuilder(super.toString());
+      sb.append('[');
+      boolean needComma = false;
+      if (media != null) {
+        sb.append("media=\"").append(media).append('"');
+        needComma = true;
+      }
+      if (direction != null) {
+        if (needComma) {
+          sb.append(", ");
+        }
+        sb.append("direction=").append(direction);
+        needComma = true;
+      }
+      if (disabled) {
+        if (needComma) {
+          sb.append(", ");
+        }
+        sb.append("disabled");
+      }
+      sb.append(']');
+      return sb.toString();
+    }
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if(!(obj instanceof Style)) return false;
-		Style other = (Style)obj;
-		return
-			disabled == other.disabled
-			&& direction == other.direction
-			&& Objects.equals(getUri(), other.getUri())
-			&& Objects.equals(media, other.media);
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof Style)) {
+      return false;
+    }
+    Style other = (Style)obj;
+    return
+      disabled == other.disabled
+      && direction == other.direction
+      && Objects.equals(getUri(), other.getUri())
+      && Objects.equals(media, other.media);
+  }
 
-	@Override
-	public int hashCode() {
-		int hash = Objects.hashCode(getUri());
-		hash = hash * 31 + Objects.hashCode(media);
-		hash = hash * 31 + Objects.hashCode(direction);
-		if(disabled) hash += 1;
-		return hash;
-	}
+  @Override
+  public int hashCode() {
+    int hash = Objects.hashCode(getUri());
+    hash = hash * 31 + Objects.hashCode(media);
+    hash = hash * 31 + Objects.hashCode(direction);
+    if (disabled) {
+      hash += 1;
+    }
+    return hash;
+  }
 
-	/**
-	 * @see  #COMPARATOR
-	 */
-	@Override
-	public int compareTo(Style o) {
-		return COMPARATOR.compare(this, o);
-	}
+  /**
+   * @see  #COMPARATOR
+   */
+  @Override
+  public int compareTo(Style o) {
+    return COMPARATOR.compare(this, o);
+  }
 
-	/**
-	 * Gets the optional media condition.
-	 */
-	public String getMedia() {
-		return media;
-	}
+  /**
+   * Gets the optional media condition.
+   */
+  public String getMedia() {
+    return media;
+  }
 
-	/**
-	 * Gets the direction for the style.
-	 * This is matched against the current response language/locale, when know,
-	 * to selectively include the style.
-	 */
-	public Direction getDirection() {
-		return direction;
-	}
+  /**
+   * Gets the direction for the style.
+   * This is matched against the current response language/locale, when know,
+   * to selectively include the style.
+   */
+  public Direction getDirection() {
+    return direction;
+  }
 
-	/**
-	 * Style may be disabled by default, then enabled via JavaScript.
-	 */
-	public boolean isDisabled() {
-		return disabled;
-	}
+  /**
+   * Style may be disabled by default, then enabled via JavaScript.
+   */
+  public boolean isDisabled() {
+    return disabled;
+  }
 }
