@@ -214,9 +214,9 @@ public final class Scripts extends Resources<Script> {
       throw new NullArgumentException("afterSrc");
     }
     return addOrdering(
-      required,
-      new Script(beforeSrc),
-      new Script(afterSrc)
+        required,
+        new Script(beforeSrc),
+        new Script(afterSrc)
     );
   }
 
@@ -309,9 +309,9 @@ public final class Scripts extends Resources<Script> {
   public boolean removeOrdering(boolean required, String beforeSrc, String afterSrc) {
     if (beforeSrc != null && afterSrc != null) {
       return removeOrdering(
-        required,
-        new Script(beforeSrc),
-        new Script(afterSrc)
+          required,
+          new Script(beforeSrc),
+          new Script(afterSrc)
       );
     } else {
       return false;

@@ -40,8 +40,8 @@ import java.io.Serializable;
  */
 // TODO: optional context relative? (adds request.contextPath when used)
 public abstract class Resource<
-  // All concrete implementations of Resource must be comparable to themselves
-  R extends Resource<R> & Comparable<? super R>
+    // All concrete implementations of Resource must be comparable to themselves
+    R extends Resource<R> & Comparable<? super R>
 > implements Serializable {
 
   public abstract static class Builder<R extends Resource<R> & Comparable<? super R>> {
@@ -51,6 +51,7 @@ public abstract class Resource<
     }
 
     protected String uri;
+
     public Builder<R> uri(String uri) {
       this.uri = uri;
       return this;

@@ -97,18 +97,21 @@ public final class Script extends Resource<Script> implements Comparable<Script>
     }
 
     private boolean async;
+
     public Builder async(boolean async) {
       this.async = async;
       return this;
     }
 
     private boolean defer;
+
     public Builder defer(boolean defer) {
       this.defer = defer;
       return this;
     }
 
     private String crossorigin;
+
     public Builder crossorigin(String crossorigin) {
       this.crossorigin = crossorigin;
       return this;
@@ -117,10 +120,10 @@ public final class Script extends Resource<Script> implements Comparable<Script>
     @Override
     public Script build() {
       return new Script(
-        uri,
-        async,
-        defer,
-        crossorigin
+          uri,
+          async,
+          defer,
+          crossorigin
       );
     }
   }
@@ -196,12 +199,12 @@ public final class Script extends Resource<Script> implements Comparable<Script>
     if (!(obj instanceof Script)) {
       return false;
     }
-    Script other = (Script)obj;
+    Script other = (Script) obj;
     return
-      async == other.async
-      && defer == other.defer
-      && Objects.equals(getUri(), other.getUri())
-      && Objects.equals(crossorigin, other.crossorigin);
+        async == other.async
+            && defer == other.defer
+            && Objects.equals(getUri(), other.getUri())
+            && Objects.equals(crossorigin, other.crossorigin);
   }
 
   @Override

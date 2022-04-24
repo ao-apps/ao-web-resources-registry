@@ -169,18 +169,21 @@ public final class Style extends Resource<Style> implements Comparable<Style> {
     }
 
     private String media;
+
     public Builder media(String media) {
       this.media = media;
       return this;
     }
 
     private Direction direction;
+
     public Builder direction(Direction direction) {
       this.direction = direction;
       return this;
     }
 
     private boolean disabled;
+
     public Builder disabled(boolean disabled) {
       this.disabled = disabled;
       return this;
@@ -189,10 +192,10 @@ public final class Style extends Resource<Style> implements Comparable<Style> {
     @Override
     public Style build() {
       return new Style(
-        uri,
-        media,
-        direction,
-        disabled
+          uri,
+          media,
+          direction,
+          disabled
       );
     }
   }
@@ -216,10 +219,10 @@ public final class Style extends Resource<Style> implements Comparable<Style> {
    * @param disabled   See {@link #isDisabled()}
    */
   public Style(
-    String href,
-    String media,
-    Direction direction,
-    boolean disabled
+      String href,
+      String media,
+      Direction direction,
+      boolean disabled
   ) {
     super(href);
     this.media = Strings.trimNullIfEmpty(media);
@@ -275,12 +278,12 @@ public final class Style extends Resource<Style> implements Comparable<Style> {
     if (!(obj instanceof Style)) {
       return false;
     }
-    Style other = (Style)obj;
+    Style other = (Style) obj;
     return
-      disabled == other.disabled
-      && direction == other.direction
-      && Objects.equals(getUri(), other.getUri())
-      && Objects.equals(media, other.media);
+        disabled == other.disabled
+            && direction == other.direction
+            && Objects.equals(getUri(), other.getUri())
+            && Objects.equals(media, other.media);
   }
 
   @Override

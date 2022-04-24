@@ -214,9 +214,9 @@ public final class Styles extends Resources<Style> {
       throw new NullArgumentException("afterHref");
     }
     return addOrdering(
-      required,
-      new Style(beforeHref),
-      new Style(afterHref)
+        required,
+        new Style(beforeHref),
+        new Style(afterHref)
     );
   }
 
@@ -309,9 +309,9 @@ public final class Styles extends Resources<Style> {
   public boolean removeOrdering(boolean required, String beforeHref, String afterHref) {
     if (beforeHref != null && afterHref != null) {
       return removeOrdering(
-        required,
-        new Style(beforeHref),
-        new Style(afterHref)
+          required,
+          new Style(beforeHref),
+          new Style(afterHref)
       );
     } else {
       return false;

@@ -71,8 +71,8 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
     @Override
     public String toString() {
       return
-        before.toString()
-        + (required ? " (required)" : " (optional)");
+          before.toString()
+              + (required ? " (required)" : " (optional)");
     }
 
     @Override
@@ -80,10 +80,10 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
       if (!(obj instanceof Before)) {
         return false;
       }
-      Before<?> other = (Before)obj;
+      Before<?> other = (Before) obj;
       return
-        required == other.required
-        && before.equals(other.before);
+          required == other.required
+              && before.equals(other.before);
     }
 
     @Override
@@ -439,9 +439,9 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
           fromSet.add(edge);
         } else if (before.required) {
           throw new IllegalStateException(
-            "Required resource not found:\n"
-            + "    before = " + to + "\n"
-            + "    after  = " + from
+              "Required resource not found:\n"
+                  + "    before = " + to + "\n"
+                  + "    after  = " + from
           );
         }
       }
@@ -512,7 +512,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
    */
   public synchronized boolean isEmpty() {
     return
-      resources.isEmpty()
-      && ordering.isEmpty();
+        resources.isEmpty()
+            && ordering.isEmpty();
   }
 }

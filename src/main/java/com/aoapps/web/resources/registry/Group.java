@@ -116,7 +116,7 @@ public class Group implements Serializable {
       if (!(obj instanceof Name)) {
         return false;
       }
-      Name other = (Name)obj;
+      Name other = (Name) obj;
       return name.equals(other.name);
     }
 
@@ -140,8 +140,8 @@ public class Group implements Serializable {
 
   // TODO: Why is "RS" required?
   private static class ResourcesEntry<
-    R extends Resource<R> & Comparable<? super R>,
-    RS extends Resources<R>
+      R extends Resource<R> & Comparable<? super R>,
+      RS extends Resources<R>
   > implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -150,8 +150,8 @@ public class Group implements Serializable {
     private final Resources<R> resources;
 
     private ResourcesEntry(
-      SerializableFunction<? super Collection<? extends RS>, RS> unionizer,
-      Resources<R> resources
+        SerializableFunction<? super Collection<? extends RS>, RS> unionizer,
+        Resources<R> resources
     ) {
       this.unionizer = unionizer;
       this.resources = resources;
@@ -167,8 +167,8 @@ public class Group implements Serializable {
    * so we maintain one sorted set per type.
    */
   private final ConcurrentMap<
-    Class<? extends Resource<?>>,
-    ResourcesEntry<?, ?>
+      Class<? extends Resource<?>>,
+      ResourcesEntry<?, ?>
   > resourcesByClass = new ConcurrentHashMap<>();
 
   /**
@@ -188,27 +188,27 @@ public class Group implements Serializable {
   public Group() {
     styles = new Styles();
     if (
-      resourcesByClass.put(
-        Style.class,
-        // Java 9: new ResourcesEntry<>
-        new ResourcesEntry<Style, Styles>(
-          Styles::union,
-          styles
-        )
-      ) != null
+        resourcesByClass.put(
+            Style.class,
+            // Java 9: new ResourcesEntry<>
+            new ResourcesEntry<Style, Styles>(
+                Styles::union,
+                styles
+            )
+        ) != null
     ) {
       throw new IllegalStateException();
     }
     scripts = new Scripts();
     if (
-      resourcesByClass.put(
-        Script.class,
-        // Java 9: new ResourcesEntry<>
-        new ResourcesEntry<Script, Scripts>(
-          Scripts::union,
-          scripts
-        )
-      ) != null
+        resourcesByClass.put(
+            Script.class,
+            // Java 9: new ResourcesEntry<>
+            new ResourcesEntry<Script, Scripts>(
+                Scripts::union,
+                scripts
+            )
+        ) != null
     ) {
       throw new IllegalStateException();
     }
@@ -229,12 +229,12 @@ public class Group implements Serializable {
       entry.setValue(entry.getValue().copy());
     }
     // Set styles
-    styles = (Styles)resourcesByClass.get(Style.class).resources;
+    styles = (Styles) resourcesByClass.get(Style.class).resources;
     if (styles == null) {
       throw new IllegalStateException();
     }
     // Set scripts
-    scripts = (Scripts)resourcesByClass.get(Script.class).resources;
+    scripts = (Scripts) resourcesByClass.get(Script.class).resources;
     if (scripts == null) {
       throw new IllegalStateException();
     }
@@ -254,8 +254,8 @@ public class Group implements Serializable {
   protected Group(Collection<? extends Group> others) {
     // Find all resources
     Map<
-      Class<? extends Resource<?>>,
-      List<ResourcesEntry<?, ?>>
+        Class<? extends Resource<?>>,
+        List<ResourcesEntry<?, ?>>
     > allResources = new HashMap<>();
     for (Group other : others) {
       for (
@@ -292,21 +292,21 @@ public class Group implements Serializable {
       }
       if (unionizer != null) {
         resourcesByClass.put(
-          clazz,
-          new ResourcesEntry(
-            unionizer,
-            (Resources)unionizer.apply(resourcesList)
-          )
+            clazz,
+            new ResourcesEntry(
+                unionizer,
+                (Resources) unionizer.apply(resourcesList)
+            )
         );
       }
     }
     // Set styles
-    styles = (Styles)resourcesByClass.get(Style.class).resources;
+    styles = (Styles) resourcesByClass.get(Style.class).resources;
     if (styles == null) {
       throw new IllegalStateException();
     }
     // Set scripts
-    scripts = (Scripts)resourcesByClass.get(Script.class).resources;
+    scripts = (Scripts) resourcesByClass.get(Script.class).resources;
     if (scripts == null) {
       throw new IllegalStateException();
     }
@@ -332,15 +332,15 @@ public class Group implements Serializable {
    * Gets the resources for a given type.
    */
   public <
-    R extends Resource<R> & Comparable<? super R>,
-    RS extends Resources<R>
+      R extends Resource<R> & Comparable<? super R>,
+      RS extends Resources<R>
   > Resources<R> getResources(Class<R> clazz, SerializableFunction<? super Collection<? extends RS>, RS> unionizer) {
     @SuppressWarnings("unchecked")
-    ResourcesEntry<R, RS> entry = (ResourcesEntry)resourcesByClass.get(clazz);
+    ResourcesEntry<R, RS> entry = (ResourcesEntry) resourcesByClass.get(clazz);
     if (entry == null) {
       entry = new ResourcesEntry<>(unionizer, new Resources<>());
       @SuppressWarnings("unchecked")
-      ResourcesEntry<R, RS> existing = (ResourcesEntry)resourcesByClass.putIfAbsent(clazz, entry);
+      ResourcesEntry<R, RS> existing = (ResourcesEntry) resourcesByClass.putIfAbsent(clazz, entry);
       if (existing != null) {
         entry = existing;
       }
