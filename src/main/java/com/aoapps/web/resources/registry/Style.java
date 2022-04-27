@@ -120,7 +120,7 @@ public final class Style extends Resource<Style> implements Comparable<Style> {
    * </ol>
    */
   // TODO: This static COMPARATOR pattern for all classes that implement compareTo?
-  public static final Comparator<Style> COMPARATOR = (ss1, ss2) -> {
+  public static final Comparator<Style> COMPARATOR = (Style ss1, Style ss2) -> {
     int diff;
     // Media condition, nulls first
     if (ss1.media == null) {

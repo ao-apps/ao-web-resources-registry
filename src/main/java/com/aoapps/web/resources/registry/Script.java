@@ -66,7 +66,7 @@ public final class Script extends Resource<Script> implements Comparable<Script>
    * All string comparisons are performed via {@link SmartComparator#ROOT}.
    * </p>
    */
-  public static final Comparator<Script> COMPARATOR = (ss1, ss2) -> {
+  public static final Comparator<Script> COMPARATOR = (Script ss1, Script ss2) -> {
     int diff;
     // async, true first
     diff = -Boolean.compare(ss1.async, ss2.async);
