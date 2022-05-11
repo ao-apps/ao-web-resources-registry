@@ -29,7 +29,7 @@ import java.util.Comparator;
 import java.util.Objects;
 
 /**
- * A script is identified by URI, but has other constraints, including:
+ * A script is identified by URI, but has other constraints.  Including:
  * <ol>
  * <li>an async attribute</li>
  * <li>an defer attribute</li>
@@ -53,7 +53,7 @@ public final class Script extends Resource<Script> implements Comparable<Script>
 
   /**
    * Scripts start with a default ordering that should minimize the number
-   * of explicit ordering declarations:
+   * of explicit ordering declarations.
    * <ol>
    * <li>Order by {@linkplain #isAsync() async}, true first</li>
    * <li>Order by {@linkplain #isDefer() defer}, true first</li>
@@ -84,6 +84,9 @@ public final class Script extends Resource<Script> implements Comparable<Script>
     return SmartComparator.ROOT.compare(ss1.getUri(), ss2.getUri());
   };
 
+  /**
+   * Builder pattern for {@link Script}.
+   */
   public static class Builder extends Resource.Builder<Script> {
 
     protected Builder() {
@@ -139,6 +142,8 @@ public final class Script extends Resource<Script> implements Comparable<Script>
   private final String crossorigin;
 
   /**
+   * Creates a new script.
+   *
    * @param src          See {@link #getUri()}
    * @param async        See {@link #isAsync()}
    * @param defer        See {@link #isDefer()}
@@ -152,6 +157,8 @@ public final class Script extends Resource<Script> implements Comparable<Script>
   }
 
   /**
+   * Creates a new script.
+   *
    * @param src  See {@link #getUri()}
    */
   public Script(String src) {
@@ -159,6 +166,8 @@ public final class Script extends Resource<Script> implements Comparable<Script>
   }
 
   /**
+   * {@inheritDoc}
+   *
    * @see  Resource#toString()
    * @see  #isAsync()
    * @see  #isDefer()
@@ -221,6 +230,8 @@ public final class Script extends Resource<Script> implements Comparable<Script>
   }
 
   /**
+   * {@inheritDoc}
+   *
    * @see  #COMPARATOR
    */
   @Override
@@ -229,14 +240,14 @@ public final class Script extends Resource<Script> implements Comparable<Script>
   }
 
   /**
-   * Is this script asynchronous?
+   * Gets this script is asynchronous.
    */
   public boolean isAsync() {
     return async;
   }
 
   /**
-   * Is this script deferred?
+   * Gets this script is deferred.
    */
   public boolean isDefer() {
     return defer;

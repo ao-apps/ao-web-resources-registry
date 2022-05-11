@@ -31,7 +31,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 /**
- * A CSS stylesheet is identified by URI, but has other constraints, including:
+ * A CSS stylesheet is identified by URI, but has other constraints.  Including:
  * <ol>
  * <li>an optional media condition</li>
  * <li>an optional Internet Explorer conditional comment (deprecated)</li>
@@ -156,6 +156,9 @@ public final class Style extends Resource<Style> implements Comparable<Style> {
     return SmartComparator.ROOT.compare(ss1.getUri(), ss2.getUri());
   };
 
+  /**
+   * Builder pattern for {@link Style}.
+   */
   public static class Builder extends Resource.Builder<Style> {
 
     protected Builder() {
@@ -213,6 +216,8 @@ public final class Style extends Resource<Style> implements Comparable<Style> {
   private final boolean disabled;
 
   /**
+   * Creates a new style.
+   *
    * @param href       See {@link #getUri()}
    * @param media      See {@link #getMedia()}
    * @param direction  See {@link #getDirection()}
@@ -231,6 +236,8 @@ public final class Style extends Resource<Style> implements Comparable<Style> {
   }
 
   /**
+   * Creates a new style.
+   *
    * @param href  See {@link #getUri()}
    */
   public Style(String href) {
@@ -238,6 +245,8 @@ public final class Style extends Resource<Style> implements Comparable<Style> {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * @see  Resource#toString()
    * @see  #getMedia()
    * @see  #getDirection()
@@ -298,6 +307,8 @@ public final class Style extends Resource<Style> implements Comparable<Style> {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * @see  #COMPARATOR
    */
   @Override

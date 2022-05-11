@@ -45,6 +45,9 @@ import java.util.concurrent.ConcurrentMap;
 // TODO: When group becomes empty, remove from Registry
 public class Group implements Serializable {
 
+  /**
+   * A valid group name.
+   */
   public static final class Name implements Comparable<Name>, Serializable {
 
     /**
@@ -141,23 +144,23 @@ public class Group implements Serializable {
   // TODO: Why is "RS" required?
   private static class ResourcesEntry<
       R extends Resource<R> & Comparable<? super R>,
-      RS extends Resources<R>
-  > implements Serializable {
+      S extends Resources<R>
+      > implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private final SerializableFunction<? super Collection<? extends RS>, RS> unionizer;
+    private final SerializableFunction<? super Collection<? extends S>, S> unionizer;
     private final Resources<R> resources;
 
     private ResourcesEntry(
-        SerializableFunction<? super Collection<? extends RS>, RS> unionizer,
+        SerializableFunction<? super Collection<? extends S>, S> unionizer,
         Resources<R> resources
     ) {
       this.unionizer = unionizer;
       this.resources = resources;
     }
 
-    private ResourcesEntry<R, RS> copy() {
+    private ResourcesEntry<R, S> copy() {
       return new ResourcesEntry<>(unionizer, resources.copy());
     }
   }
@@ -169,7 +172,7 @@ public class Group implements Serializable {
   private final ConcurrentMap<
       Class<? extends Resource<?>>,
       ResourcesEntry<?, ?>
-  > resourcesByClass = new ConcurrentHashMap<>();
+      > resourcesByClass = new ConcurrentHashMap<>();
 
   /**
    * The partition for CSS styles.
@@ -185,6 +188,9 @@ public class Group implements Serializable {
    */
   public final Scripts scripts;
 
+  /**
+   * Creates a new group.
+   */
   public Group() {
     styles = new Styles();
     if (
@@ -220,12 +226,7 @@ public class Group implements Serializable {
   protected Group(Group other) {
     resourcesByClass.putAll(other.resourcesByClass);
     // Copy each
-    for (
-      Map.Entry<
-        Class<? extends Resource<?>>,
-        ResourcesEntry<?, ?>
-      > entry : resourcesByClass.entrySet()
-    ) {
+    for (Map.Entry<Class<? extends Resource<?>>, ResourcesEntry<?, ?>> entry : resourcesByClass.entrySet()) {
       entry.setValue(entry.getValue().copy());
     }
     // Set styles
@@ -256,14 +257,9 @@ public class Group implements Serializable {
     Map<
         Class<? extends Resource<?>>,
         List<ResourcesEntry<?, ?>>
-    > allResources = new HashMap<>();
+        > allResources = new HashMap<>();
     for (Group other : others) {
-      for (
-        Map.Entry<
-          Class<? extends Resource<?>>,
-          ResourcesEntry<?, ?>
-        > entry : other.resourcesByClass.entrySet()
-      ) {
+      for (Map.Entry<Class<? extends Resource<?>>, ResourcesEntry<?, ?>> entry : other.resourcesByClass.entrySet()) {
         Class<? extends Resource<?>> clazz = entry.getKey();
         List<ResourcesEntry<?, ?>> resourcesForClass = allResources.get(clazz);
         if (resourcesForClass == null) {
@@ -274,12 +270,7 @@ public class Group implements Serializable {
       }
     }
     // Union all resources
-    for (
-      Map.Entry<
-        Class<? extends Resource<?>>,
-        List<ResourcesEntry<?, ?>>
-      > entry : allResources.entrySet()
-    ) {
+    for (Map.Entry<Class<? extends Resource<?>>, List<ResourcesEntry<?, ?>>> entry : allResources.entrySet()) {
       Class<? extends Resource<?>> clazz = entry.getKey();
       List<ResourcesEntry<?, ?>> resourcesEntries = entry.getValue();
       List<Resources<?>> resourcesList = new ArrayList<>();
@@ -333,14 +324,14 @@ public class Group implements Serializable {
    */
   public <
       R extends Resource<R> & Comparable<? super R>,
-      RS extends Resources<R>
-  > Resources<R> getResources(Class<R> clazz, SerializableFunction<? super Collection<? extends RS>, RS> unionizer) {
+      S extends Resources<R>
+      > Resources<R> getResources(Class<R> clazz, SerializableFunction<? super Collection<? extends S>, S> unionizer) {
     @SuppressWarnings("unchecked")
-    ResourcesEntry<R, RS> entry = (ResourcesEntry) resourcesByClass.get(clazz);
+    ResourcesEntry<R, S> entry = (ResourcesEntry) resourcesByClass.get(clazz);
     if (entry == null) {
       entry = new ResourcesEntry<>(unionizer, new Resources<>());
       @SuppressWarnings("unchecked")
-      ResourcesEntry<R, RS> existing = (ResourcesEntry) resourcesByClass.putIfAbsent(clazz, entry);
+      ResourcesEntry<R, S> existing = (ResourcesEntry) resourcesByClass.putIfAbsent(clazz, entry);
       if (existing != null) {
         entry = existing;
       }
@@ -349,7 +340,7 @@ public class Group implements Serializable {
   }
 
   /**
-   * Are all resources empty?
+   * Gets all resources are empty.
    *
    * @see  Resources#isEmpty()
    */

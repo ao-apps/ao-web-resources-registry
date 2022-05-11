@@ -67,55 +67,53 @@ public class Registry implements Serializable {
     return new Registry(this);
   }
 
-  /**
-   * Union constructor.
-   */
-  /* TODO: Is full registry union still used?  Or is it just group unions?
-  protected Registry(Collection<? extends Registry> others) {
-    // Find all groups
-    Map<Group.Name, List<Group>> allGroups = new HashMap<>();
-    for (Registry other : others) {
-      for (Map.Entry<Group.Name, Group> entry : other.groups.entrySet()) {
-        Group.Name name = entry.getKey();
-        Group group = entry.getValue();
-        List<Group> groupsForName = allGroups.get(name);
-        if (groupsForName == null) {
-          groupsForName = new ArrayList<>();
-          allGroups.put(name, groupsForName);
-        }
-        groupsForName.add(group);
-      }
-    }
-    // Union all groups
-    for (Map.Entry<String, List<Group>> entry : allGroups.entrySet()) {
-      groups.put(
-        entry.getKey(),
-        Group.union(entry.getValue())
-      );
-    }
-    // Union all activations
-    TODO
-  }
-   */
+  // TODO: Is full registry union still used?  Or is it just group unions?
+  //  /**
+  //   * Union constructor.
+  //   */
+  //  protected Registry(Collection<? extends Registry> others) {
+  //    // Find all groups
+  //    Map<Group.Name, List<Group>> allGroups = new HashMap<>();
+  //    for (Registry other : others) {
+  //      for (Map.Entry<Group.Name, Group> entry : other.groups.entrySet()) {
+  //        Group.Name name = entry.getKey();
+  //        Group group = entry.getValue();
+  //        List<Group> groupsForName = allGroups.get(name);
+  //        if (groupsForName == null) {
+  //          groupsForName = new ArrayList<>();
+  //          allGroups.put(name, groupsForName);
+  //        }
+  //        groupsForName.add(group);
+  //      }
+  //    }
+  //    // Union all groups
+  //    for (Map.Entry<String, List<Group>> entry : allGroups.entrySet()) {
+  //      groups.put(
+  //        entry.getKey(),
+  //        Group.union(entry.getValue())
+  //      );
+  //    }
+  //    // Union all activations
+  //    TODO
+  //  }
 
-  /**
-   * Gets a the union of multiple registries.
-   * This is a deep copy and may be manipulated without altering the source registries.
-   */
-  /* TODO: Is full registry union still used?  Or is it just group unions?
-  public static Registry union(Collection<? extends Registry> others) {
-    // Empty registry when null or empty
-    if (others == null || others.isEmpty()) {
-      return new Registry();
-    }
-    // Perform a copy when a single registry
-    if (others.size() == 1) {
-      return others.iterator().next().copy();
-    }
-    // Use union constructor
-    return new Registry(others);
-  }
-   */
+  // TODO: Is full registry union still used?  Or is it just group unions?
+  //  /**
+  //   * Gets a the union of multiple registries.
+  //   * This is a deep copy and may be manipulated without altering the source registries.
+  //   */
+  //  public static Registry union(Collection<? extends Registry> others) {
+  //    // Empty registry when null or empty
+  //    if (others == null || others.isEmpty()) {
+  //      return new Registry();
+  //    }
+  //    // Perform a copy when a single registry
+  //    if (others.size() == 1) {
+  //      return others.iterator().next().copy();
+  //    }
+  //    // Use union constructor
+  //    return new Registry(others);
+  //  }
 
   /**
    * Gets the group for a given name, optionally creating it if not already present.

@@ -42,8 +42,11 @@ import java.io.Serializable;
 public abstract class Resource<
     // All concrete implementations of Resource must be comparable to themselves
     R extends Resource<R> & Comparable<? super R>
-> implements Serializable {
+    > implements Serializable {
 
+  /**
+   * Base builder pattern.
+   */
   public abstract static class Builder<R extends Resource<R> & Comparable<? super R>> {
 
     protected Builder() {
@@ -67,6 +70,8 @@ public abstract class Resource<
   private final String uri;
 
   /**
+   * Creates a new resource.
+   *
    * @param uri  See {@link #getUri()}
    */
   protected Resource(String uri) {
@@ -74,6 +79,8 @@ public abstract class Resource<
   }
 
   /**
+   * {@inheritDoc}
+   *
    * @see  #getUri()
    */
   @Override

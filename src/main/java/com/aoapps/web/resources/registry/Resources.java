@@ -453,11 +453,13 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
         Set<Edge<R>> set = edgesTo.get(to);
         return (set == null) ? Collections.emptySet() : set;
       }
+
       @Override
       public Set<Edge<R>> getEdgesFrom(R from) {
         Set<Edge<R>> set = edgesFrom.get(from);
         return (set == null) ? Collections.emptySet() : set;
       }
+
       @Override
       public Set<R> getVertices() {
         return vertices;
@@ -477,7 +479,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
   /**
    * Gets the set of all resources of the given class, first with their
    * {@linkplain Resource#compareTo(com.aoapps.web.resources.registry.Resource) natural ordering},
-   * then with a topological sort to manage ordering constraints;
+   * then with a topological sort to manage ordering constraints.
    */
   public synchronized Set<R> getSorted() {
     Set<R> s = sorted;
@@ -508,7 +510,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
   }
 
   /**
-   * Is this resources empty?
+   * Gets these resources are empty.
    */
   public synchronized boolean isEmpty() {
     return
