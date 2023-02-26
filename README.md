@@ -22,7 +22,7 @@ Central registry for web resource management.
 * [Project Home](https://oss.aoapps.com/web-resources/registry/)
 * [Changelog](https://oss.aoapps.com/web-resources/registry/changelog)
 * [API Docs](https://oss.aoapps.com/web-resources/registry/apidocs/)
-* [Maven Central Repository](https://search.maven.org/artifact/com.aoapps/ao-web-resources-registry)
+* [Maven Central Repository](https://central.sonatype.com/search?namespace=com.aoapps&q=a%3Aao-web-resources-registry)
 * [GitHub](https://github.com/ao-apps/ao-web-resources-registry)
 
 ## Contact Us
