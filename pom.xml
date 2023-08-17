@@ -30,7 +30,7 @@ along with ao-web-resources-registry.  If not, see <https://www.gnu.org/licenses
   </parent>
 
   <groupId>com.aoapps</groupId><artifactId>ao-web-resources-registry</artifactId><version>0.4.0-POST-SNAPSHOT</version>
-  <packaging>bundle</packaging>
+  <packaging>jar</packaging>
 
   <properties>
     <module.name>com.aoapps.web.resources.registry</module.name>
