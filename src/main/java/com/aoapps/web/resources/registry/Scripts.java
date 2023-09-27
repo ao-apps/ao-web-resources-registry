@@ -1,6 +1,6 @@
 /*
  * ao-web-resources-registry - Central registry for web resource management.
- * Copyright (C) 2020, 2021, 2022  AO Industries, Inc.
+ * Copyright (C) 2020, 2021, 2022, 2023  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -179,24 +179,65 @@ public final class Scripts extends Resources<Script> {
     return this;
   }
 
+  /**
+   * {@inheritDoc}
+   * <p>
+   * The before script must have a position that is before or equal to the after script.
+   * </p>
+   */
+  @Override
+  protected void checkOrdering(Script before, Script after) {
+    super.checkOrdering(before, after);
+    Script.Position beforePos = before.getPosition();
+    Script.Position afterPos = after.getPosition();
+    if (beforePos.compareTo(afterPos) > 0) {
+      throw new IllegalArgumentException("before.position > after.position: " + before + " > " + after);
+    }
+  }
+
+
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Ordering may not violate {@link Script.Position}.
+   * </p>
+   */
   @Override
   public Scripts addOrdering(boolean required, Iterable<? extends Script> scripts) {
     super.addOrdering(required, scripts);
     return this;
   }
 
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Ordering may not violate {@link Script.Position}.
+   * </p>
+   */
   @Override
   public Scripts addOrdering(Iterable<? extends Script> scripts) {
     super.addOrdering(scripts);
     return this;
   }
 
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Ordering may not violate {@link Script.Position}.
+   * </p>
+   */
   @Override
   public Scripts addOrdering(boolean required, Script ... scripts) {
     super.addOrdering(required, scripts);
     return this;
   }
 
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Ordering may not violate {@link Script.Position}.
+   * </p>
+   */
   @Override
   public Scripts addOrdering(Script ... scripts) {
     super.addOrdering(scripts);
@@ -205,6 +246,9 @@ public final class Scripts extends Resources<Script> {
 
   /**
    * Adds an ordering constraint between two scripts.
+   * <p>
+   * Ordering may not violate {@link Script.Position}.
+   * </p>
    */
   public boolean addOrdering(boolean required, String beforeSrc, String afterSrc) {
     if (beforeSrc == null) {
@@ -222,6 +266,9 @@ public final class Scripts extends Resources<Script> {
 
   /**
    * Adds a required ordering constraint between two scripts.
+   * <p>
+   * Ordering may not violate {@link Script.Position}.
+   * </p>
    */
   public boolean addOrdering(String beforeSrc, String afterSrc) {
     return addOrdering(true, beforeSrc, afterSrc);
@@ -229,6 +276,9 @@ public final class Scripts extends Resources<Script> {
 
   /**
    * Adds ordering constraints between multiple scripts, if not already present.
+   * <p>
+   * Ordering may not violate {@link Script.Position}.
+   * </p>
    */
   public Scripts addOrdering(boolean required, Iterables.String<?> srcs) {
     if (srcs != null) {
@@ -248,6 +298,9 @@ public final class Scripts extends Resources<Script> {
 
   /**
    * Adds required ordering constraints between multiple scripts, if not already present.
+   * <p>
+   * Ordering may not violate {@link Script.Position}.
+   * </p>
    */
   public Scripts addOrdering(Iterables.String<?> srcs) {
     return addOrdering(true, srcs);
@@ -255,6 +308,9 @@ public final class Scripts extends Resources<Script> {
 
   /**
    * Adds ordering constraints between multiple scripts, if not already present.
+   * <p>
+   * Ordering may not violate {@link Script.Position}.
+   * </p>
    */
   public Scripts addOrdering(boolean required, String ... srcs) {
     if (srcs != null) {
@@ -274,6 +330,9 @@ public final class Scripts extends Resources<Script> {
 
   /**
    * Adds required ordering constraints between multiple scripts, if not already present.
+   * <p>
+   * Ordering may not violate {@link Script.Position}.
+   * </p>
    */
   public Scripts addOrdering(String ... srcs) {
     return addOrdering(true, srcs);

@@ -1,6 +1,6 @@
 /*
  * ao-web-resources-registry - Central registry for web resource management.
- * Copyright (C) 2020, 2021, 2022  AO Industries, Inc.
+ * Copyright (C) 2020, 2021, 2022, 2023  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -248,27 +248,41 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
   }
 
   /**
+   * Checks that the before and after ordering is allowed.
+   * This is called outside of the synchronized block.
+   *
+   * @throws IllegalArgumentException if the ordering is not allowed
+   */
+  protected void checkOrdering(R before, R after) {
+    // Allowed by default
+  }
+
+  /**
    * Adds an ordering constraint between two resources.
    *
    * @return  {@code true} if the ordering was added, or {@code false} if already exists and was not added
    */
-  public synchronized boolean addOrdering(boolean required, R before, R after) {
+  // TODO: before and after should be URI for lookup purposes only?  They may not have position information if setup as direct URI-only string.
+  public boolean addOrdering(boolean required, R before, R after) {
     if (before == null) {
       throw new NullArgumentException("before");
     }
     if (after == null) {
       throw new NullArgumentException("after");
     }
-    Set<Before<R>> set = ordering.get(after);
-    if (set == null) {
-      set = new HashSet<>();
-      ordering.put(after, set);
+    checkOrdering(before, after);
+    synchronized (this) {
+      Set<Before<R>> set = ordering.get(after);
+      if (set == null) {
+        set = new HashSet<>();
+        ordering.put(after, set);
+      }
+      boolean added = set.add(new Before<>(before, required));
+      if (added) {
+        sorted = null;
+      }
+      return added;
     }
-    boolean added = set.add(new Before<>(before, required));
-    if (added) {
-      sorted = null;
-    }
-    return added;
   }
 
   /**
