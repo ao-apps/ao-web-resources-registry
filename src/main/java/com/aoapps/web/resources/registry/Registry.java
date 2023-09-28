@@ -131,13 +131,11 @@ public class Registry implements Serializable {
       throw new NullArgumentException("name");
     }
     Group group = groups.get(name);
-    if (group == null) {
-      if (createIfMissing) {
-        group = new Group();
-        Group existing = groups.putIfAbsent(name, group);
-        if (existing != null) {
-          group = existing;
-        }
+    if (group == null && createIfMissing) {
+      group = new Group();
+      Group existing = groups.putIfAbsent(name, group);
+      if (existing != null) {
+        group = existing;
       }
     }
     return group;
