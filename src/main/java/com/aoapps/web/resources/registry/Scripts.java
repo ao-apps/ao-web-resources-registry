@@ -1,6 +1,6 @@
 /*
  * ao-web-resources-registry - Central registry for web resource management.
- * Copyright (C) 2020, 2021, 2022, 2023  AO Industries, Inc.
+ * Copyright (C) 2020, 2021, 2022, 2023, 2024  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -48,18 +48,18 @@ public final class Scripts extends Resources<Script> {
   }
 
   /**
+   * Union constructor.
+   */
+  private Scripts(Collection<? extends Scripts> others) {
+    super(others);
+  }
+
+  /**
    * Gets a deep copy of these resources.
    */
   @Override
   protected Scripts copy() {
     return new Scripts(this);
-  }
-
-  /**
-   * Union constructor.
-   */
-  private Scripts(Collection<? extends Scripts> others) {
-    super(others);
   }
 
   /**

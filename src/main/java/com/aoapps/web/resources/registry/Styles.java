@@ -1,6 +1,6 @@
 /*
  * ao-web-resources-registry - Central registry for web resource management.
- * Copyright (C) 2020, 2021, 2022  AO Industries, Inc.
+ * Copyright (C) 2020, 2021, 2022, 2024  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -48,18 +48,18 @@ public final class Styles extends Resources<Style> {
   }
 
   /**
+   * Union constructor.
+   */
+  private Styles(Collection<? extends Styles> others) {
+    super(others);
+  }
+
+  /**
    * Gets a deep copy of these resources.
    */
   @Override
   protected Styles copy() {
     return new Styles(this);
-  }
-
-  /**
-   * Union constructor.
-   */
-  private Styles(Collection<? extends Styles> others) {
-    super(others);
   }
 
   /**

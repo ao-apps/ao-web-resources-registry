@@ -1,6 +1,6 @@
 /*
  * ao-web-resources-registry - Central registry for web resource management.
- * Copyright (C) 2020, 2021, 2022  AO Industries, Inc.
+ * Copyright (C) 2020, 2021, 2022, 2024  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -242,13 +242,6 @@ public class Group implements Serializable {
   }
 
   /**
-   * Gets a deep copy of this group.
-   */
-  protected Group copy() {
-    return new Group(this);
-  }
-
-  /**
    * Union constructor.
    */
   @SuppressWarnings({"unchecked", "rawtypes"})
@@ -301,6 +294,13 @@ public class Group implements Serializable {
     if (scripts == null) {
       throw new IllegalStateException();
     }
+  }
+
+  /**
+   * Gets a deep copy of this group.
+   */
+  protected Group copy() {
+    return new Group(this);
   }
 
   /**

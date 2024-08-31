@@ -1,6 +1,6 @@
 /*
  * ao-web-resources-registry - Central registry for web resource management.
- * Copyright (C) 2020, 2021, 2022, 2023  AO Industries, Inc.
+ * Copyright (C) 2020, 2021, 2022, 2023, 2024  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -127,13 +127,6 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
   }
 
   /**
-   * Gets a deep copy of these resources.
-   */
-  protected Resources<R> copy() {
-    return new Resources<>(this);
-  }
-
-  /**
    * Union constructor.
    */
   protected Resources(Collection<? extends Resources<R>> others) {
@@ -158,6 +151,13 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
       }
     }
     sorted = null;
+  }
+
+  /**
+   * Gets a deep copy of these resources.
+   */
+  protected Resources<R> copy() {
+    return new Resources<>(this);
   }
 
   /**
