@@ -1,6 +1,6 @@
 /*
  * ao-web-resources-registry - Central registry for web resource management.
- * Copyright (C) 2020, 2021, 2022, 2023  AO Industries, Inc.
+ * Copyright (C) 2020, 2021, 2022, 2023, 2024  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -36,16 +36,13 @@ import java.util.Objects;
  * <li>an optional crossorigin attribute</li>
  * <li>TODO: Add more attributes as-needed</li>
  * </ol>
- * <p>
- * Optimizers should be careful to only group stylesheets that have equivalent
- * constraints.
- * </p>
- * <p>
- * TODO: Support inline scripts without URI (defer and async not allowed for inline).
- * </p>
- * <p>
- * TODO: Support modules.
- * </p>
+ *
+ * <p>Optimizers should be careful to only group stylesheets that have equivalent
+ * constraints.</p>
+ *
+ * <p>TODO: Support inline scripts without URI (defer and async not allowed for inline).</p>
+ *
+ * <p>TODO: Support modules.</p>
  *
  * @author  AO Industries, Inc.
  */
@@ -59,12 +56,10 @@ public final class Script extends Resource<Script> implements Comparable<Script>
    * <li>Order by {@linkplain #isDefer() defer}, true first</li>
    * <li>Order by {@linkplain #getUri() URI}</li>
    * </ol>
-   * <p>
-   * Note: The {@linkplain #getCrossorigin() crossorigin policy} is not used in ordering.
-   * </p>
-   * <p>
-   * All string comparisons are performed via {@link SmartComparator#ROOT}.
-   * </p>
+   *
+   * <p>Note: The {@linkplain #getCrossorigin() crossorigin policy} is not used in ordering.</p>
+   *
+   * <p>All string comparisons are performed via {@link SmartComparator#ROOT}.</p>
    */
   public static final Comparator<Script> COMPARATOR = (Script ss1, Script ss2) -> {
     int diff;

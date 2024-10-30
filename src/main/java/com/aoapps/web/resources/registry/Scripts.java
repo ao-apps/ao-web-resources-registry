@@ -181,9 +181,8 @@ public final class Scripts extends Resources<Script> {
 
   /**
    * {@inheritDoc}
-   * <p>
-   * The before script must have a position that is before or equal to the after script.
-   * </p>
+   *
+   * <p>The before script must have a position that is before or equal to the after script.</p>
    */
   @Override
   protected void checkOrdering(Script before, Script after) {
@@ -198,9 +197,8 @@ public final class Scripts extends Resources<Script> {
 
   /**
    * {@inheritDoc}
-   * <p>
-   * Ordering may not violate {@link Script.Position}.
-   * </p>
+   *
+   * <p>Ordering may not violate {@link Script.Position}.</p>
    */
   @Override
   public Scripts addOrdering(boolean required, Iterable<? extends Script> scripts) {
@@ -210,9 +208,8 @@ public final class Scripts extends Resources<Script> {
 
   /**
    * {@inheritDoc}
-   * <p>
-   * Ordering may not violate {@link Script.Position}.
-   * </p>
+   *
+   * <p>Ordering may not violate {@link Script.Position}.</p>
    */
   @Override
   public Scripts addOrdering(Iterable<? extends Script> scripts) {
@@ -222,9 +219,8 @@ public final class Scripts extends Resources<Script> {
 
   /**
    * {@inheritDoc}
-   * <p>
-   * Ordering may not violate {@link Script.Position}.
-   * </p>
+   *
+   * <p>Ordering may not violate {@link Script.Position}.</p>
    */
   @Override
   public Scripts addOrdering(boolean required, Script ... scripts) {
@@ -234,9 +230,8 @@ public final class Scripts extends Resources<Script> {
 
   /**
    * {@inheritDoc}
-   * <p>
-   * Ordering may not violate {@link Script.Position}.
-   * </p>
+   *
+   * <p>Ordering may not violate {@link Script.Position}.</p>
    */
   @Override
   public Scripts addOrdering(Script ... scripts) {
@@ -246,9 +241,8 @@ public final class Scripts extends Resources<Script> {
 
   /**
    * Adds an ordering constraint between two scripts.
-   * <p>
-   * Ordering may not violate {@link Script.Position}.
-   * </p>
+   *
+   * <p>Ordering may not violate {@link Script.Position}.</p>
    */
   public boolean addOrdering(boolean required, String beforeSrc, String afterSrc) {
     if (beforeSrc == null) {
@@ -266,9 +260,8 @@ public final class Scripts extends Resources<Script> {
 
   /**
    * Adds a required ordering constraint between two scripts.
-   * <p>
-   * Ordering may not violate {@link Script.Position}.
-   * </p>
+   *
+   * <p>Ordering may not violate {@link Script.Position}.</p>
    */
   public boolean addOrdering(String beforeSrc, String afterSrc) {
     return addOrdering(true, beforeSrc, afterSrc);
@@ -276,9 +269,8 @@ public final class Scripts extends Resources<Script> {
 
   /**
    * Adds ordering constraints between multiple scripts, if not already present.
-   * <p>
-   * Ordering may not violate {@link Script.Position}.
-   * </p>
+   *
+   * <p>Ordering may not violate {@link Script.Position}.</p>
    */
   public Scripts addOrdering(boolean required, Iterables.String<?> srcs) {
     if (srcs != null) {
@@ -298,9 +290,8 @@ public final class Scripts extends Resources<Script> {
 
   /**
    * Adds required ordering constraints between multiple scripts, if not already present.
-   * <p>
-   * Ordering may not violate {@link Script.Position}.
-   * </p>
+   *
+   * <p>Ordering may not violate {@link Script.Position}.</p>
    */
   public Scripts addOrdering(Iterables.String<?> srcs) {
     return addOrdering(true, srcs);
@@ -308,9 +299,8 @@ public final class Scripts extends Resources<Script> {
 
   /**
    * Adds ordering constraints between multiple scripts, if not already present.
-   * <p>
-   * Ordering may not violate {@link Script.Position}.
-   * </p>
+   *
+   * <p>Ordering may not violate {@link Script.Position}.</p>
    */
   public Scripts addOrdering(boolean required, String ... srcs) {
     if (srcs != null) {
@@ -330,9 +320,8 @@ public final class Scripts extends Resources<Script> {
 
   /**
    * Adds required ordering constraints between multiple scripts, if not already present.
-   * <p>
-   * Ordering may not violate {@link Script.Position}.
-   * </p>
+   *
+   * <p>Ordering may not violate {@link Script.Position}.</p>
    */
   public Scripts addOrdering(String ... srcs) {
     return addOrdering(true, srcs);

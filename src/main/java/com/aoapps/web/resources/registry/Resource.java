@@ -1,6 +1,6 @@
 /*
  * ao-web-resources-registry - Central registry for web resource management.
- * Copyright (C) 2020, 2021, 2022  AO Industries, Inc.
+ * Copyright (C) 2020, 2021, 2022, 2024  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -29,12 +29,10 @@ import java.io.Serializable;
 
 /**
  * A resource given its full URL or application context-relative path.
- * <p>
- * TODO: Support inline resources without URI.
- * </p>
- * <p>
- * TODO: Support comments, which would not be displayed in production mode.
- * </p>
+ *
+ * <p>TODO: Support inline resources without URI.</p>
+ *
+ * <p>TODO: Support comments, which would not be displayed in production mode.</p>
  *
  * @author  AO Industries, Inc.
  */
@@ -103,9 +101,8 @@ public abstract class Resource<
 
   /**
    * All concrete implementations of Resource must be comparable to themselves.
-   * <p>
-   * This default implementation compares by URI only via {@link SmartComparator#ROOT}.
-   * </p>
+   *
+   * <p>This default implementation compares by URI only via {@link SmartComparator#ROOT}.</p>
    */
   protected int compareTo(R o) {
     return SmartComparator.ROOT.compare(uri, o.getUri());
@@ -128,14 +125,12 @@ public abstract class Resource<
    *   It is an error if the series of <code>../</code> would go past the root path <code>"/"</code>.
    * </li>
    * </ul>
-   * <p>
-   * It is strongly recommended for this URI to be normalized, so that ordering
-   * will be consistent.  However, no normalization is performed within this API.
-   * </p>
-   * <p>
-   * All types of URI may be subjected to URL encoding, depending on
-   * application type.
-   * </p>
+   *
+   * <p>It is strongly recommended for this URI to be normalized, so that ordering
+   * will be consistent.  However, no normalization is performed within this API.</p>
+   *
+   * <p>All types of URI may be subjected to URL encoding, depending on
+   * application type.</p>
    */
   public final String getUri() {
     return uri;

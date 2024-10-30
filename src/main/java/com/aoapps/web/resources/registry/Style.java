@@ -1,6 +1,6 @@
 /*
  * ao-web-resources-registry - Central registry for web resource management.
- * Copyright (C) 2020, 2021, 2022, 2023  AO Industries, Inc.
+ * Copyright (C) 2020, 2021, 2022, 2023, 2024  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -37,21 +37,18 @@ import java.util.Objects;
  * <li>an optional crossorigin attribute</li>
  * <li>a disabled attribute</li>
  * </ol>
- * <p>
- * Optimizers should be careful to only group styles that have equivalent
- * constraints.
- * </p>
- * <p>
- * TODO: Support a "group" (or "position" / "category"?): prelude, main, and coda.
+ *
+ * <p>Optimizers should be careful to only group styles that have equivalent
+ * constraints.</p>
+ *
+ * <p>TODO: Support a "group" (or "position" / "category"?): prelude, main, and coda.
  * "prelude" is before all others (except possibly other prelude).
  * "main" (the default) is the middle.
  * "coda" is after all others (except possibly other coda).
  * It would be an error if the topological sort results in prelude that is not
- * first or coda that is not last.  Use "prelude" for "html5.css".
- * </p>
- * <p>
- * TODO: Support inline styles without URI.
- * </p>
+ * first or coda that is not last.  Use "prelude" for "html5.css".</p>
+ *
+ * <p>TODO: Support inline styles without URI.</p>
  *
  * @author  AO Industries, Inc.
  */
@@ -103,20 +100,17 @@ public final class Style extends Resource<Style> implements Comparable<Style> {
    * <li>Order by {@linkplain #getDirection() direction}, nulls first</li>
    * <li>Order by {@linkplain #getUri() URI}</li>
    * </ol>
-   * <p>
-   * Note: The {@linkplain #getCrossorigin() crossorigin policy} is not used in ordering.
-   * </p>
-   * <p>
-   * Note: The {@linkplain #isDisabled() disabled flag} is not used in ordering.
-   * </p>
-   * <p>
-   * All string comparisons are performed via {@link SmartComparator#ROOT}.
-   * </p>
-   * <p>
-   * As an example of this ordering, consider the following order would be the
+   *
+   * <p>Note: The {@linkplain #getCrossorigin() crossorigin policy} is not used in ordering.</p>
+   *
+   * <p>Note: The {@linkplain #isDisabled() disabled flag} is not used in ordering.</p>
+   *
+   * <p>All string comparisons are performed via {@link SmartComparator#ROOT}.</p>
+   *
+   * <p>As an example of this ordering, consider the following order would be the
    * default, which we expect will often match the way CSS styles override
-   * base definitions:
-   * </p>
+   * base definitions:</p>
+   *
    * <ol>
    * <li><code>global.css</code> (no media)</li>
    * <li><code>global-print.css</code> (media="print")</li>

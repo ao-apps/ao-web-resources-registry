@@ -1,6 +1,6 @@
 /*
  * ao-web-resources-registry - Central registry for web resource management.
- * Copyright (C) 2020, 2021, 2022, 2023  AO Industries, Inc.
+ * Copyright (C) 2020, 2021, 2022, 2023, 2024  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -33,10 +33,9 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * A registry contains a set of groups, along with activations.
- * <p>
- * TODO: Idea: Have a default group that is always active (getDefaultGroup), and when group not provided this is
- * assumed.  This would save all the group naming and activation when the intent is to have always active.
- * </p>
+ *
+ * <p>TODO: Idea: Have a default group that is always active (getDefaultGroup), and when group not provided this is
+ * assumed.  This would save all the group naming and activation when the intent is to have always active.</p>
  *
  * @author  AO Industries, Inc.
  */
@@ -177,13 +176,11 @@ public class Registry implements Serializable {
    * <li>{@link Boolean#FALSE} indicates the group is deactivated by this registry.</li>
    * <li>{@code null} indicates the activation is unchanged.</li>
    * </ul>
-   * <p>
-   * Groups are inactive by default, when not activated in any of the applied registries.
-   * </p>
-   * <p>
-   * This mapping is not a snapshot and may reflect concurrent changes to the registry
-   * (see {@link ConcurrentHashMap}).
-   * </p>
+   *
+   * <p>Groups are inactive by default, when not activated in any of the applied registries.</p>
+   *
+   * <p>This mapping is not a snapshot and may reflect concurrent changes to the registry
+   * (see {@link ConcurrentHashMap}).</p>
    */
   public Map<Group.Name, Boolean> getActivations() {
     return Collections.unmodifiableMap(activations);
@@ -196,11 +193,10 @@ public class Registry implements Serializable {
    * <li>{@link Boolean#FALSE} indicates the group is deactivated by this registry.</li>
    * <li>{@code null} indicates the activation is unchanged.</li>
    * </ul>
-   * <p>
-   * The group does not need to be part of this registry.  In fact, it will
+   *
+   * <p>The group does not need to be part of this registry.  In fact, it will
    * often be the case that the application-scope registry contains the
-   * resources while request/theme/view/page-scope registries activate them.
-   * </p>
+   * resources while request/theme/view/page-scope registries activate them.</p>
    *
    * @param  activation  When {@code null}, the activation is removed.
    *
