@@ -1,6 +1,6 @@
 /*
  * ao-web-resources-registry - Central registry for web resource management.
- * Copyright (C) 2020, 2021, 2022, 2024  AO Industries, Inc.
+ * Copyright (C) 2020, 2021, 2022, 2024, 2025  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -196,7 +196,6 @@ public class Group implements Serializable {
     if (
         resourcesByClass.put(
             Style.class,
-            // Java 9: new ResourcesEntry<>
             new ResourcesEntry<Style, Styles>(
                 Styles::union,
                 styles
@@ -209,7 +208,6 @@ public class Group implements Serializable {
     if (
         resourcesByClass.put(
             Script.class,
-            // Java 9: new ResourcesEntry<>
             new ResourcesEntry<Script, Scripts>(
                 Scripts::union,
                 scripts

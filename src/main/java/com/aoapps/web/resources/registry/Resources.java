@@ -1,6 +1,6 @@
 /*
  * ao-web-resources-registry - Central registry for web resource management.
- * Copyright (C) 2020, 2021, 2022, 2023, 2024  AO Industries, Inc.
+ * Copyright (C) 2020, 2021, 2022, 2023, 2024, 2025  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -460,8 +460,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
         }
       }
     }
-    // Java 9: new SymmetricGraph<>
-    SymmetricGraph<R, Edge<R>, RuntimeException> graph = new SymmetricGraph<R, Edge<R>, RuntimeException>() {
+    SymmetricGraph<R, Edge<R>, RuntimeException> graph = new SymmetricGraph<>() {
       @Override
       public Set<Edge<R>> getEdgesTo(R to) {
         Set<Edge<R>> set = edgesTo.get(to);
