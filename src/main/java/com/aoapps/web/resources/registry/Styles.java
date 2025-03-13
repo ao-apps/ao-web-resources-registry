@@ -1,6 +1,6 @@
 /*
  * ao-web-resources-registry - Central registry for web resource management.
- * Copyright (C) 2020, 2021, 2022, 2024  AO Industries, Inc.
+ * Copyright (C) 2020, 2021, 2022, 2024, 2025  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -50,7 +50,7 @@ public final class Styles extends Resources<Style> {
   /**
    * Union constructor.
    */
-  private Styles(Collection<? extends Styles> others) {
+  private Styles(Collection<Styles> others) {
     super(others);
   }
 
@@ -65,7 +65,7 @@ public final class Styles extends Resources<Style> {
   /**
    * Gets a the union of multiple groups.
    */
-  public static Styles union(Collection<? extends Styles> others) {
+  public static Styles union(Collection<Styles> others) {
     // Empty resources when null or empty
     if (others == null || others.isEmpty()) {
       return new Styles();
@@ -79,7 +79,7 @@ public final class Styles extends Resources<Style> {
   }
 
   @Override
-  public Styles add(Iterable<? extends Style> styles) {
+  public Styles add(Iterable<Style> styles) {
     super.add(styles);
     return this;
   }
@@ -129,7 +129,7 @@ public final class Styles extends Resources<Style> {
   }
 
   @Override
-  public Styles remove(Iterable<? extends Style> styles) {
+  public Styles remove(Iterable<Style> styles) {
     super.remove(styles);
     return this;
   }
@@ -180,13 +180,13 @@ public final class Styles extends Resources<Style> {
   }
 
   @Override
-  public Styles addOrdering(boolean required, Iterable<? extends Style> styles) {
+  public Styles addOrdering(boolean required, Iterable<Style> styles) {
     super.addOrdering(required, styles);
     return this;
   }
 
   @Override
-  public Styles addOrdering(Iterable<? extends Style> styles) {
+  public Styles addOrdering(Iterable<Style> styles) {
     super.addOrdering(styles);
     return this;
   }
@@ -280,13 +280,13 @@ public final class Styles extends Resources<Style> {
   }
 
   @Override
-  public Styles removeOrdering(boolean required, Iterable<? extends Style> styles) {
+  public Styles removeOrdering(boolean required, Iterable<Style> styles) {
     super.removeOrdering(required, styles);
     return this;
   }
 
   @Override
-  public Styles removeOrdering(Iterable<? extends Style> styles) {
+  public Styles removeOrdering(Iterable<Style> styles) {
     super.removeOrdering(styles);
     return this;
   }

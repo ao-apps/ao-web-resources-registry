@@ -1,6 +1,6 @@
 /*
  * ao-web-resources-registry - Central registry for web resource management.
- * Copyright (C) 2020, 2021, 2022, 2023, 2024  AO Industries, Inc.
+ * Copyright (C) 2020, 2021, 2022, 2023, 2024, 2025  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -50,7 +50,7 @@ public final class Scripts extends Resources<Script> {
   /**
    * Union constructor.
    */
-  private Scripts(Collection<? extends Scripts> others) {
+  private Scripts(Collection<Scripts> others) {
     super(others);
   }
 
@@ -65,7 +65,7 @@ public final class Scripts extends Resources<Script> {
   /**
    * Gets a the union of multiple groups.
    */
-  public static Scripts union(Collection<? extends Scripts> others) {
+  public static Scripts union(Collection<Scripts> others) {
     // Empty resources when null or empty
     if (others == null || others.isEmpty()) {
       return new Scripts();
@@ -79,7 +79,7 @@ public final class Scripts extends Resources<Script> {
   }
 
   @Override
-  public Scripts add(Iterable<? extends Script> scripts) {
+  public Scripts add(Iterable<Script> scripts) {
     super.add(scripts);
     return this;
   }
@@ -129,7 +129,7 @@ public final class Scripts extends Resources<Script> {
   }
 
   @Override
-  public Scripts remove(Iterable<? extends Script> scripts) {
+  public Scripts remove(Iterable<Script> scripts) {
     super.remove(scripts);
     return this;
   }
@@ -201,7 +201,7 @@ public final class Scripts extends Resources<Script> {
    * <p>Ordering may not violate {@link Script.Position}.</p>
    */
   @Override
-  public Scripts addOrdering(boolean required, Iterable<? extends Script> scripts) {
+  public Scripts addOrdering(boolean required, Iterable<Script> scripts) {
     super.addOrdering(required, scripts);
     return this;
   }
@@ -212,7 +212,7 @@ public final class Scripts extends Resources<Script> {
    * <p>Ordering may not violate {@link Script.Position}.</p>
    */
   @Override
-  public Scripts addOrdering(Iterable<? extends Script> scripts) {
+  public Scripts addOrdering(Iterable<Script> scripts) {
     super.addOrdering(scripts);
     return this;
   }
@@ -328,13 +328,13 @@ public final class Scripts extends Resources<Script> {
   }
 
   @Override
-  public Scripts removeOrdering(boolean required, Iterable<? extends Script> scripts) {
+  public Scripts removeOrdering(boolean required, Iterable<Script> scripts) {
     super.removeOrdering(required, scripts);
     return this;
   }
 
   @Override
-  public Scripts removeOrdering(Iterable<? extends Script> scripts) {
+  public Scripts removeOrdering(Iterable<Script> scripts) {
     super.removeOrdering(scripts);
     return this;
   }

@@ -179,7 +179,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
   /**
    * Adds new resources, if not already present.
    */
-  public Resources<R> add(Iterable<? extends R> resources) {
+  public Resources<R> add(Iterable<R> resources) {
     if (resources != null) {
       for (R resource : resources) {
         if (resource != null) {
@@ -221,7 +221,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
   /**
    * Removes resources.
    */
-  public Resources<R> remove(Iterable<? extends R> resources) {
+  public Resources<R> remove(Iterable<R> resources) {
     if (resources != null) {
       for (R resource : resources) {
         if (resource != null) {
@@ -295,7 +295,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
   /**
    * Adds ordering constraints between multiple resources, if not already present.
    */
-  public Resources<R> addOrdering(boolean required, Iterable<? extends R> resources) {
+  public Resources<R> addOrdering(boolean required, Iterable<R> resources) {
     if (resources != null) {
       R lastResource = null;
       for (R resource : resources) {
@@ -313,7 +313,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
   /**
    * Adds required ordering constraints between multiple resources, if not already present.
    */
-  public Resources<R> addOrdering(Iterable<? extends R> resources) {
+  public Resources<R> addOrdering(Iterable<R> resources) {
     return addOrdering(true, resources);
   }
 
@@ -372,7 +372,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
   /**
    * Removes ordering constraints between multiple resources.
    */
-  public Resources<R> removeOrdering(boolean required, Iterable<? extends R> resources) {
+  public Resources<R> removeOrdering(boolean required, Iterable<R> resources) {
     if (resources != null) {
       R lastResource = null;
       for (R resource : resources) {
@@ -390,7 +390,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
   /**
    * Removes required ordering constraints between multiple resources.
    */
-  public Resources<R> removeOrdering(Iterable<? extends R> resources) {
+  public Resources<R> removeOrdering(Iterable<R> resources) {
     return removeOrdering(true, resources);
   }
 

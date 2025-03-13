@@ -149,11 +149,11 @@ public class Group implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private final SerializableFunction<? super Collection<? extends S>, S> unionizer;
+    private final SerializableFunction<? super Collection<S>, S> unionizer;
     private final Resources<R> resources;
 
     private ResourcesEntry(
-        SerializableFunction<? super Collection<? extends S>, S> unionizer,
+        SerializableFunction<? super Collection<S>, S> unionizer,
         Resources<R> resources
     ) {
       this.unionizer = unionizer;
@@ -323,7 +323,7 @@ public class Group implements Serializable {
   public <
       R extends Resource<R> & Comparable<? super R>,
       S extends Resources<R>
-      > Resources<R> getResources(Class<R> clazz, SerializableFunction<? super Collection<? extends S>, S> unionizer) {
+      > Resources<R> getResources(Class<R> clazz, SerializableFunction<? super Collection<S>, S> unionizer) {
     @SuppressWarnings("unchecked")
     ResourcesEntry<R, S> entry = (ResourcesEntry) resourcesByClass.get(clazz);
     if (entry == null) {
