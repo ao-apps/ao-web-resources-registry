@@ -248,7 +248,7 @@ public class Registry implements Serializable {
   /**
    * Activates the given groups.
    */
-  public Registry activate(Group.Name ... groups) {
+  public Registry activate(Group.Name... groups) {
     if (groups != null) {
       for (Group.Name group : groups) {
         if (group != null) {
@@ -280,7 +280,7 @@ public class Registry implements Serializable {
    *
    * @throws  IllegalArgumentException  See {@link Group.Name#checkName(java.lang.String)}.
    */
-  public Registry activate(String ... groups) throws IllegalArgumentException {
+  public Registry activate(String... groups) throws IllegalArgumentException {
     if (groups != null) {
       for (String group : groups) {
         if (group != null) {
@@ -326,7 +326,7 @@ public class Registry implements Serializable {
   /**
    * Deactivates the given groups.
    */
-  public Registry deactivate(Group.Name ... groups) {
+  public Registry deactivate(Group.Name... groups) {
     if (groups != null) {
       for (Group.Name group : groups) {
         if (group != null) {
@@ -358,7 +358,7 @@ public class Registry implements Serializable {
    *
    * @throws  IllegalArgumentException  See {@link Group.Name#checkName(java.lang.String)}.
    */
-  public Registry deactivate(String ... groups) throws IllegalArgumentException {
+  public Registry deactivate(String... groups) throws IllegalArgumentException {
     if (groups != null) {
       for (String group : groups) {
         if (group != null) {

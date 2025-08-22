@@ -85,7 +85,7 @@ public final class Styles extends Resources<Style> {
   }
 
   @Override
-  public Styles add(Style ... styles) {
+  public Styles add(Style... styles) {
     super.add(styles);
     return this;
   }
@@ -117,7 +117,7 @@ public final class Styles extends Resources<Style> {
   /**
    * Adds new styles, if not already present.
    */
-  public Styles add(String ... hrefs) {
+  public Styles add(String... hrefs) {
     if (hrefs != null) {
       for (String href : hrefs) {
         if (href != null) {
@@ -135,7 +135,7 @@ public final class Styles extends Resources<Style> {
   }
 
   @Override
-  public Styles remove(Style ... styles) {
+  public Styles remove(Style... styles) {
     super.remove(styles);
     return this;
   }
@@ -168,7 +168,7 @@ public final class Styles extends Resources<Style> {
   /**
    * Removes styles.
    */
-  public Styles remove(String ... hrefs) {
+  public Styles remove(String... hrefs) {
     if (hrefs != null) {
       for (String href : hrefs) {
         if (href != null) {
@@ -192,13 +192,13 @@ public final class Styles extends Resources<Style> {
   }
 
   @Override
-  public Styles addOrdering(boolean required, Style ... styles) {
+  public Styles addOrdering(boolean required, Style... styles) {
     super.addOrdering(required, styles);
     return this;
   }
 
   @Override
-  public Styles addOrdering(Style ... styles) {
+  public Styles addOrdering(Style... styles) {
     super.addOrdering(styles);
     return this;
   }
@@ -256,7 +256,7 @@ public final class Styles extends Resources<Style> {
   /**
    * Adds ordering constraints between multiple styles, if not already present.
    */
-  public Styles addOrdering(boolean required, String ... hrefs) {
+  public Styles addOrdering(boolean required, String... hrefs) {
     if (hrefs != null) {
       Style lastStyle = null;
       for (String href : hrefs) {
@@ -275,7 +275,7 @@ public final class Styles extends Resources<Style> {
   /**
    * Adds required ordering constraints between multiple styles, if not already present.
    */
-  public Styles addOrdering(String ... hrefs) {
+  public Styles addOrdering(String... hrefs) {
     return addOrdering(true, hrefs);
   }
 
@@ -292,13 +292,13 @@ public final class Styles extends Resources<Style> {
   }
 
   @Override
-  public Styles removeOrdering(boolean required, Style ... styles) {
+  public Styles removeOrdering(boolean required, Style... styles) {
     super.removeOrdering(required, styles);
     return this;
   }
 
   @Override
-  public Styles removeOrdering(Style ... styles) {
+  public Styles removeOrdering(Style... styles) {
     super.removeOrdering(styles);
     return this;
   }
@@ -354,7 +354,7 @@ public final class Styles extends Resources<Style> {
   /**
    * Removes ordering constraints between multiple styles.
    */
-  public Styles removeOrdering(boolean required, String ... hrefs) {
+  public Styles removeOrdering(boolean required, String... hrefs) {
     if (hrefs != null) {
       Style lastStyle = null;
       for (String href : hrefs) {
@@ -373,7 +373,7 @@ public final class Styles extends Resources<Style> {
   /**
    * Removes required ordering constraints between multiple styles.
    */
-  public Styles removeOrdering(String ... hrefs) {
+  public Styles removeOrdering(String... hrefs) {
     return removeOrdering(true, hrefs);
   }
 }

@@ -194,7 +194,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
    * Adds new resources, if not already present.
    */
   @SuppressWarnings({"unchecked", "varargs"})
-  public Resources<R> add(R ... resources) {
+  public Resources<R> add(R... resources) {
     if (resources != null) {
       for (R resource : resources) {
         if (resource != null) {
@@ -236,7 +236,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
    * Removes resources.
    */
   @SuppressWarnings({"unchecked", "varargs"})
-  public Resources<R> remove(R ... resources) {
+  public Resources<R> remove(R... resources) {
     if (resources != null) {
       for (R resource : resources) {
         if (resource != null) {
@@ -321,7 +321,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
    * Adds ordering constraints between multiple resources, if not already present.
    */
   @SuppressWarnings({"unchecked", "varargs"})
-  public Resources<R> addOrdering(boolean required, R ... resources) {
+  public Resources<R> addOrdering(boolean required, R... resources) {
     if (resources != null) {
       R lastResource = null;
       for (R resource : resources) {
@@ -340,7 +340,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
    * Adds required ordering constraints between multiple resources, if not already present.
    */
   @SuppressWarnings({"unchecked", "varargs"})
-  public Resources<R> addOrdering(R ... resources) {
+  public Resources<R> addOrdering(R... resources) {
     return addOrdering(true, resources);
   }
 
@@ -398,7 +398,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
    * Removes ordering constraints between multiple resources.
    */
   @SuppressWarnings({"unchecked", "varargs"})
-  public Resources<R> removeOrdering(boolean required, R ... resources) {
+  public Resources<R> removeOrdering(boolean required, R... resources) {
     if (resources != null) {
       R lastResource = null;
       for (R resource : resources) {
@@ -417,7 +417,7 @@ public class Resources<R extends Resource<R> & Comparable<? super R>> implements
    * Removes required ordering constraints between multiple resources.
    */
   @SuppressWarnings({"unchecked", "varargs"})
-  public Resources<R> removeOrdering(R ... resources) {
+  public Resources<R> removeOrdering(R... resources) {
     return removeOrdering(true, resources);
   }
 

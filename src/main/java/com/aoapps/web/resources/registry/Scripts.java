@@ -85,7 +85,7 @@ public final class Scripts extends Resources<Script> {
   }
 
   @Override
-  public Scripts add(Script ... scripts) {
+  public Scripts add(Script... scripts) {
     super.add(scripts);
     return this;
   }
@@ -117,7 +117,7 @@ public final class Scripts extends Resources<Script> {
   /**
    * Adds new scripts, if not already present.
    */
-  public Scripts add(String ... srcs) {
+  public Scripts add(String... srcs) {
     if (srcs != null) {
       for (String src : srcs) {
         if (src != null) {
@@ -135,7 +135,7 @@ public final class Scripts extends Resources<Script> {
   }
 
   @Override
-  public Scripts remove(Script ... scripts) {
+  public Scripts remove(Script... scripts) {
     super.remove(scripts);
     return this;
   }
@@ -168,7 +168,7 @@ public final class Scripts extends Resources<Script> {
   /**
    * Removes scripts.
    */
-  public Scripts remove(String ... srcs) {
+  public Scripts remove(String... srcs) {
     if (srcs != null) {
       for (String src : srcs) {
         if (src != null) {
@@ -223,7 +223,7 @@ public final class Scripts extends Resources<Script> {
    * <p>Ordering may not violate {@link Script.Position}.</p>
    */
   @Override
-  public Scripts addOrdering(boolean required, Script ... scripts) {
+  public Scripts addOrdering(boolean required, Script... scripts) {
     super.addOrdering(required, scripts);
     return this;
   }
@@ -234,7 +234,7 @@ public final class Scripts extends Resources<Script> {
    * <p>Ordering may not violate {@link Script.Position}.</p>
    */
   @Override
-  public Scripts addOrdering(Script ... scripts) {
+  public Scripts addOrdering(Script... scripts) {
     super.addOrdering(scripts);
     return this;
   }
@@ -302,7 +302,7 @@ public final class Scripts extends Resources<Script> {
    *
    * <p>Ordering may not violate {@link Script.Position}.</p>
    */
-  public Scripts addOrdering(boolean required, String ... srcs) {
+  public Scripts addOrdering(boolean required, String... srcs) {
     if (srcs != null) {
       Script lastScript = null;
       for (String src : srcs) {
@@ -323,7 +323,7 @@ public final class Scripts extends Resources<Script> {
    *
    * <p>Ordering may not violate {@link Script.Position}.</p>
    */
-  public Scripts addOrdering(String ... srcs) {
+  public Scripts addOrdering(String... srcs) {
     return addOrdering(true, srcs);
   }
 
@@ -340,13 +340,13 @@ public final class Scripts extends Resources<Script> {
   }
 
   @Override
-  public Scripts removeOrdering(boolean required, Script ... scripts) {
+  public Scripts removeOrdering(boolean required, Script... scripts) {
     super.removeOrdering(required, scripts);
     return this;
   }
 
   @Override
-  public Scripts removeOrdering(Script ... scripts) {
+  public Scripts removeOrdering(Script... scripts) {
     super.removeOrdering(scripts);
     return this;
   }
@@ -402,7 +402,7 @@ public final class Scripts extends Resources<Script> {
   /**
    * Removes ordering constraints between multiple scripts.
    */
-  public Scripts removeOrdering(boolean required, String ... srcs) {
+  public Scripts removeOrdering(boolean required, String... srcs) {
     if (srcs != null) {
       Script lastScript = null;
       for (String src : srcs) {
@@ -421,7 +421,7 @@ public final class Scripts extends Resources<Script> {
   /**
    * Removes required ordering constraints between multiple scripts.
    */
-  public Scripts removeOrdering(String ... srcs) {
+  public Scripts removeOrdering(String... srcs) {
     return removeOrdering(true, srcs);
   }
 }
