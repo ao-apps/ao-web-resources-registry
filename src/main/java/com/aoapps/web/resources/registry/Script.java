@@ -52,12 +52,12 @@ public final class Script extends Resource<Script> implements Comparable<Script>
    * Scripts start with a default ordering that should minimize the number
    * of explicit ordering declarations.
    * <ol>
-   * <li>Order by {@linkplain #isAsync() async}, true first</li>
-   * <li>Order by {@linkplain #isDefer() defer}, true first</li>
-   * <li>Order by {@linkplain #getUri() URI}</li>
+   * <li>Order by {@linkplain Script#isAsync() async}, true first</li>
+   * <li>Order by {@linkplain Script#isDefer() defer}, true first</li>
+   * <li>Order by {@linkplain Script#getUri() URI}</li>
    * </ol>
    *
-   * <p>Note: The {@linkplain #getCrossorigin() crossorigin policy} is not used in ordering.</p>
+   * <p>Note: The {@linkplain Script#getCrossorigin() crossorigin policy} is not used in ordering.</p>
    *
    * <p>All string comparisons are performed via {@link SmartComparator#ROOT}.</p>
    */
@@ -191,11 +191,11 @@ public final class Script extends Resource<Script> implements Comparable<Script>
   /**
    * Creates a new script.
    *
-   * @param src          See {@link #getUri()}
-   * @param position     See {@link #getPosition()}
-   * @param async        See {@link #isAsync()}
-   * @param defer        See {@link #isDefer()}
-   * @param crossorigin  See {@link #getCrossorigin()}
+   * @param src          See {@link Script#getUri()}
+   * @param position     See {@link Script#getPosition()}
+   * @param async        See {@link Script#isAsync()}
+   * @param defer        See {@link Script#isDefer()}
+   * @param crossorigin  See {@link Script#getCrossorigin()}
    */
   public Script(String src, Position position, boolean async, boolean defer, String crossorigin) {
     super(src);
@@ -208,7 +208,7 @@ public final class Script extends Resource<Script> implements Comparable<Script>
   /**
    * Creates a new script.
    *
-   * @param src  See {@link #getUri()}
+   * @param src  See {@link Script#getUri()}
    */
   public Script(String src) {
     this(src, Position.DEFAULT, false, false, null);
@@ -218,10 +218,10 @@ public final class Script extends Resource<Script> implements Comparable<Script>
    * {@inheritDoc}
    *
    * @see  Resource#toString()
-   * @see  #getPosition()
-   * @see  #isAsync()
-   * @see  #isDefer()
-   * @see  #getCrossorigin()
+   * @see  Script#getPosition()
+   * @see  Script#isAsync()
+   * @see  Script#isDefer()
+   * @see  Script#getCrossorigin()
    */
   @Override
   public String toString() {
@@ -271,7 +271,7 @@ public final class Script extends Resource<Script> implements Comparable<Script>
   /**
    * {@inheritDoc}
    *
-   * @see  #COMPARATOR
+   * @see  Script#COMPARATOR
    */
   @Override
   public int compareTo(Script o) {

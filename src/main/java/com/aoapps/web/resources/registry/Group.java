@@ -177,14 +177,14 @@ public class Group implements Serializable {
   /**
    * The partition for CSS styles.
    *
-   * @see  #getResources(java.lang.Class, com.aoapps.lang.function.SerializableFunction)
+   * @see  Group#getResources(java.lang.Class, com.aoapps.lang.function.SerializableFunction)
    */
   public final Styles styles;
 
   /**
    * The partition for scripts.
    *
-   * @see  #getResources(java.lang.Class, com.aoapps.lang.function.SerializableFunction)
+   * @see  Group#getResources(java.lang.Class, com.aoapps.lang.function.SerializableFunction)
    */
   public final Scripts scripts;
 

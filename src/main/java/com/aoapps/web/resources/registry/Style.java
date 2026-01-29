@@ -84,7 +84,7 @@ public final class Style extends Resource<Style> implements Comparable<Style> {
      * Gets the expected direction for the given language.
      *
      * @see  Locales#parseLocale(java.lang.String)
-     * @see  #getDirection(java.util.Locale)
+     * @see  Direction#getDirection(java.util.Locale)
      */
     public static Direction getDirection(String language) {
       return getDirection(Locales.parseLocale(language));
@@ -96,14 +96,14 @@ public final class Style extends Resource<Style> implements Comparable<Style> {
    * of explicit ordering declarations:
    * TODO: Review that this is the best default ordering.
    * <ol>
-   * <li>Order by {@linkplain #getMedia() media condition}, nulls first</li>
-   * <li>Order by {@linkplain #getDirection() direction}, nulls first</li>
-   * <li>Order by {@linkplain #getUri() URI}</li>
+   * <li>Order by {@linkplain Style#getMedia() media condition}, nulls first</li>
+   * <li>Order by {@linkplain Style#getDirection() direction}, nulls first</li>
+   * <li>Order by {@linkplain Style#getUri() URI}</li>
    * </ol>
    *
-   * <p>Note: The {@linkplain #getCrossorigin() crossorigin policy} is not used in ordering.</p>
+   * <p>Note: The {@linkplain Style#getCrossorigin() crossorigin policy} is not used in ordering.</p>
    *
-   * <p>Note: The {@linkplain #isDisabled() disabled flag} is not used in ordering.</p>
+   * <p>Note: The {@linkplain Style#isDisabled() disabled flag} is not used in ordering.</p>
    *
    * <p>All string comparisons are performed via {@link SmartComparator#ROOT}.</p>
    *
@@ -234,11 +234,11 @@ public final class Style extends Resource<Style> implements Comparable<Style> {
   /**
    * Creates a new style.
    *
-   * @param href         See {@link #getUri()}
-   * @param media        See {@link #getMedia()}
-   * @param direction    See {@link #getDirection()}
-   * @param crossorigin  See {@link #getCrossorigin()}
-   * @param disabled     See {@link #isDisabled()}
+   * @param href         See {@link Style#getUri()}
+   * @param media        See {@link Style#getMedia()}
+   * @param direction    See {@link Style#getDirection()}
+   * @param crossorigin  See {@link Style#getCrossorigin()}
+   * @param disabled     See {@link Style#isDisabled()}
    */
   public Style(
       String href,
@@ -257,7 +257,7 @@ public final class Style extends Resource<Style> implements Comparable<Style> {
   /**
    * Creates a new style.
    *
-   * @param href  See {@link #getUri()}
+   * @param href  See {@link Style#getUri()}
    */
   public Style(String href) {
     this(href, null, null, null, false);
@@ -267,10 +267,10 @@ public final class Style extends Resource<Style> implements Comparable<Style> {
    * {@inheritDoc}
    *
    * @see  Resource#toString()
-   * @see  #getMedia()
-   * @see  #getDirection()
-   * @see  #getCrossorigin()
-   * @see  #isDisabled()
+   * @see  Style#getMedia()
+   * @see  Style#getDirection()
+   * @see  Style#getCrossorigin()
+   * @see  Style#isDisabled()
    */
   @Override
   public String toString() {
@@ -338,7 +338,7 @@ public final class Style extends Resource<Style> implements Comparable<Style> {
   /**
    * {@inheritDoc}
    *
-   * @see  #COMPARATOR
+   * @see  Style#COMPARATOR
    */
   @Override
   public int compareTo(Style o) {

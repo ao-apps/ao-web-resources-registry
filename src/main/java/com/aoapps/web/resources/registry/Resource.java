@@ -70,7 +70,7 @@ public abstract class Resource<
   /**
    * Creates a new resource.
    *
-   * @param uri  See {@link #getUri()}
+   * @param uri  See {@link Resource#getUri()}
    */
   protected Resource(String uri) {
     this.uri = Strings.nullIfEmpty(uri);
@@ -79,7 +79,7 @@ public abstract class Resource<
   /**
    * {@inheritDoc}
    *
-   * @see  #getUri()
+   * @see  Resource#getUri()
    */
   @Override
   public String toString() {
@@ -94,7 +94,7 @@ public abstract class Resource<
   public abstract boolean equals(Object obj);
 
   /**
-   * The hash key must be consistent with {@link #equals(java.lang.Object)}.
+   * The hash key must be consistent with {@link Resource#equals(java.lang.Object)}.
    */
   @Override
   public abstract int hashCode();
