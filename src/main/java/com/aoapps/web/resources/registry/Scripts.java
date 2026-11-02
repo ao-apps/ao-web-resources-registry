@@ -1,6 +1,6 @@
 /*
  * ao-web-resources-registry - Central registry for web resource management.
- * Copyright (C) 2020, 2021, 2022, 2023, 2024, 2025  AO Industries, Inc.
+ * Copyright (C) 2020, 2021, 2022, 2023, 2024, 2025, 2026  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -193,7 +193,6 @@ public final class Scripts extends Resources<Script> {
       throw new IllegalArgumentException("before.position > after.position: " + before + " > " + after);
     }
   }
-
 
   /**
    * {@inheritDoc}
